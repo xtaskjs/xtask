@@ -8,11 +8,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
-    "paths": {
-      "@xtaskjs/common": ["packages/common"],
-      "@xtaskjs/core": ["packages/core"]
-    }
+  
   },
-  "include": ["packages/**/*","packages/**/**/*","packages/**/**/**/*"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }
