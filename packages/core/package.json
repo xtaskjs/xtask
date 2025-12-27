@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "xtaskjs - modern, fast, node.js web framework (@core)",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.com",
@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.2"
+    "@xtaskjs/common": "^1.0.3"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0"
