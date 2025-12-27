@@ -1,0 +1,36 @@
+{
+  "name": "xtaskjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "ts-node -r tsconfig-paths/register app.ts",
+    "build": "npm run clean; tsc",
+    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common",
+    "clean": "rm -r dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "reflect-metadata": "^0.2.2",
+    "ts-morph": "^27.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
+    "@jest/globals": "^30.1.2",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "babel-jest": "^30.1.2",
+    "jest": "^30.1.3",
+    "nodemon": "^3.1.10",
+    "ts-jest": "^29.4.4",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2"
+  }
+}

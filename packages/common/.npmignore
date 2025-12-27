@@ -1,0 +1,6 @@
+test/
+src/
+tsconfig.json
+babel.config.js
+jest.config.js
+*.test.ts
