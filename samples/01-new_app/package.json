@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
     "build": "npm run clean; tsc",
     "test": "npm run test --prefix packages/core && npm run test --prefix packages/common",
     "clean": "rm -r dist"
@@ -14,6 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@xtaskjs/common": "^1.0.1",
+    "@xtaskjs/core": "^1.0.1",
     "express": "^5.1.0",
     "reflect-metadata": "^0.2.2",
     "ts-morph": "^27.0.0"
