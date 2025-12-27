@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "xtaskjs - modern, fast, node.js web framework (@core)",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.com",
@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test":" jest --passWithNoTests"
+    "test": " jest --passWithNoTests"
   },
   "funding": {
     "type": "opencollective",
@@ -24,11 +24,11 @@
   },
   "license": "MIT",
   "dependencies": {
-      "@xtaskjs/common": "^1.0.0"
-     },
+    "@xtaskjs/common": "^1.0.1"
+  },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0"
-      },
+  },
   "peerDependenciesMeta": {
     "class-validator": {
       "optional": true
