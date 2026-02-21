@@ -13,8 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.1",
-    "@xtaskjs/core": "^1.0.1",
+    "@xtaskjs/common": "file:../../packages/common",
+    "@xtaskjs/core": "file:../../packages/core",
     "express": "^5.1.0",
     "reflect-metadata": "^0.2.2",
     "ts-morph": "^27.0.0"

@@ -1,5 +1,7 @@
 import "reflect-metadata";
-import { Container } from "@xtaskjs/core";
+import { existsSync } from "fs";
+import { join } from "path";
+import { Container } from "../di/container";
 import { Logger } from "@xtaskjs/common";
 
 export class Kernel {
@@ -12,8 +14,18 @@ export class Kernel {
     async boot(): Promise<void> {
         // Bootstrapping logic here
         this.container = new Container();
-        // Autoload components from the "packages" directory
-        await this.container.autoload("packages");
+
+        const scanDirs = [
+            join(process.cwd(), "src"),
+            join(process.cwd(), "packages"),
+            join(__dirname, "../../../common/src"),
+        ];
+
+        for (const dir of scanDirs) {
+            if (existsSync(dir)) {
+                await this.container.autoload(dir);
+            }
+        }
 
         this.logger = await this.container.get(Logger);
         // Simulate some async operation

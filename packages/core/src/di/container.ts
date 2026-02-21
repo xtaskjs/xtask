@@ -1,7 +1,7 @@
 import "reflect-metadata"
 import { ComponentMetadata, getComponentMetadata } from "./component";
 import { getPostConstructMethod, getPreDestroyMethod } from "./lifecycle";  
-import { readdirSync , statSync } from "fs";
+import { existsSync, readdirSync , statSync } from "fs";
 import { join } from "path";
 import { ManagedInstance } from "./managedinstance";
 import { Project } from "ts-morph";
@@ -23,7 +23,9 @@ export class Container{
     // SCAN FOLDER BASE DIR FOR @Service() AND @Component()
 
     async autoload(baseDir = "packages"){
-        const files = await this.scanDir(join(process.cwd(), baseDir));
+        const scanRoot = join(process.cwd(), baseDir);
+        const root = existsSync(baseDir) ? baseDir : scanRoot;
+        const files = await this.scanDir(root);
     
         for (const file of files) {
             const name = file.toString();
@@ -185,6 +187,9 @@ export class Container{
     // Scan folder recursively for .ts or .js files
     public async scanDir(dir: string): Promise<string[]> {
         let results: string[] = [];
+        if (!existsSync(dir)) {
+            return results;
+        }
         for (const file of readdirSync(dir)) {
             const full = join (dir, file);
             const stat = statSync(full);

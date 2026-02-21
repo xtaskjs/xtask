@@ -1,5 +1,8 @@
 import "reflect-metadata";
-import { ApplicationLifeCycle, Kernel, KernelListeners, registerEventHandlers } from "@xtaskjs/core";
+import { ApplicationLifeCycle } from "./server/application-lifecycle";
+import { Kernel } from "./kernel/kernel";
+import { KernelListeners } from "./kernel/kernellisteners";
+import { registerEventHandlers } from "./server/registereventhandlers";
 
 export async function Bootstrap(): Promise<Kernel> {
     const lifecycle = new ApplicationLifeCycle();

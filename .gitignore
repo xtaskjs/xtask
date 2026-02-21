@@ -1,6 +1,9 @@
 
 # Build output
 /src/dist
+/dist
+/src/build
+/build
 
 # IDE
 /.idea
@@ -8,6 +11,8 @@
 
 # Dependencies
 /src/node_modules
+pacakge-lock.json
+/node_modules
 
 # Environment variables
 /src/.env
@@ -25,5 +30,8 @@
 #Jest
 /src/.tmp
 /tmp
-/src/pacakges/**/.tmp
-/src/pacakges/core/.tmp
+/src/packages/**/.tmp
+/src/packages/core/.tmp
+
+#Dist
+packages/common/dist/

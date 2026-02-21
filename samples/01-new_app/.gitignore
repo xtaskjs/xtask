@@ -2,12 +2,14 @@
 # Build output
 /dist
 
+
 # IDE
 /.idea
 /.vscode
 
 # Dependencies
 /node_modules
+pacakge-lock.json
 
 # Environment variables
 /src/.env
