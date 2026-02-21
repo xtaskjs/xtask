@@ -28,12 +28,12 @@ jobs:
 
       - name: Set up git user
         run: |
-          git config --global user.name 'github-actions[bot]'
+          git config --global user.name 'github-actions[bot]' 
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Bump versions and publish packages
         run: |
-          npx lerna version --conventional-commits --yes
+          npx lerna version --conventional-commits --yes  --ignore-changes package-lock.json
           npx lerna publish from-package --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
