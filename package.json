@@ -9,6 +9,9 @@
   "scripts": {
     "build": "npm run clean; tsc",
     "test": "npm run test --prefix packages/core && npm run test --prefix packages/common",
+    "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common",
+    "coverage:open:core": "npm run coverage:open --prefix packages/core",
+    "coverage:open:common": "npm run coverage:open --prefix packages/common",
     "clean": "rm -r dist"
   },
   "author": "",

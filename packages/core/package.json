@@ -8,7 +8,9 @@
   "types": "index.ts",
   "scripts": {
     "build": "tsc",
-    "test": " jest --passWithNoTests"
+    "test": " jest --passWithNoTests",
+    "test:coverage": "jest --coverage --runInBand",
+    "coverage:open": "xdg-open coverage/lcov-report/index.html"
   },
   "funding": {
     "type": "opencollective",

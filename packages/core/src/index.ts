@@ -3,3 +3,4 @@ export * from "./bootstrap";
 export * from "./kernel";
 export * from "./di";
 export * from "./server";
+export * from "./http";

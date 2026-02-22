@@ -12,6 +12,30 @@ npm install @xtaskjs/core
 import { ... } from '@xtaskjs/core';
 ```
 
+## HTTP Platform Adapters
+`@xtaskjs/core` now supports an adapter layer similar to NestJS. You can switch servers without changing controller code.
+
+```typescript
+import { CreateApplication } from "@xtaskjs/core";
+
+async function main() {
+	const app = await CreateApplication({
+		adapter: "node-http", // "express" | "fastify"
+		autoListen: true,
+		server: { host: "127.0.0.1", port: 3000 },
+	});
+}
+```
+
+With `express` or `fastify`, pass your instance in `adapterInstance`:
+
+```typescript
+const app = await CreateApplication({
+	adapter: "express",
+	adapterInstance: express(),
+});
+```
+
 ## Features
 - Dependency Injection
 - Application Lifecycle
