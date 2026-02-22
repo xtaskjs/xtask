@@ -31,8 +31,8 @@
 /tmp
 /src/packages/**/.tmp
 /src/packages/core/.tmp
-/core/coverage
-/common/coverage
+/src/packages/core/coverage
+/src/packages/common/coverage
 
 #Dist
 packages/common/dist/
