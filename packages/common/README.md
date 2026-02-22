@@ -17,5 +17,35 @@ import { ... } from '@xtaskjs/common';
 - Decorators
 - Shared types and constants
 
+## HTTP Controllers (Nest-style)
+```typescript
+import {
+	Controller,
+	Get,
+	Post,
+	Patch,
+	Delete,
+	UseMiddlewares,
+	UseGuards,
+	UsePipes,
+} from "@xtaskjs/common";
+
+@Controller("users")
+@UseGuards((ctx) => true)
+class UsersController {
+	@Get("/")
+	list() {}
+
+	@Post("/")
+	create() {}
+
+	@Patch("/:id")
+	update() {}
+
+	@Delete("/:id")
+	remove() {}
+}
+```
+
 ## Documentation
 See [xtaskjs.com](https://xtaskjs.com) for full documentation.

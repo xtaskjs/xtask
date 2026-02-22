@@ -34,20 +34,19 @@ export function AutoWired(options: { required?: boolean; qualifier?: string } = 
 export function getAutoWiredProperties(target: any): Map<string | symbol, AutoWiredMetaData>{
 
     const properties = new Map<string | symbol, AutoWiredMetaData>();
-    let currentClass = target.contructor;
+    let currentPrototype = Object.getPrototypeOf(target);
 
-    while (currentClass && currentClass !== Object) {
-        const autowiredProps = Reflect.getMetadata(AUTOWIRED_PROPS_KEY, currentClass) || [];
-        const prototype = currentClass.prototype;
+    while (currentPrototype && currentPrototype !== Object.prototype) {
+        const autowiredProps = Reflect.getMetadata(AUTOWIRED_PROPS_KEY, currentPrototype.constructor) || [];
 
         autowiredProps.forEach((prop: string | symbol) => {
-                const metaData = Reflect.getMetadata(AUTOWIRED_KEY, prototype, prop);
+                const metaData = Reflect.getMetadata(AUTOWIRED_KEY, currentPrototype, prop);
                 if (metaData && !properties.has(prop)) {
                     properties.set(prop, metaData);
                 }
             });
 
-        currentClass = Object.getPrototypeOf(currentClass);
+        currentPrototype = Object.getPrototypeOf(currentPrototype);
           
     }
 

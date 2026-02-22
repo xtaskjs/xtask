@@ -1,4 +1,11 @@
-import { LifeCyclePhase } from "@xtaskjs/common";
+import {
+    GuardLike,
+    HttpMethod,
+    LifeCyclePhase,
+    MiddlewareLike,
+    PipeLike,
+    RouteExecutionContext,
+} from "@xtaskjs/common";
 import *  as os from "os";
 import * as process from "process";
 
@@ -7,10 +14,22 @@ interface Listener{
     priority:number;
 }
 
+interface ControllerRoute {
+    method: HttpMethod;
+    path: string;
+    controller: any;
+    handler: PropertyKey;
+    middlewares: MiddlewareLike[];
+    guards: GuardLike[];
+    pipes: PipeLike[];
+    action: (...args: any[]) => any | Promise<any>;
+}
+
 export class ApplicationLifeCycle {
     private listeners: Map<LifeCyclePhase, Listener[]> = new Map();
     private metricsInterval?: NodeJS.Timeout;
     private runners : { type: "ApplicationRunner" | "CommandLineRunner"; priority:number; fn:(args?:string[]) => any }[] = [];
+    private controllerRoutes: ControllerRoute[] = [];
 
     constructor() {}
 
@@ -23,6 +42,87 @@ export class ApplicationLifeCycle {
     public registerRunner(fn: (args?:string[]) => any, type: "ApplicationRunner" | "CommandLineRunner" = "ApplicationRunner", priority = 0) {
         this.runners.push({ fn, type, priority});
         this.runners.sort((a,b) => b.priority - a.priority);
+    }
+
+    public registerControllerRoute(route: ControllerRoute) {
+        this.controllerRoutes.push(route);
+    }
+
+    public getControllerRoutes() {
+        return [...this.controllerRoutes];
+    }
+
+    private async runGuard(guard: GuardLike, context: RouteExecutionContext): Promise<boolean> {
+        if (typeof guard === "function") {
+            return Promise.resolve(guard(context));
+        }
+        return Promise.resolve(guard.canActivate(context));
+    }
+
+    private async runPipe(pipe: PipeLike, value: any, context: RouteExecutionContext): Promise<any> {
+        if (typeof pipe === "function") {
+            return Promise.resolve(pipe(value, context));
+        }
+        return Promise.resolve(pipe.transform(value, context));
+    }
+
+    private async runMiddleware(
+        middleware: MiddlewareLike,
+        context: RouteExecutionContext,
+        next: () => Promise<any>
+    ): Promise<any> {
+        if (typeof middleware === "function") {
+            return Promise.resolve(middleware(context, next));
+        }
+        return Promise.resolve(middleware.use(context, next));
+    }
+
+    public async dispatchControllerRoute(method: HttpMethod, path: string, ...args: any[]) {
+        const route = this.controllerRoutes.find(
+            (candidate) => candidate.method === method && candidate.path === path
+        );
+
+        if (!route) {
+            throw new Error(`No route registered for ${method} ${path}`);
+        }
+
+        const context: RouteExecutionContext = {
+            method,
+            path,
+            args,
+            controller: route.controller,
+            handler: route.handler,
+        };
+
+        for (const guard of route.guards) {
+            const canActivate = await this.runGuard(guard, context);
+            if (!canActivate) {
+                throw new Error(`Route blocked by guard: ${method} ${path}`);
+            }
+        }
+
+        let transformedArgs = [...args];
+        for (const pipe of route.pipes) {
+            const nextArgs = [];
+            for (const arg of transformedArgs) {
+                nextArgs.push(await this.runPipe(pipe, arg, context));
+            }
+            transformedArgs = nextArgs;
+        }
+
+        context.args = transformedArgs;
+
+        const executeRoute = async () => Promise.resolve(route.action(...context.args));
+
+        const executeMiddleware = async (index: number): Promise<any> => {
+            if (index >= route.middlewares.length) {
+                return executeRoute();
+            }
+            const middleware = route.middlewares[index];
+            return this.runMiddleware(middleware, context, () => executeMiddleware(index + 1));
+        };
+
+        return executeMiddleware(0);
     }
     
     public async emit(event: LifeCyclePhase, payload?:any) {
@@ -80,6 +180,7 @@ export class ApplicationLifeCycle {
             clearInterval(this.metricsInterval);
             this.metricsInterval = undefined;
         }
+        this.controllerRoutes = [];
     }
 
 }

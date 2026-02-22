@@ -17,5 +17,14 @@ import { ... } from '@xtaskjs/core';
 - Application Lifecycle
 - Kernel and Server utilities
 
+## Controller Route Integration
+- `Container.registerLifeCycleListeners(app)` now registers lifecycle handlers/runners and controller routes.
+- `ApplicationLifeCycle.registerControllerRoute(...)` stores resolved routes.
+- `ApplicationLifeCycle.dispatchControllerRoute(method, path, ...args)` executes guards, pipes, middlewares, and the route handler.
+
+## Metrics Log Configuration
+- Metrics logs are disabled by default.
+- Set `XTASKJS_SHOW_METRICS_LOGS=true` to show runtime metric logs like `[Metrics] Heap MB` and `CPU { ... }`.
+
 ## Documentation
 See [xtaskjs.com](https://xtaskjs.com) for full documentation.

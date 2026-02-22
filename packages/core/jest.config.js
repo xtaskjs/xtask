@@ -9,7 +9,7 @@ module.exports = {
     ...tsJestTransformCfg,
   },
   moduleNameMapper: {
-    "^@xtaskjs/common$": "<rootDir>/../common/dist/index.js",
-    "^@xtaskjs/common/(.*)$": "<rootDir>/../common/dist/$1"
+    "^@xtaskjs/common$": "<rootDir>/../common/src/index.ts",
+    "^@xtaskjs/common/(.*)$": "<rootDir>/../common/src/$1"
   },
 };

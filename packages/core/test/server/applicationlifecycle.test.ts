@@ -1,5 +1,5 @@
 import { OnEvent } from "@xtaskjs/common";
-import { Service } from "packages/core/src";
+import { Service } from "../../src";
 
 @Service()
 class TestLifeCycleListener {
@@ -11,3 +11,11 @@ class TestLifeCycleListener {
     }
     
 }
+
+describe("ApplicationLifecycle decorators", () => {
+    it("should execute lifecycle listener method", async () => {
+        const listener = new TestLifeCycleListener();
+        await listener.onStarting();
+        expect(listener.events).toEqual(["starting"]);
+    });
+});

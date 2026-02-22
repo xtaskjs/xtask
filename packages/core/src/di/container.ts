@@ -7,8 +7,8 @@ import { ManagedInstance } from "./managedinstance";
 import { Project } from "ts-morph";
 import { getAutoWiredProperties } from "./autowired";
 import { getConstructorQualifiers } from "./qualifier";
-import { registerEventHandlers} from "../server";
-import { HANDLERS_KEY, RUNNERS_KEY } from "@xtaskjs/common";
+import { registerControllerRoutes, registerEventHandlers} from "../server";
+import { CONTROLLERS_KEY, HANDLERS_KEY, ROUTES_KEY, RUNNERS_KEY } from "@xtaskjs/common";
 
 
 export class Container{
@@ -76,7 +76,9 @@ export class Container{
         const paramTypes: any[] =
             Reflect.getMetadata("design:paramtypes", target) || [];
 
-        console.log(`Registering component: ${target.name} with dependencies:`, paramTypes.map(t => t?.name || 'unknown'));
+        if (process.env.NODE_ENV !== "test") {
+            console.log(`Registering component: ${target.name} with dependencies:`, paramTypes.map(t => t?.name || 'unknown'));
+        }
         
         const provider = () => {
             if (this.resolving.has(target)) {
@@ -211,10 +213,13 @@ export class Container{
             // Check if class has lifecycle decorators
             const handlers = Reflect.getMetadata(HANDLERS_KEY, type) || [];
             const runners =  Reflect.getMetadata(RUNNERS_KEY, type) || [];
+            const controller = Reflect.getMetadata(CONTROLLERS_KEY, type);
+            const routes = Reflect.getMetadata(ROUTES_KEY, type) || [];
 
-            if(handlers.length > 0 || runners.length > 0){
+            if(handlers.length > 0 || runners.length > 0 || (controller && routes.length > 0)){
                 const instance = this.get(type);
                 registerEventHandlers(instance, app);
+                registerControllerRoutes(instance, app);
             }
         }
     }
