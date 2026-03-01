@@ -42,6 +42,18 @@ For Express support, install the adapter package:
 npm install @xtaskjs/express-http
 ```
 
+## Template Engines
+
+Controllers can return rendered views with `view(...)`:
+
+```typescript
+import { view } from "@xtaskjs/core";
+
+return view("home", { title: "Hello" });
+```
+
+The selected adapter must implement view rendering (for example `@xtaskjs/express-http` via `templateEngine`).
+
 ## Features
 - Dependency Injection
 - Application Lifecycle

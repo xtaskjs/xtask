@@ -1,4 +1,5 @@
 import { ExpressAdapter } from "../src/express-adapter";
+import { view } from "../src/types";
 
 describe("ExpressAdapter", () => {
   it("should throw if app is invalid", () => {
@@ -72,5 +73,65 @@ describe("ExpressAdapter", () => {
 
     await adapter.close();
     expect(close).toHaveBeenCalledTimes(1);
+  });
+
+  it("should configure express native template engine", () => {
+    const app = {
+      use: jest.fn(),
+      listen: jest.fn(),
+      set: jest.fn(),
+      engine: jest.fn(),
+    };
+
+    new ExpressAdapter(app, {
+      templateEngine: {
+        viewsPath: "./views",
+        extension: "hbs",
+        engine: jest.fn(),
+        viewEngine: "hbs",
+      },
+    });
+
+    expect(app.set).toHaveBeenCalledWith("views", "./views");
+    expect(app.engine).toHaveBeenCalledWith("hbs", expect.any(Function));
+    expect(app.set).toHaveBeenCalledWith("view engine", "hbs");
+  });
+
+  it("should render view with custom html renderer", async () => {
+    const app = {
+      use: jest.fn(),
+      listen: jest.fn(),
+      set: jest.fn(),
+      engine: jest.fn(),
+    };
+
+    const adapter = new ExpressAdapter(app, {
+      templateEngine: {
+        render: async (_template, model) => `<html><body><h1>${model.title}</h1></body></html>`,
+      },
+    });
+
+    const res = { send: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+    await adapter.renderView!({}, res, view("home", { title: "XTask" }, 201));
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.send).toHaveBeenCalledWith("<html><body><h1>XTask</h1></body></html>");
+  });
+
+  it("should render view through express res.render", async () => {
+    const app = {
+      use: jest.fn(),
+      listen: jest.fn(),
+    };
+
+    const adapter = new ExpressAdapter(app);
+    const send = jest.fn();
+    const render = jest.fn((_template, _model, cb) => cb(null, "<html>ok</html>"));
+    const res = { render, send } as any;
+
+    await adapter.renderView!({}, res, view("dashboard", { ok: true }));
+
+    expect(render).toHaveBeenCalledWith("dashboard", { ok: true }, expect.any(Function));
+    expect(send).toHaveBeenCalledWith("<html>ok</html>");
   });
 });

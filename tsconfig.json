@@ -14,6 +14,6 @@
       "@xtaskjs/express-http": ["packages/express-http"]
     }
   },
-  "include": ["packages/**/*","packages/**/**/*","packages/**/**/**/*"],
+  "include": ["packages/**/*","packages/**/**/*","packages/**/**/**/*","samples/**/*","samples/**/**/*"],
   "exclude": ["node_modules", "dist"]
 }

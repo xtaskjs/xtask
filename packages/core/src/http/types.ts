@@ -14,6 +14,24 @@ export interface HttpRequestLike {
   body?: any;
 }
 
+export interface HttpViewResult {
+  readonly __xtaskView: true;
+  template: string;
+  model?: Record<string, any>;
+  statusCode?: number;
+}
+
+export const view = (
+  template: string,
+  model?: Record<string, any>,
+  statusCode?: number
+): HttpViewResult => ({
+  __xtaskView: true,
+  template,
+  model,
+  statusCode,
+});
+
 export interface HttpResponseLike {
   statusCode?: number;
   headersSent?: boolean;
@@ -34,6 +52,11 @@ export type HttpRequestHandler = (
 export interface HttpAdapter {
   readonly type: HttpAdapterType;
   registerRequestHandler(handler: HttpRequestHandler): void;
+  renderView?(
+    req: HttpRequestLike,
+    res: HttpResponseLike,
+    payload: HttpViewResult
+  ): Promise<void>;
   listen(options: Required<HttpServerOptions>): Promise<void>;
   close(): Promise<void>;
 }

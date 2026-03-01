@@ -2,12 +2,18 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "CommonJS",
+    "moduleResolution": "node",
     "rootDir": "./",
     "outDir": "dist",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@xtaskjs/common": ["../../packages/common"],
+      "@xtaskjs/core": ["../../packages/core"],
+      "@xtaskjs/express-http": ["../../packages/express-http"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

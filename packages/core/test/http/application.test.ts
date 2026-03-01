@@ -3,6 +3,7 @@ import {
   createHttpAdapter,
   registerContainerInLifecycle,
 } from "../../src/http/application";
+import { view } from "../../src/http/types";
 
 class FakeNodeAdapter {
   type = "node-http" as const;
@@ -174,6 +175,48 @@ describe("XTaskHttpApplication", () => {
     await app.close();
 
     expect(adapter.close).toHaveBeenCalledTimes(1);
+  });
+
+  it("should render a view using adapter renderView", async () => {
+    const adapter = {
+      type: "node-http" as const,
+      registerRequestHandler: jest.fn(),
+      renderView: jest.fn(async () => {}),
+      listen: jest.fn(async () => {}),
+      close: jest.fn(async () => {}),
+    };
+    const lifecycle = {
+      dispatchControllerRoute: jest.fn(async () => view("home", { title: "Welcome" }, 201)),
+    } as any;
+    new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
+
+    const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
+    const req = {};
+    const res = { end: jest.fn() };
+
+    await requestHandler("GET", "/", req, res);
+
+    expect(adapter.renderView).toHaveBeenCalledWith(req, res, view("home", { title: "Welcome" }, 201));
+  });
+
+  it("should return 500 when adapter does not support view rendering", async () => {
+    const adapter = new FakeNodeAdapter();
+    const lifecycle = {
+      dispatchControllerRoute: jest.fn(async () => view("home", { title: "Welcome" })),
+    } as any;
+    new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
+
+    const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
+
+    await requestHandler("GET", "/", {}, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Internal Server Error",
+      error:
+        "Adapter 'node-http' does not support view rendering. Configure a template engine in the selected adapter.",
+    });
   });
 });
 

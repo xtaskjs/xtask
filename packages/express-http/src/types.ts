@@ -14,6 +14,13 @@ export interface HttpRequestLike {
   body?: any;
 }
 
+export interface HttpViewResult {
+  readonly __xtaskView: true;
+  template: string;
+  model?: Record<string, any>;
+  statusCode?: number;
+}
+
 export interface HttpResponseLike {
   statusCode?: number;
   headersSent?: boolean;
@@ -22,6 +29,7 @@ export interface HttpResponseLike {
   json?: (payload: any) => void;
   send?: (payload: any) => void;
   status?: (code: number) => HttpResponseLike;
+  render?: (view: string, locals?: Record<string, any>, callback?: (error: Error | null, html?: string) => void) => void;
 }
 
 export type HttpRequestHandler = (
@@ -34,6 +42,34 @@ export type HttpRequestHandler = (
 export interface HttpAdapter {
   readonly type: HttpAdapterType;
   registerRequestHandler(handler: HttpRequestHandler): void;
+  renderView?(req: HttpRequestLike, res: HttpResponseLike, payload: HttpViewResult): Promise<void>;
   listen(options: Required<HttpServerOptions>): Promise<void>;
   close(): Promise<void>;
+}
+
+export const view = (
+  template: string,
+  model?: Record<string, any>,
+  statusCode?: number
+): HttpViewResult => ({
+  __xtaskView: true,
+  template,
+  model,
+  statusCode,
+});
+
+export interface ExpressTemplateEngineOptions {
+  viewsPath?: string;
+  viewEngine?: string;
+  extension?: string;
+  engine?: (...args: any[]) => any;
+  render?: (
+    template: string,
+    model: Record<string, any>,
+    context: { req: HttpRequestLike; res: HttpResponseLike }
+  ) => string | Promise<string>;
+}
+
+export interface ExpressAdapterOptions {
+  templateEngine?: ExpressTemplateEngineOptions;
 }

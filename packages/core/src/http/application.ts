@@ -10,6 +10,7 @@ import {
   HttpRequestLike,
   HttpResponseLike,
   HttpServerOptions,
+  HttpViewResult,
 } from "./types";
 
 export interface CreateApplicationOptions {
@@ -47,6 +48,10 @@ const normalizePath = (value: string): string => {
 
 const isRouteNotFoundError = (error: any) => {
   return typeof error?.message === "string" && error.message.startsWith("No route registered for");
+};
+
+const isViewResult = (payload: any): payload is HttpViewResult => {
+  return payload?.__xtaskView === true && typeof payload?.template === "string";
 };
 
 type ExpressAdapterConstructor = new (app: any) => HttpAdapter;
@@ -109,6 +114,17 @@ export class XTaskHttpApplication {
         res.statusCode = 204;
         res.end?.();
         return;
+      }
+
+      if (isViewResult(result)) {
+        if (this.adapter.renderView) {
+          await this.adapter.renderView(req, res, result);
+          return;
+        }
+
+        throw new Error(
+          `Adapter '${this.adapter.type}' does not support view rendering. Configure a template engine in the selected adapter.`
+        );
       }
 
       if (typeof result === "object") {
