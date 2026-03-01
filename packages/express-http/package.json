@@ -1,0 +1,53 @@
+{
+  "name": "@xtaskjs/express-http",
+  "version": "1.0.9",
+  "description": "xtaskjs express http adapter",
+  "author": "Javier Rodríguez Soler",
+  "homepage": "https://xtaskjs.com",
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": " jest --passWithNoTests",
+    "test:coverage": "jest --coverage --runInBand",
+    "coverage:open": "xdg-open coverage/lcov-report/index.html"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/xtaskjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtaskjs/xtaskjs.git",
+    "directory": "packages/express-http"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@xtaskjs/common": "^1.0.9"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.1.12 || ^0.2.0"
+  },
+  "peerDependenciesMeta": {
+    "class-validator": {
+      "optional": true
+    },
+    "class-transformer": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.1.2",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.1.3",
+    "nodemon": "^3.1.10",
+    "ts-jest": "^29.4.4",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2"
+  }
+}

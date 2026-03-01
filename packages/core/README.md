@@ -36,6 +36,12 @@ const app = await CreateApplication({
 });
 ```
 
+For Express support, install the adapter package:
+
+```bash
+npm install @xtaskjs/express-http
+```
+
 ## Features
 - Dependency Injection
 - Application Lifecycle

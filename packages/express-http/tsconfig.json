@@ -10,9 +10,7 @@
     "baseUrl": ".",
     "paths":{
       "@xtaskjs/common": ["../../dist/packages/common"],
-      "@xtaskjs/common/*": ["../../dist/packages/common/*"],
-      "@xtaskjs/express-http": ["../express-http/src"],
-      "@xtaskjs/express-http/*": ["../express-http/src/*"]
+      "@xtaskjs/common/*": ["../../dist/packages/common/*"]
     },
     "declaration": true
   },

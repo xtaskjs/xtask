@@ -2,7 +2,6 @@ import { HttpMethod } from "@xtaskjs/common";
 import { Container } from "../di";
 import { Kernel } from "../kernel";
 import { ApplicationLifeCycle } from "../server";
-import { ExpressAdapter } from "./express-adapter";
 import { FastifyAdapter } from "./fastify-adapter";
 import { NodeHttpAdapter } from "./node-http-adapter";
 import {
@@ -48,6 +47,34 @@ const normalizePath = (value: string): string => {
 
 const isRouteNotFoundError = (error: any) => {
   return typeof error?.message === "string" && error.message.startsWith("No route registered for");
+};
+
+type ExpressAdapterConstructor = new (app: any) => HttpAdapter;
+
+const resolveExpressAdapter = (): ExpressAdapterConstructor => {
+  try {
+    const expressHttpPackage = require("@xtaskjs/express-http") as {
+      ExpressAdapter?: ExpressAdapterConstructor;
+    };
+
+    if (typeof expressHttpPackage.ExpressAdapter !== "function") {
+      throw new Error("@xtaskjs/express-http does not export ExpressAdapter");
+    }
+
+    return expressHttpPackage.ExpressAdapter;
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/express-http");
+
+    if (missingPackage) {
+      throw new Error(
+        "express adapter requires @xtaskjs/express-http. Install it with: npm install @xtaskjs/express-http"
+      );
+    }
+
+    throw error;
+  }
 };
 
 export class XTaskHttpApplication {
@@ -168,6 +195,7 @@ export function createHttpAdapter(
   }
 
   if (adapter === "express") {
+    const ExpressAdapter = resolveExpressAdapter();
     return new ExpressAdapter(adapterInstance);
   }
 

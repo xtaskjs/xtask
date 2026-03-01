@@ -8,10 +8,11 @@
   ],
   "scripts": {
     "build": "npm run clean; tsc",
-    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common",
-    "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common",
+    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common && npm run test --prefix packages/express-http",
+    "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common && npm run test:coverage --prefix packages/express-http",
     "coverage:open:core": "npm run coverage:open --prefix packages/core",
     "coverage:open:common": "npm run coverage:open --prefix packages/common",
+    "coverage:open:express-http": "npm run coverage:open --prefix packages/express-http",
     "benchmark:startup": "npm run benchmark:startup --prefix packages/core",
     "clean": "rm -r dist"
   },

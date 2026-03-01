@@ -10,7 +10,8 @@
     "baseUrl": "./",
     "paths": {
       "@xtaskjs/common": ["packages/common"],
-      "@xtaskjs/core": ["packages/core"]
+      "@xtaskjs/core": ["packages/core"],
+      "@xtaskjs/express-http": ["packages/express-http"]
     }
   },
   "include": ["packages/**/*","packages/**/**/*","packages/**/**/**/*"],
