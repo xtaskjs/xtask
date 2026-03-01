@@ -50,5 +50,14 @@ const app = await CreateApplication({
 - Metrics logs are disabled by default.
 - Set `XTASKJS_SHOW_METRICS_LOGS=true` to show runtime metric logs like `[Metrics] Heap MB` and `CPU { ... }`.
 
+## Startup Benchmark
+- Run `npm run benchmark:startup --prefix packages/core` from the workspace root.
+- Optional env vars:
+	- `XTASKJS_BENCH_WARMUP` (default: `3`)
+	- `XTASKJS_BENCH_ITERATIONS` (default: `10`)
+	- `XTASKJS_BENCH_NODE_ENV` (default: `test`)
+- Example:
+	- `XTASKJS_BENCH_WARMUP=5 XTASKJS_BENCH_ITERATIONS=20 XTASKJS_BENCH_NODE_ENV=production npm run benchmark:startup --prefix packages/core`
+
 ## Documentation
 See [xtaskjs.com](https://xtaskjs.com) for full documentation.

@@ -10,7 +10,8 @@
     "build": "tsc",
     "test": " jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
-    "coverage:open": "xdg-open coverage/lcov-report/index.html"
+    "coverage:open": "xdg-open coverage/lcov-report/index.html",
+    "benchmark:startup": "TS_NODE_PROJECT=../../tsconfig.json node --expose-gc -r ts-node/register/transpile-only -r tsconfig-paths/register ./scripts/startup-benchmark.ts"
   },
   "funding": {
     "type": "opencollective",

@@ -4,7 +4,6 @@ import { getPostConstructMethod, getPreDestroyMethod } from "./lifecycle";
 import { existsSync, readdirSync , statSync } from "fs";
 import { join } from "path";
 import { ManagedInstance } from "./managedinstance";
-import { Project } from "ts-morph";
 import { getAutoWiredProperties } from "./autowired";
 import { getConstructorQualifiers } from "./qualifier";
 import { registerControllerRoutes, registerEventHandlers} from "../server";
@@ -19,6 +18,14 @@ export class Container{
     private primaryBeans = new Map<any, any>();
     private resolving = new Set<any>();
     public managedInstances : ManagedInstance[] = [];
+    private readonly ignoredDirs = new Set([
+        "node_modules",
+        ".git",
+        "coverage",
+        "dist",
+        "build",
+        "out",
+    ]);
 
     // SCAN FOLDER BASE DIR FOR @Service() AND @Component()
 
@@ -26,29 +33,38 @@ export class Container{
         const scanRoot = join(process.cwd(), baseDir);
         const root = existsSync(baseDir) ? baseDir : scanRoot;
         const files = await this.scanDir(root);
+        const seenConstructors = new Set<any>();
     
         for (const file of files) {
             const name = file.toString();
-            if (name.includes("test")) continue; //skip test files
-            if (name.endsWith("d.ts")) continue; // skip TypeScript declarations Files.
-            if (name.includes("js")) continue; //skip configuration files
-            if (name.includes("json")) continue; //skip configuration files
-            if (name.includes("index.ts")) continue; //skip export files
+            if (name.endsWith(".d.ts")) continue;
+            if (/(^|\/)index\.(ts|js)$/.test(name)) continue;
+            if (/\.(test|spec)\.(ts|js)$/.test(name)) continue;
+
             const module = await import(file);
-            const project = new Project();
-            const sourceFile = project.addSourceFileAtPath(file);
-            const classes = sourceFile.getClasses();
-            
-            for (const cls of classes) {
-               if (cls.getDecorator("Service") || cls.getDecorator("Component") || cls.getDecorator("Controller") || cls.getDecorator("Repository")) {
-                    const className = cls.getName();
-                    if (className && module[className]){
-                        const classConstructor = module[className];
-                        const metaData = getComponentMetadata(classConstructor) || { scope: "singleton"};
-                        const beanName = metaData.name || className;
-                        this.registerWithName(classConstructor, metaData, beanName);
-                    }
+            const exportedValues = Object.values(module);
+
+            for (const exportedValue of exportedValues) {
+                if (typeof exportedValue !== "function") {
+                    continue;
                 }
+
+                const classConstructor = exportedValue;
+                const hasComponentMetadata = Boolean(getComponentMetadata(classConstructor));
+                const hasControllerMetadata = Boolean(Reflect.getMetadata(CONTROLLERS_KEY, classConstructor));
+
+                if (!hasComponentMetadata && !hasControllerMetadata) {
+                    continue;
+                }
+
+                if (seenConstructors.has(classConstructor)) {
+                    continue;
+                }
+
+                seenConstructors.add(classConstructor);
+                const metaData = getComponentMetadata(classConstructor) || { scope: "singleton" };
+                const beanName = metaData.name || classConstructor.name;
+                this.registerWithName(classConstructor, metaData, beanName);
             }
         } 
     }   
@@ -196,6 +212,9 @@ export class Container{
             const full = join (dir, file);
             const stat = statSync(full);
             if (stat && stat.isDirectory()) {
+                if (this.ignoredDirs.has(file)) {
+                    continue;
+                }
                 const res = await this.scanDir(full);
                 results = results.concat(res);
             } else if (/\.(ts|js)$/.test(file)) {

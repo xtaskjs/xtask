@@ -28,8 +28,6 @@ export class Kernel {
         }
 
         this.logger = await this.container.get(Logger);
-        // Simulate some async operation
-        await new Promise((resolve) => setTimeout(resolve, 1000));
         this.logger.info("🚀 Kernel started successfully.");
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1771761669601" clover="3.2.0">
-  <project timestamp="1771761669601" name="All files">
+<coverage generated="1771762479741" clover="3.2.0">
+  <project timestamp="1771762479741" name="All files">
     <metrics statements="122" coveredstatements="115" conditionals="54" coveredconditionals="40" methods="35" coveredmethods="32" elements="211" coveredelements="187" complexity="0" loc="122" ncloc="122" packages="2" files="3" classes="3"/>
     <package name="decorators.core.server">
       <metrics statements="114" coveredstatements="110" conditionals="54" coveredconditionals="40" methods="30" coveredmethods="30"/>

@@ -29,10 +29,13 @@
 #Jest
 /src/.tmp
 /tmp
+/.tmp
 /src/packages/**/.tmp
 /src/packages/core/.tmp
 /src/packages/core/coverage
 /src/packages/common/coverage
+/packages/core/coverage
+/packages/common/coverage
 
 #Dist
 packages/common/dist/

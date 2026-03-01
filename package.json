@@ -12,6 +12,7 @@
     "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common",
     "coverage:open:core": "npm run coverage:open --prefix packages/core",
     "coverage:open:common": "npm run coverage:open --prefix packages/common",
+    "benchmark:startup": "npm run benchmark:startup --prefix packages/core",
     "clean": "rm -r dist"
   },
   "author": "",
