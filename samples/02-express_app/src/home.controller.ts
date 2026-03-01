@@ -10,6 +10,7 @@ export class HomeController {
     this.logger.info("Rendering home page");
     return view("home", {
       title: "xTaskJS + Express Template Engine",
+      subtitle: "Rendered from external views/home.html and assets from public/",
     });
   }
 }

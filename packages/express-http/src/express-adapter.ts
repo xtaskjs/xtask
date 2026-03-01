@@ -8,17 +8,34 @@ import {
   HttpServerOptions,
   HttpViewResult,
 } from "./types";
+import { readFile } from "fs/promises";
+import path from "path";
 
 const SUPPORTED_METHODS: HttpMethod[] = ["GET", "POST", "PATCH", "DELETE"];
+const DEFAULT_VIEWS_FOLDER = "views";
+const DEFAULT_PUBLIC_FOLDER = "public";
+const DEFAULT_FILE_EXTENSION = ".html";
+
+const interpolateTemplate = (template: string, model: Record<string, any>): string => {
+  return template.replace(/{{\s*([\w.]+)\s*}}/g, (_match, key: string) => {
+    const value = key.split(".").reduce<any>((acc, segment) => acc?.[segment], model);
+    return value === undefined || value === null ? "" : String(value);
+  });
+};
+
+const withLeadingDot = (value: string): string => (value.startsWith(".") ? value : `.${value}`);
 
 export class ExpressAdapter implements HttpAdapter {
   public readonly type = "express" as const;
   private readonly app: any;
+  private readonly viewsPath: string;
+  private readonly fileExtension: string;
   private readonly templateRenderer?: (
     template: string,
     model: Record<string, any>,
     context: { req: HttpRequestLike; res: HttpResponseLike }
   ) => string | Promise<string>;
+  private readonly hasNativeViewEngine: boolean;
   private closeServer?: { close: (cb?: (error?: Error) => void) => void };
 
   constructor(app: any, options?: ExpressAdapterOptions) {
@@ -27,8 +44,10 @@ export class ExpressAdapter implements HttpAdapter {
     }
 
     const templateEngine = options?.templateEngine;
-    if (templateEngine?.viewsPath && typeof app.set === "function") {
-      app.set("views", templateEngine.viewsPath);
+    this.viewsPath = templateEngine?.viewsPath || path.join(process.cwd(), DEFAULT_VIEWS_FOLDER);
+    this.fileExtension = withLeadingDot(templateEngine?.fileExtension || DEFAULT_FILE_EXTENSION);
+    if (typeof app.set === "function") {
+      app.set("views", this.viewsPath);
     }
 
     if (templateEngine?.engine && templateEngine.extension && typeof app.engine === "function") {
@@ -39,8 +58,29 @@ export class ExpressAdapter implements HttpAdapter {
       app.set("view engine", templateEngine.viewEngine);
     }
 
+    const staticFiles = options?.staticFiles;
+    if (staticFiles?.enabled !== false) {
+      const expressModule = require("express");
+      const publicPath = staticFiles?.publicPath || path.join(process.cwd(), DEFAULT_PUBLIC_FOLDER);
+      const urlPrefix = staticFiles?.urlPrefix || "/";
+      const staticMiddleware = expressModule.static(publicPath);
+      if (urlPrefix === "/") {
+        app.use(staticMiddleware);
+      } else {
+        app.use(urlPrefix, staticMiddleware);
+      }
+    }
+
     this.templateRenderer = templateEngine?.render;
+    this.hasNativeViewEngine = Boolean(templateEngine?.viewEngine || templateEngine?.engine);
     this.app = app;
+  }
+
+  private async renderFileTemplate(template: string, model: Record<string, any>): Promise<string> {
+    const fullTemplateName = path.extname(template) ? template : `${template}${this.fileExtension}`;
+    const templatePath = path.join(this.viewsPath, fullTemplateName);
+    const templateFile = await readFile(templatePath, "utf-8");
+    return interpolateTemplate(templateFile, model);
   }
 
   registerRequestHandler(handler: HttpRequestHandler): void {
@@ -85,7 +125,7 @@ export class ExpressAdapter implements HttpAdapter {
       return;
     }
 
-    if (typeof res.render === "function") {
+    if (this.hasNativeViewEngine && typeof res.render === "function") {
       await new Promise<void>((resolve, reject) => {
         res.render!(payload.template, payload.model || {}, (error, html) => {
           if (error) {
@@ -106,9 +146,15 @@ export class ExpressAdapter implements HttpAdapter {
       return;
     }
 
-    throw new Error(
-      "Express template engine is not configured. Provide templateEngine.render or configure app.set('view engine', ...)"
-    );
+    const html = await this.renderFileTemplate(payload.template, payload.model || {});
+    if (typeof res.send === "function") {
+      res.send(html);
+      return;
+    }
+    res.setHeader?.("content-type", "text/html; charset=utf-8");
+    res.end?.(html);
+    return;
+
   }
 
   async close(): Promise<void> {

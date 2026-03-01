@@ -1,5 +1,8 @@
 import { ExpressAdapter } from "../src/express-adapter";
 import { view } from "../src/types";
+import fs from "fs";
+import os from "os";
+import path from "path";
 
 describe("ExpressAdapter", () => {
   it("should throw if app is invalid", () => {
@@ -12,6 +15,7 @@ describe("ExpressAdapter", () => {
     const middlewareRegistry: any[] = [];
     const app = {
       use: (fn: any) => middlewareRegistry.push(fn),
+      set: jest.fn(),
       listen: jest.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
         cb();
         return { close: jest.fn() };
@@ -22,7 +26,7 @@ describe("ExpressAdapter", () => {
     const handler = jest.fn(async () => {});
     adapter.registerRequestHandler(handler);
 
-    const middleware = middlewareRegistry[0];
+    const middleware = middlewareRegistry[middlewareRegistry.length - 1];
     const res = { status: jest.fn().mockReturnThis(), send: jest.fn() };
 
     await middleware({ method: "PUT", path: "/x" }, res);
@@ -36,6 +40,7 @@ describe("ExpressAdapter", () => {
     const middlewareRegistry: any[] = [];
     const app = {
       use: (fn: any) => middlewareRegistry.push(fn),
+      set: jest.fn(),
       listen: jest.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
         cb();
         return { close: jest.fn() };
@@ -48,7 +53,7 @@ describe("ExpressAdapter", () => {
 
     const req = { method: "GET", path: "/hello" };
     const res = {};
-    await middlewareRegistry[0](req, res);
+    await middlewareRegistry[middlewareRegistry.length - 1](req, res);
 
     expect(handler).toHaveBeenCalledWith("GET", "/hello", req, res);
   });
@@ -57,6 +62,7 @@ describe("ExpressAdapter", () => {
     const close = jest.fn((cb?: (error?: Error) => void) => cb?.());
     const app = {
       use: jest.fn(),
+      set: jest.fn(),
       listen: jest.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
         cb();
         return { close };
@@ -87,8 +93,12 @@ describe("ExpressAdapter", () => {
       templateEngine: {
         viewsPath: "./views",
         extension: "hbs",
+        fileExtension: ".hbs",
         engine: jest.fn(),
         viewEngine: "hbs",
+      },
+      staticFiles: {
+        enabled: false,
       },
     });
 
@@ -109,6 +119,9 @@ describe("ExpressAdapter", () => {
       templateEngine: {
         render: async (_template, model) => `<html><body><h1>${model.title}</h1></body></html>`,
       },
+      staticFiles: {
+        enabled: false,
+      },
     });
 
     const res = { send: jest.fn(), status: jest.fn().mockReturnThis() } as any;
@@ -124,7 +137,14 @@ describe("ExpressAdapter", () => {
       listen: jest.fn(),
     };
 
-    const adapter = new ExpressAdapter(app);
+    const adapter = new ExpressAdapter(app, {
+      templateEngine: {
+        viewEngine: "pug",
+      },
+      staticFiles: {
+        enabled: false,
+      },
+    });
     const send = jest.fn();
     const render = jest.fn((_template, _model, cb) => cb(null, "<html>ok</html>"));
     const res = { render, send } as any;
@@ -133,5 +153,47 @@ describe("ExpressAdapter", () => {
 
     expect(render).toHaveBeenCalledWith("dashboard", { ok: true }, expect.any(Function));
     expect(send).toHaveBeenCalledWith("<html>ok</html>");
+  });
+
+  it("should use default views/public folders", () => {
+    const app = {
+      use: jest.fn(),
+      listen: jest.fn(),
+      set: jest.fn(),
+      engine: jest.fn(),
+    };
+
+    new ExpressAdapter(app);
+
+    expect(app.set).toHaveBeenCalledWith("views", path.join(process.cwd(), "views"));
+    expect(app.use).toHaveBeenCalled();
+  });
+
+  it("should render templates from views folder by default", async () => {
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "xtaskjs-express-view-"));
+    const viewsPath = path.join(tempRoot, "views");
+    fs.mkdirSync(viewsPath, { recursive: true });
+    fs.writeFileSync(path.join(viewsPath, "home.html"), "<h1>{{title}}</h1>", "utf-8");
+
+    const app = {
+      use: jest.fn(),
+      listen: jest.fn(),
+      set: jest.fn(),
+    };
+
+    const adapter = new ExpressAdapter(app, {
+      templateEngine: {
+        viewsPath,
+      },
+      staticFiles: {
+        enabled: false,
+      },
+    });
+    const res = { send: jest.fn() } as any;
+
+    await adapter.renderView!({}, res, view("home", { title: "From File" }));
+
+    expect(res.send).toHaveBeenCalledWith("<h1>From File</h1>");
+    fs.rmSync(tempRoot, { recursive: true, force: true });
   });
 });

@@ -60,6 +60,7 @@ export const view = (
 
 export interface ExpressTemplateEngineOptions {
   viewsPath?: string;
+  fileExtension?: string;
   viewEngine?: string;
   extension?: string;
   engine?: (...args: any[]) => any;
@@ -70,6 +71,13 @@ export interface ExpressTemplateEngineOptions {
   ) => string | Promise<string>;
 }
 
+export interface ExpressStaticFilesOptions {
+  enabled?: boolean;
+  publicPath?: string;
+  urlPrefix?: string;
+}
+
 export interface ExpressAdapterOptions {
   templateEngine?: ExpressTemplateEngineOptions;
+  staticFiles?: ExpressStaticFilesOptions;
 }

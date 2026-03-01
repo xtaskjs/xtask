@@ -15,17 +15,36 @@ import { CreateApplication, view } from "@xtaskjs/core";
 
 const expressApp = express();
 const application = await CreateApplication({
-  adapter: new ExpressAdapter(expressApp, {
-    templateEngine: {
-      render: async (template, model) => `<html><body><h1>${model.title}</h1></body></html>`,
-    },
-  }),
+  adapter: new ExpressAdapter(expressApp),
 });
 
 await application.listen({ port: 3000 });
 
 // In a controller:
 return view("home", { title: "Hello" });
+```
+
+By default, `ExpressAdapter` uses:
+
+- `views/` as templates directory
+- `public/` as static assets directory (`/app.css`, `/images/logo.png`, etc.)
+- `.html` as the template extension for filesystem templates
+
+## Custom Views/Public Paths
+
+```typescript
+import path from "path";
+
+const adapter = new ExpressAdapter(expressApp, {
+  templateEngine: {
+    viewsPath: path.join(process.cwd(), "resources/views"),
+    fileExtension: ".html",
+  },
+  staticFiles: {
+    publicPath: path.join(process.cwd(), "resources/public"),
+    urlPrefix: "/",
+  },
+});
 ```
 
 ## Native Express Engines (pug, hbs, ejs)
