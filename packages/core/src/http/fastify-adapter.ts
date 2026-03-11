@@ -1,40 +1,42 @@
-import { HttpAdapter, HttpRequestHandler, HttpServerOptions } from "./types";
-import { HttpMethod } from "@xtaskjs/common";
-
-const SUPPORTED_METHODS: HttpMethod[] = ["GET", "POST", "PATCH", "DELETE"];
+import {
+	HttpAdapter,
+	HttpRequestHandler,
+	HttpRequestLike,
+	HttpResponseLike,
+	HttpServerOptions,
+	HttpViewResult,
+} from "./types";
 
 export class FastifyAdapter implements HttpAdapter {
-  public readonly type = "fastify" as const;
-  private readonly app: any;
+	public readonly type = "fastify" as const;
+	private readonly delegate: HttpAdapter;
 
-  constructor(app: any) {
-    if (!app || typeof app.route !== "function" || typeof app.listen !== "function") {
-      throw new Error("FastifyAdapter requires a valid fastify instance");
-    }
-    this.app = app;
-  }
+	constructor(app: any, options?: any) {
+		const fastifyHttpPackage = require("@xtaskjs/fastify-http") as {
+			FastifyAdapter: new (app: any, options?: any) => HttpAdapter;
+		};
+		this.delegate = new fastifyHttpPackage.FastifyAdapter(app, options);
+	}
 
-  registerRequestHandler(handler: HttpRequestHandler): void {
-    this.app.route({
-      method: ["GET", "POST", "PATCH", "DELETE"],
-      url: "*",
-      handler: async (request: any, reply: any) => {
-        const method = (request.method || "GET").toUpperCase() as HttpMethod;
-        if (!SUPPORTED_METHODS.includes(method)) {
-          reply.code(405).send("Method Not Allowed");
-          return;
-        }
-        const path = request.url || "/";
-        await handler(method, path, request, reply);
-      },
-    });
-  }
+	registerRequestHandler(handler: HttpRequestHandler): void {
+		this.delegate.registerRequestHandler(handler);
+	}
 
-  async listen(options: Required<HttpServerOptions>): Promise<void> {
-    await this.app.listen({ port: options.port, host: options.host });
-  }
+	renderView = async (
+		req: HttpRequestLike,
+		res: HttpResponseLike,
+		payload: HttpViewResult
+	): Promise<void> => {
+		if (typeof this.delegate.renderView === "function") {
+			await this.delegate.renderView(req, res, payload);
+		}
+	};
 
-  async close(): Promise<void> {
-    await this.app.close();
-  }
+	async listen(options: Required<HttpServerOptions>): Promise<void> {
+		await this.delegate.listen(options);
+	}
+
+	async close(): Promise<void> {
+		await this.delegate.close();
+	}
 }

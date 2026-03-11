@@ -35,9 +35,11 @@
 /src/packages/core/coverage
 /src/packages/common/coverage
 /src/packages/express-http/coverage
+/src/packages/fastify-http/coverage
 /packages/core/coverage
 /packages/common/coverage
 /packages/express-http/coverage
+/packages/fastify-http/coverage
 
 #Dist
 packages/common/dist/

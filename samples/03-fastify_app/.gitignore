@@ -27,5 +27,5 @@
 #Jest
 /src/.tmp
 /tmp
-/src/packages/**/.tmp
-/src/packages/core/.tmp
+/src/pacakges/**/.tmp
+/src/pacakges/core/.tmp

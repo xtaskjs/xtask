@@ -42,6 +42,12 @@ For Express support, install the adapter package:
 npm install @xtaskjs/express-http
 ```
 
+For Fastify support, install the adapter package:
+
+```bash
+npm install @xtaskjs/fastify-http
+```
+
 ## Template Engines
 
 Controllers can return rendered views with `view(...)`:

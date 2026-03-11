@@ -2,7 +2,6 @@ import { HttpMethod } from "@xtaskjs/common";
 import { Container } from "../di";
 import { Kernel } from "../kernel";
 import { ApplicationLifeCycle } from "../server";
-import { FastifyAdapter } from "./fastify-adapter";
 import { NodeHttpAdapter } from "./node-http-adapter";
 import {
   HttpAdapter,
@@ -55,6 +54,7 @@ const isViewResult = (payload: any): payload is HttpViewResult => {
 };
 
 type ExpressAdapterConstructor = new (app: any) => HttpAdapter;
+type FastifyAdapterConstructor = new (app: any) => HttpAdapter;
 
 const resolveExpressAdapter = (): ExpressAdapterConstructor => {
   try {
@@ -75,6 +75,32 @@ const resolveExpressAdapter = (): ExpressAdapterConstructor => {
     if (missingPackage) {
       throw new Error(
         "express adapter requires @xtaskjs/express-http. Install it with: npm install @xtaskjs/express-http"
+      );
+    }
+
+    throw error;
+  }
+};
+
+const resolveFastifyAdapter = (): FastifyAdapterConstructor => {
+  try {
+    const fastifyHttpPackage = require("@xtaskjs/fastify-http") as {
+      FastifyAdapter?: FastifyAdapterConstructor;
+    };
+
+    if (typeof fastifyHttpPackage.FastifyAdapter !== "function") {
+      throw new Error("@xtaskjs/fastify-http does not export FastifyAdapter");
+    }
+
+    return fastifyHttpPackage.FastifyAdapter;
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/fastify-http");
+
+    if (missingPackage) {
+      throw new Error(
+        "fastify adapter requires @xtaskjs/fastify-http. Install it with: npm install @xtaskjs/fastify-http"
       );
     }
 
@@ -216,6 +242,7 @@ export function createHttpAdapter(
   }
 
   if (adapter === "fastify") {
+    const FastifyAdapter = resolveFastifyAdapter();
     return new FastifyAdapter(adapterInstance);
   }
 
