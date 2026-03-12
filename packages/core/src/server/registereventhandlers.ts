@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import { ApplicationLifeCycle } from "./application-lifecycle";
-import { EventHandlerMeta } from "@xtaskjs/common";
-import { RunnerMeta } from "../../../common/src/types/runnermeta";
+import { EventHandlerMeta, RunnerMeta } from "@xtaskjs/common";
 import { HANDLERS_KEY, RUNNERS_KEY } from "@xtaskjs/common";
 
 

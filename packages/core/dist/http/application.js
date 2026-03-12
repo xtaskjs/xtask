@@ -171,17 +171,27 @@ class XTaskHttpApplication {
         }
     }
     async close() {
-        await this.lifecycle.emit("stopping");
+        if (typeof this.lifecycle.emit === "function") {
+            await this.lifecycle.emit("stopping");
+        }
         await this.adapter.close();
-        await this.lifecycle.stop();
+        if (typeof this.lifecycle.stop === "function") {
+            await this.lifecycle.stop();
+        }
         const shutdownTypeOrmIntegration = resolveTypeOrmShutdown();
         if (shutdownTypeOrmIntegration) {
             await shutdownTypeOrmIntegration();
         }
-        const container = await this.kernel.getContainer();
-        container.destroy();
-        (0, di_1.clearCurrentContainer)();
-        await this.lifecycle.emit("stopped");
+        if (this.kernel && typeof this.kernel.getContainer === "function") {
+            const container = await this.kernel.getContainer();
+            if (container && typeof container.destroy === "function") {
+                container.destroy();
+            }
+            (0, di_1.clearCurrentContainer)();
+        }
+        if (typeof this.lifecycle.emit === "function") {
+            await this.lifecycle.emit("stopped");
+        }
     }
     getKernel() {
         return this.kernel;

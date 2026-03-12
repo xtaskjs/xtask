@@ -9,8 +9,8 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths":{
-      "@xtaskjs/common": ["../../dist/packages/common"],
-      "@xtaskjs/common/*": ["../../dist/packages/common/*"]
+      "@xtaskjs/common": ["../common/dist"],
+      "@xtaskjs/common/*": ["../common/dist/*"]
     },
     "declaration": true
   },
