@@ -12,7 +12,8 @@
       "@xtaskjs/common": ["packages/common"],
       "@xtaskjs/core": ["packages/core"],
       "@xtaskjs/express-http": ["packages/express-http"],
-      "@xtaskjs/fastify-http": ["packages/fastify-http"]
+      "@xtaskjs/fastify-http": ["packages/fastify-http"],
+      "@xtaskjs/typeorm": ["packages/typeorm"]
     }
   },
   "include": ["packages/**/*","packages/**/**/*","packages/**/**/**/*","samples/**/*","samples/**/**/*"],

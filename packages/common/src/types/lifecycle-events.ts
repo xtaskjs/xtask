@@ -4,6 +4,8 @@ export type LifeCyclePhase =
 | "contextPrepared"
 | "serverStarting"
 | "serverStarted"
+| "stopping"
+| "stopped"
 | "ready"
 | "error"
 | "memoryReport"

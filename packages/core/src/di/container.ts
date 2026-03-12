@@ -16,6 +16,7 @@ export class Container{
     private nameToType = new Map<string, any>();
     private typeToNames = new Map<any, string[]>();
     private primaryBeans = new Map<any, any>();
+    private namedInstances = new Map<string, any>();
     private resolving = new Set<any>();
     public managedInstances : ManagedInstance[] = [];
     private readonly ignoredDirs = new Set([
@@ -151,11 +152,22 @@ export class Container{
     }
 
     public getByName<T>(name: string): T {
+        if (this.namedInstances.has(name)) {
+            return this.namedInstances.get(name) as T;
+        }
+
         const type = this.nameToType.get(name);
         if (!type) {
             throw new Error(`No component found with name: ${name}`);
         }
         return this.get(type);
+    }
+
+    public registerNamedInstance<T>(name: string, instance: T): void {
+        if (!name) {
+            throw new Error("Named instance requires a non-empty name");
+        }
+        this.namedInstances.set(name, instance);
     }
 
     private getWithQualifier<T>(type: new (...args: any[]) => T, qualifier?: string): T {
@@ -198,6 +210,7 @@ export class Container{
     destroy() {
         this.managedInstances.reverse().forEach((m) => m.preDestroy?.());
         this.managedInstances = [];
+        this.namedInstances.clear();
         this.singletons.clear();
         this.providers.clear();
     }

@@ -1,5 +1,5 @@
 import { HttpMethod } from "@xtaskjs/common";
-import { Container } from "../di";
+import { clearCurrentContainer, Container, setCurrentContainer } from "../di";
 import { Kernel } from "../kernel";
 import { ApplicationLifeCycle } from "../server";
 import { NodeHttpAdapter } from "./node-http-adapter";
@@ -56,6 +56,9 @@ const isViewResult = (payload: any): payload is HttpViewResult => {
 type ExpressAdapterConstructor = new (app: any) => HttpAdapter;
 type FastifyAdapterConstructor = new (app: any) => HttpAdapter;
 
+type TypeOrmInitializeFn = (container: Container) => Promise<void>;
+type TypeOrmShutdownFn = () => Promise<void>;
+
 const resolveExpressAdapter = (): ExpressAdapterConstructor => {
   try {
     const expressHttpPackage = require("@xtaskjs/express-http") as {
@@ -106,6 +109,50 @@ const resolveFastifyAdapter = (): FastifyAdapterConstructor => {
 
     throw error;
   }
+};
+
+const resolveTypeOrmInitialize = (): TypeOrmInitializeFn | undefined => {
+  try {
+    const typeormPackage = require("@xtaskjs/typeorm") as {
+      initializeTypeOrmIntegration?: TypeOrmInitializeFn;
+    };
+
+    if (typeof typeormPackage.initializeTypeOrmIntegration === "function") {
+      return typeormPackage.initializeTypeOrmIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/typeorm");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveTypeOrmShutdown = (): TypeOrmShutdownFn | undefined => {
+  try {
+    const typeormPackage = require("@xtaskjs/typeorm") as {
+      shutdownTypeOrmIntegration?: TypeOrmShutdownFn;
+    };
+
+    if (typeof typeormPackage.shutdownTypeOrmIntegration === "function") {
+      return typeormPackage.shutdownTypeOrmIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/typeorm");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
 };
 
 export class XTaskHttpApplication {
@@ -208,7 +255,32 @@ export class XTaskHttpApplication {
   }
 
   async close(): Promise<void> {
+    if (typeof (this.lifecycle as any).emit === "function") {
+      await (this.lifecycle as any).emit("stopping");
+    }
+
     await this.adapter.close();
+
+    if (typeof (this.lifecycle as any).stop === "function") {
+      await (this.lifecycle as any).stop();
+    }
+
+    const shutdownTypeOrmIntegration = resolveTypeOrmShutdown();
+    if (shutdownTypeOrmIntegration) {
+      await shutdownTypeOrmIntegration();
+    }
+
+    if (this.kernel && typeof (this.kernel as any).getContainer === "function") {
+      const container = await (this.kernel as any).getContainer();
+      if (container && typeof container.destroy === "function") {
+        container.destroy();
+      }
+      clearCurrentContainer();
+    }
+
+    if (typeof (this.lifecycle as any).emit === "function") {
+      await (this.lifecycle as any).emit("stopped");
+    }
   }
 
   getKernel(): Kernel {
@@ -254,5 +326,12 @@ export async function registerContainerInLifecycle(
   lifecycle: ApplicationLifeCycle
 ): Promise<void> {
   const container: Container = await kernel.getContainer();
+  setCurrentContainer(container);
+
+  const initializeTypeOrmIntegration = resolveTypeOrmInitialize();
+  if (initializeTypeOrmIntegration) {
+    await initializeTypeOrmIntegration(container);
+  }
+
   container.registerLifeCycleListeners(lifecycle);
 }

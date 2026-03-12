@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "paths": {
+      "@xtaskjs/common": ["../../packages/common"],
+      "@xtaskjs/core": ["../../packages/core"],
+      "@xtaskjs/fastify-http": ["../../packages/fastify-http"],
+      "@xtaskjs/typeorm": ["../../packages/typeorm"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -8,12 +8,13 @@
   ],
   "scripts": {
     "build": "npm run clean; tsc",
-    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common && npm run test --prefix packages/express-http && npm run test --prefix packages/fastify-http",
-    "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common && npm run test:coverage --prefix packages/express-http && npm run test:coverage --prefix packages/fastify-http",
+    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common && npm run test --prefix packages/express-http && npm run test --prefix packages/fastify-http && npm run test --prefix packages/typeorm",
+    "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common && npm run test:coverage --prefix packages/express-http && npm run test:coverage --prefix packages/fastify-http && npm run test:coverage --prefix packages/typeorm",
     "coverage:open:core": "npm run coverage:open --prefix packages/core",
     "coverage:open:common": "npm run coverage:open --prefix packages/common",
     "coverage:open:express-http": "npm run coverage:open --prefix packages/express-http",
     "coverage:open:fastify-http": "npm run coverage:open --prefix packages/fastify-http",
+    "coverage:open:typeorm": "npm run coverage:open --prefix packages/typeorm",
     "benchmark:startup": "npm run benchmark:startup --prefix packages/core",
     "clean": "rm -r dist"
   },
@@ -22,6 +23,7 @@
   "dependencies": {
     "express": "^5.1.0",
     "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.28",
     "ts-morph": "^27.0.0"
   },
   "devDependencies": {
