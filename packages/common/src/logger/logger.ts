@@ -1,15 +1,6 @@
-import { Service } from '../../../core/src/di/stereotypes';
-import { PostConstruct } from '../../../core/src/di/lifecycle';
-
-@Service({ scope: "singleton" })
 export class Logger {
 
     constructor() {}
-    
-  @PostConstruct()
-  init() {
-    console.log("Logger Initialized");
-  }
 
     
     info(message: string): void {

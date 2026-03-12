@@ -1,0 +1,11 @@
+import { ControllerMetadata, ControllerOptions, GuardLike, MiddlewareLike, PipeLike, RouteMetadata, RouteOptions } from "../../../types";
+export declare function Controller(pathOrOptions?: string | ControllerOptions): ClassDecorator;
+export declare const Get: (pathOrOptions?: string | RouteOptions) => MethodDecorator;
+export declare const Post: (pathOrOptions?: string | RouteOptions) => MethodDecorator;
+export declare const Patch: (pathOrOptions?: string | RouteOptions) => MethodDecorator;
+export declare const Delete: (pathOrOptions?: string | RouteOptions) => MethodDecorator;
+export declare function UseMiddlewares(...middlewares: MiddlewareLike[]): MethodDecorator & ClassDecorator;
+export declare function UseGuards(...guards: GuardLike[]): MethodDecorator & ClassDecorator;
+export declare function UsePipes(...pipes: PipeLike[]): MethodDecorator & ClassDecorator;
+export declare function getControllerMetadata(target: any): ControllerMetadata | undefined;
+export declare function getRouteMetadata(target: any): RouteMetadata[];

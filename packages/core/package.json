@@ -4,8 +4,8 @@
   "description": "xtaskjs - modern, fast, node.js web framework (@core)",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.com",
-  "main": "index.ts",
-  "types": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": " jest --passWithNoTests",

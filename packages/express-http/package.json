@@ -4,8 +4,8 @@
   "description": "xtaskjs express http adapter",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.com",
-  "main": "index.ts",
-  "types": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": " jest --passWithNoTests",

@@ -1,4 +1,4 @@
-import { RunnerMeta } from '@xtaskjs/core';
+import { RunnerMeta } from '../../../types/runnermeta';
 import { RUNNERS_KEY } from './constants';
 
 export function ApplicationRunner(priority = 0): MethodDecorator {
