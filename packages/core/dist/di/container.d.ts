@@ -11,6 +11,7 @@ export declare class Container {
     private resolving;
     managedInstances: ManagedInstance[];
     private readonly ignoredDirs;
+    constructor();
     autoload(baseDir?: string): Promise<void>;
     registerWithName(target: any, meta: ComponentMetadata, name?: string): void;
     register(target: any, meta: ComponentMetadata): void;

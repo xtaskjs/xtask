@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Autowired = void 0;
 exports.AutoWired = AutoWired;
 exports.getAutoWiredProperties = getAutoWiredProperties;
 require("reflect-metadata");
@@ -38,3 +39,4 @@ function getAutoWiredProperties(target) {
     }
     return properties;
 }
+exports.Autowired = AutoWired;

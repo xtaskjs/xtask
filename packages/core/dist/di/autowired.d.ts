@@ -9,3 +9,4 @@ export declare function AutoWired(options?: {
     qualifier?: string;
 }): (target: any, propertyKey: string | symbol) => void;
 export declare function getAutoWiredProperties(target: any): Map<string | symbol, AutoWiredMetaData>;
+export declare const Autowired: typeof AutoWired;

@@ -36,10 +36,16 @@
 /src/packages/common/coverage
 /src/packages/express-http/coverage
 /src/packages/fastify-http/coverage
+/src/packages/typeorm/coverage
 /packages/core/coverage
 /packages/common/coverage
 /packages/express-http/coverage
 /packages/fastify-http/coverage
+/packages/typeorm/coverage
 
 #Dist
 packages/common/dist/
+packages/core/dist/
+packages/express-http/dist/
+packages/fastify-http/dist/
+packages/typeorm/dist/  

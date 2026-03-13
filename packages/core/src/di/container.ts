@@ -7,7 +7,7 @@ import { ManagedInstance } from "./managedinstance";
 import { getAutoWiredProperties } from "./autowired";
 import { getConstructorQualifiers } from "./qualifier";
 import { registerControllerRoutes, registerEventHandlers} from "../server";
-import { CONTROLLERS_KEY, HANDLERS_KEY, ROUTES_KEY, RUNNERS_KEY } from "@xtaskjs/common";
+import { CONTROLLERS_KEY, HANDLERS_KEY, Logger, ROUTES_KEY, RUNNERS_KEY } from "@xtaskjs/common";
 
 
 export class Container{
@@ -27,6 +27,10 @@ export class Container{
         "build",
         "out",
     ]);
+
+    constructor() {
+        this.registerWithName(Logger, { scope: "singleton" }, Logger.name);
+    }
 
     // SCAN FOLDER BASE DIR FOR @Service() AND @Component()
 

@@ -53,3 +53,5 @@ export function getAutoWiredProperties(target: any): Map<string | symbol, AutoWi
     return properties;
     
 }
+
+export const Autowired = AutoWired;

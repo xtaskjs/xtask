@@ -61,6 +61,7 @@ class Container {
             "build",
             "out",
         ]);
+        this.registerWithName(common_1.Logger, { scope: "singleton" }, common_1.Logger.name);
     }
     // SCAN FOLDER BASE DIR FOR @Service() AND @Component()
     async autoload(baseDir = "packages") {

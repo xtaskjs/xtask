@@ -1,4 +1,4 @@
 export * from "./application-lifecycle";
 export * from "./registereventhandlers";
 export * from "./registercontrollers";
-export * from "../../../common/src/types/runnermeta";
+export type { RunnerMeta } from "@xtaskjs/common";
