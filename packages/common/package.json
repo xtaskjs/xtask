@@ -13,8 +13,14 @@
       "default": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "build": "rm -rf dist && tsc",
+    "prepack": "npm run build",
     "test": " jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"

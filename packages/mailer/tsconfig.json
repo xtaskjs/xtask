@@ -9,8 +9,8 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
-      "@xtaskjs/core": ["../../dist/packages/core"],
-      "@xtaskjs/core/*": ["../../dist/packages/core/*"]
+      "@xtaskjs/core": ["../core/dist"],
+      "@xtaskjs/core/*": ["../core/dist/*"]
     },
     "declaration": true
   },

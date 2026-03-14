@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "paths": {
+      "@xtaskjs/common": ["../../packages/common/src/index.ts"],
+      "@xtaskjs/common/*": ["../../packages/common/src/*"],
+      "@xtaskjs/core": ["../../packages/core/src/index.ts"],
+      "@xtaskjs/core/*": ["../../packages/core/src/*"],
+      "@xtaskjs/express-http": ["../../packages/express-http/src/index.ts"],
+      "@xtaskjs/express-http/*": ["../../packages/express-http/src/*"],
+      "@xtaskjs/mailer": ["../../packages/mailer/src/index.ts"],
+      "@xtaskjs/mailer/*": ["../../packages/mailer/src/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -18,6 +18,9 @@
     "coverage:open:security": "npm run coverage:open --prefix packages/security",
     "coverage:open:mailer": "npm run coverage:open --prefix packages/mailer",
     "benchmark:startup": "npm run benchmark:startup --prefix packages/core",
+    "release:order": "node ./scripts/release-packages.js list",
+    "pack:packages": "node ./scripts/release-packages.js pack",
+    "publish:packages": "node ./scripts/release-packages.js publish",
     "clean": "rm -r dist"
   },
   "author": "",

@@ -9,10 +9,10 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
-      "@xtaskjs/common": ["../../dist/packages/common"],
-      "@xtaskjs/common/*": ["../../dist/packages/common/*"],
-      "@xtaskjs/core": ["../../dist/packages/core"],
-      "@xtaskjs/core/*": ["../../dist/packages/core/*"]
+      "@xtaskjs/common": ["../common/dist"],
+      "@xtaskjs/common/*": ["../common/dist/*"],
+      "@xtaskjs/core": ["../core/dist"],
+      "@xtaskjs/core/*": ["../core/dist/*"]
     },
     "declaration": true
   },

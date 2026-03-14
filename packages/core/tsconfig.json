@@ -9,8 +9,8 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths":{
-      "@xtaskjs/common": ["../../dist/packages/common"],
-      "@xtaskjs/common/*": ["../../dist/packages/common/*"],
+      "@xtaskjs/common": ["../common/dist"],
+      "@xtaskjs/common/*": ["../common/dist/*"],
       "@xtaskjs/express-http": ["../express-http/src"],
       "@xtaskjs/express-http/*": ["../express-http/src/*"],
       "@xtaskjs/fastify-http": ["../fastify-http/src"],

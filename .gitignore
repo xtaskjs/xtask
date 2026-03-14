@@ -16,6 +16,7 @@
 # Environment variables
 /src/.env
 /.env
+/samples/**/.env
 
 # Miscelaneaneous
 /src/.npmrc
