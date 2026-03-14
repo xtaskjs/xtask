@@ -8,13 +8,14 @@
   ],
   "scripts": {
     "build": "npm run clean; tsc",
-    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common && npm run test --prefix packages/express-http && npm run test --prefix packages/fastify-http && npm run test --prefix packages/typeorm",
-    "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common && npm run test:coverage --prefix packages/express-http && npm run test:coverage --prefix packages/fastify-http && npm run test:coverage --prefix packages/typeorm",
+    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common && npm run test --prefix packages/express-http && npm run test --prefix packages/fastify-http && npm run test --prefix packages/typeorm && npm run test --prefix packages/security",
+    "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common && npm run test:coverage --prefix packages/express-http && npm run test:coverage --prefix packages/fastify-http && npm run test:coverage --prefix packages/typeorm && npm run test:coverage --prefix packages/security",
     "coverage:open:core": "npm run coverage:open --prefix packages/core",
     "coverage:open:common": "npm run coverage:open --prefix packages/common",
     "coverage:open:express-http": "npm run coverage:open --prefix packages/express-http",
     "coverage:open:fastify-http": "npm run coverage:open --prefix packages/fastify-http",
     "coverage:open:typeorm": "npm run coverage:open --prefix packages/typeorm",
+    "coverage:open:security": "npm run coverage:open --prefix packages/security",
     "benchmark:startup": "npm run benchmark:startup --prefix packages/core",
     "clean": "rm -r dist"
   },

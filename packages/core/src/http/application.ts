@@ -2,6 +2,7 @@ import { HttpMethod } from "@xtaskjs/common";
 import { clearCurrentContainer, Container, setCurrentContainer } from "../di";
 import { Kernel } from "../kernel";
 import { ApplicationLifeCycle } from "../server";
+import { HttpError } from "./errors";
 import { NodeHttpAdapter } from "./node-http-adapter";
 import {
   HttpAdapter,
@@ -58,6 +59,8 @@ type FastifyAdapterConstructor = new (app: any) => HttpAdapter;
 
 type TypeOrmInitializeFn = (container: Container) => Promise<void>;
 type TypeOrmShutdownFn = () => Promise<void>;
+type SecurityInitializeFn = (container: Container) => Promise<void>;
+type SecurityShutdownFn = () => Promise<void>;
 
 const resolveExpressAdapter = (): ExpressAdapterConstructor => {
   try {
@@ -155,6 +158,50 @@ const resolveTypeOrmShutdown = (): TypeOrmShutdownFn | undefined => {
   return undefined;
 };
 
+const resolveSecurityInitialize = (): SecurityInitializeFn | undefined => {
+  try {
+    const securityPackage = require("@xtaskjs/security") as {
+      initializeSecurityIntegration?: SecurityInitializeFn;
+    };
+
+    if (typeof securityPackage.initializeSecurityIntegration === "function") {
+      return securityPackage.initializeSecurityIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/security");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveSecurityShutdown = (): SecurityShutdownFn | undefined => {
+  try {
+    const securityPackage = require("@xtaskjs/security") as {
+      shutdownSecurityIntegration?: SecurityShutdownFn;
+    };
+
+    if (typeof securityPackage.shutdownSecurityIntegration === "function") {
+      return securityPackage.shutdownSecurityIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/security");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
 export class XTaskHttpApplication {
   private readonly adapter: HttpAdapter;
   private readonly lifecycle: ApplicationLifeCycle;
@@ -232,6 +279,24 @@ export class XTaskHttpApplication {
         return;
       }
 
+      if (error instanceof HttpError || typeof error?.statusCode === "number") {
+        const statusCode = error instanceof HttpError ? error.statusCode : error.statusCode;
+        const payload =
+          error instanceof HttpError && error.payload !== undefined
+            ? error.payload
+            : { message: error?.message || "Request failed" };
+
+        if (typeof res.status === "function" && typeof res.json === "function") {
+          res.status(statusCode).json(payload);
+          return;
+        }
+
+        res.statusCode = statusCode;
+        res.setHeader?.("content-type", "application/json");
+        res.end?.(JSON.stringify(payload));
+        return;
+      }
+
       if (typeof res.status === "function" && typeof res.json === "function") {
         res.status(500).json({ message: "Internal Server Error", error: error?.message });
         return;
@@ -268,6 +333,11 @@ export class XTaskHttpApplication {
     const shutdownTypeOrmIntegration = resolveTypeOrmShutdown();
     if (shutdownTypeOrmIntegration) {
       await shutdownTypeOrmIntegration();
+    }
+
+    const shutdownSecurityIntegration = resolveSecurityShutdown();
+    if (shutdownSecurityIntegration) {
+      await shutdownSecurityIntegration();
     }
 
     if (this.kernel && typeof (this.kernel as any).getContainer === "function") {
@@ -331,6 +401,11 @@ export async function registerContainerInLifecycle(
   const initializeTypeOrmIntegration = resolveTypeOrmInitialize();
   if (initializeTypeOrmIntegration) {
     await initializeTypeOrmIntegration(container);
+  }
+
+  const initializeSecurityIntegration = resolveSecurityInitialize();
+  if (initializeSecurityIntegration) {
+    await initializeSecurityIntegration(container);
   }
 
   container.registerLifeCycleListeners(lifecycle);

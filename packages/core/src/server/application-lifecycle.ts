@@ -92,6 +92,13 @@ export class ApplicationLifeCycle {
             args,
             controller: route.controller,
             handler: route.handler,
+            request: args[0],
+            response: args[1],
+            state: {},
+            auth: {
+                isAuthenticated: false,
+                roles: [],
+            },
         };
 
         for (const guard of route.guards) {

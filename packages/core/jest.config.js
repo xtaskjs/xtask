@@ -1,12 +1,13 @@
-const { createDefaultPreset } = require("ts-jest");
-
-const tsJestTransformCfg = createDefaultPreset().transform;
-
 /** @type {import("jest").Config} **/
 module.exports = {
   testEnvironment: "node",
   transform: {
-    ...tsJestTransformCfg,
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        tsconfig: "<rootDir>/tsconfig.test.json",
+      },
+    ],
   },
   moduleNameMapper: {
     "^@xtaskjs/common$": "<rootDir>/../common/src/index.ts",
@@ -14,6 +15,8 @@ module.exports = {
     "^@xtaskjs/express-http$": "<rootDir>/../express-http/src/index.ts",
     "^@xtaskjs/express-http/(.*)$": "<rootDir>/../express-http/src/$1",
     "^@xtaskjs/fastify-http$": "<rootDir>/../fastify-http/src/index.ts",
-    "^@xtaskjs/fastify-http/(.*)$": "<rootDir>/../fastify-http/src/$1"
+    "^@xtaskjs/fastify-http/(.*)$": "<rootDir>/../fastify-http/src/$1",
+    "^@xtaskjs/security$": "<rootDir>/../security/src/index.ts",
+    "^@xtaskjs/security/(.*)$": "<rootDir>/../security/src/$1"
   },
 };

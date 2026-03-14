@@ -6,6 +6,19 @@ export interface RouteExecutionContext {
   args: any[];
   controller?: any;
   handler?: PropertyKey;
+  request?: any;
+  response?: any;
+  state: Record<string, any>;
+  auth: RouteAuthenticationContext;
+}
+
+export interface RouteAuthenticationContext {
+  isAuthenticated: boolean;
+  strategy?: string;
+  token?: string;
+  user?: any;
+  claims?: Record<string, any>;
+  roles: string[];
 }
 
 export type MiddlewareFn = (

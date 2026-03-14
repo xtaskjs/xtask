@@ -9,11 +9,18 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@xtaskjs/common": ["packages/common"],
-      "@xtaskjs/core": ["packages/core"],
-      "@xtaskjs/express-http": ["packages/express-http"],
-      "@xtaskjs/fastify-http": ["packages/fastify-http"],
-      "@xtaskjs/typeorm": ["packages/typeorm"]
+      "@xtaskjs/common": ["packages/common/src/index.ts"],
+      "@xtaskjs/common/*": ["packages/common/src/*"],
+      "@xtaskjs/core": ["packages/core/src/index.ts"],
+      "@xtaskjs/core/*": ["packages/core/src/*"],
+      "@xtaskjs/express-http": ["packages/express-http/src/index.ts"],
+      "@xtaskjs/express-http/*": ["packages/express-http/src/*"],
+      "@xtaskjs/fastify-http": ["packages/fastify-http/src/index.ts"],
+      "@xtaskjs/fastify-http/*": ["packages/fastify-http/src/*"],
+      "@xtaskjs/typeorm": ["packages/typeorm/src/index.ts"],
+      "@xtaskjs/typeorm/*": ["packages/typeorm/src/*"],
+      "@xtaskjs/security": ["packages/security/src/index.ts"],
+      "@xtaskjs/security/*": ["packages/security/src/*"]
     }
   },
   "include": ["packages/**/*","packages/**/**/*","packages/**/**/**/*","samples/**/*","samples/**/**/*"],

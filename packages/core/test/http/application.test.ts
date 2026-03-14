@@ -3,6 +3,7 @@ import {
   createHttpAdapter,
   registerContainerInLifecycle,
 } from "../../src/http/application";
+import { ForbiddenError } from "../../src/http/errors";
 import { view } from "../../src/http/types";
 
 class FakeNodeAdapter {
@@ -135,6 +136,24 @@ describe("XTaskHttpApplication", () => {
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: "Internal Server Error", error: "boom" });
+  });
+
+  it("should map HttpError instances to their status code", async () => {
+    const adapter = new FakeNodeAdapter();
+    const lifecycle = {
+      dispatchControllerRoute: jest.fn(async () => {
+        throw new ForbiddenError("nope", { message: "Forbidden", code: "AUTH_FORBIDDEN" });
+      }),
+    } as any;
+    new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
+
+    const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
+
+    await requestHandler("GET", "/secure", {}, res);
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({ message: "Forbidden", code: "AUTH_FORBIDDEN" });
   });
 
   it("should log startup with adapter and url", async () => {

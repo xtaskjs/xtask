@@ -53,4 +53,42 @@ describe("Controller route integration", () => {
     expect(result).toBe("HELLO JOHN");
     expect(callOrder).toEqual(["guard", "pipe", "middleware", "handler"]);
   });
+
+  it("should expose request, response and auth state in route context", async () => {
+    const contexts: any[] = [];
+    const guard = (context) => {
+      context.auth.isAuthenticated = true;
+      context.auth.roles.push("admin");
+      contexts.push(context);
+      return true;
+    };
+
+    class UsersController {
+      hello() {
+        return "ok";
+      }
+    }
+
+    Controller("users")(UsersController);
+    UseGuards(guard)(UsersController);
+
+    const helloDescriptor = Object.getOwnPropertyDescriptor(UsersController.prototype, "hello");
+    Get("/hello")(UsersController.prototype, "hello", helloDescriptor);
+
+    const app = new ApplicationLifeCycle();
+    const controller = new UsersController();
+    const request = { headers: { authorization: "Bearer token" } };
+    const response = { statusCode: 200 };
+
+    registerControllerRoutes(controller, app);
+    await app.dispatchControllerRoute("GET", "/users/hello", request, response);
+
+    expect(contexts[0].request).toBe(request);
+    expect(contexts[0].response).toBe(response);
+    expect(contexts[0].auth).toEqual({
+      isAuthenticated: true,
+      roles: ["admin"],
+    });
+    expect(contexts[0].state).toEqual({});
+  });
 });
