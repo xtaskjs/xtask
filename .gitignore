@@ -37,11 +37,15 @@
 /src/packages/express-http/coverage
 /src/packages/fastify-http/coverage
 /src/packages/typeorm/coverage
+/src/packages/security/coverage
+/src/packages/mailer/coverage
 /packages/core/coverage
 /packages/common/coverage
 /packages/express-http/coverage
 /packages/fastify-http/coverage
 /packages/typeorm/coverage
+/packages/security/coverage
+/packages/mailer/coverage
 
 #Dist
 packages/common/dist/
@@ -49,3 +53,5 @@ packages/core/dist/
 packages/express-http/dist/
 packages/fastify-http/dist/
 packages/typeorm/dist/  
+packages/security/dist/
+packages/mailer/dist/

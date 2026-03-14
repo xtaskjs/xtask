@@ -61,6 +61,8 @@ type TypeOrmInitializeFn = (container: Container) => Promise<void>;
 type TypeOrmShutdownFn = () => Promise<void>;
 type SecurityInitializeFn = (container: Container) => Promise<void>;
 type SecurityShutdownFn = () => Promise<void>;
+type MailerInitializeFn = (container: Container) => Promise<void>;
+type MailerShutdownFn = () => Promise<void>;
 
 const resolveExpressAdapter = (): ExpressAdapterConstructor => {
   try {
@@ -193,6 +195,50 @@ const resolveSecurityShutdown = (): SecurityShutdownFn | undefined => {
     const missingPackage =
       error?.code === "MODULE_NOT_FOUND" ||
       String(error?.message || "").includes("@xtaskjs/security");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveMailerInitialize = (): MailerInitializeFn | undefined => {
+  try {
+    const mailerPackage = require("@xtaskjs/mailer") as {
+      initializeMailerIntegration?: MailerInitializeFn;
+    };
+
+    if (typeof mailerPackage.initializeMailerIntegration === "function") {
+      return mailerPackage.initializeMailerIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/mailer");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
+  try {
+    const mailerPackage = require("@xtaskjs/mailer") as {
+      shutdownMailerIntegration?: MailerShutdownFn;
+    };
+
+    if (typeof mailerPackage.shutdownMailerIntegration === "function") {
+      return mailerPackage.shutdownMailerIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/mailer");
 
     if (!missingPackage) {
       throw error;
@@ -340,6 +386,11 @@ export class XTaskHttpApplication {
       await shutdownSecurityIntegration();
     }
 
+    const shutdownMailerIntegration = resolveMailerShutdown();
+    if (shutdownMailerIntegration) {
+      await shutdownMailerIntegration();
+    }
+
     if (this.kernel && typeof (this.kernel as any).getContainer === "function") {
       const container = await (this.kernel as any).getContainer();
       if (container && typeof container.destroy === "function") {
@@ -406,6 +457,11 @@ export async function registerContainerInLifecycle(
   const initializeSecurityIntegration = resolveSecurityInitialize();
   if (initializeSecurityIntegration) {
     await initializeSecurityIntegration(container);
+  }
+
+  const initializeMailerIntegration = resolveMailerInitialize();
+  if (initializeMailerIntegration) {
+    await initializeMailerIntegration(container);
   }
 
   container.registerLifeCycleListeners(lifecycle);

@@ -5,6 +5,12 @@ import {
 } from "../../src/http/application";
 import { ForbiddenError } from "../../src/http/errors";
 import { view } from "../../src/http/types";
+import { initializeMailerIntegration, shutdownMailerIntegration } from "@xtaskjs/mailer";
+
+jest.mock("@xtaskjs/mailer", () => ({
+  initializeMailerIntegration: jest.fn(async () => {}),
+  shutdownMailerIntegration: jest.fn(async () => {}),
+}));
 
 class FakeNodeAdapter {
   type = "node-http" as const;
@@ -194,6 +200,7 @@ describe("XTaskHttpApplication", () => {
     await app.close();
 
     expect(adapter.close).toHaveBeenCalledTimes(1);
+    expect(shutdownMailerIntegration).toHaveBeenCalledTimes(1);
   });
 
   it("should render a view using adapter renderView", async () => {
@@ -295,6 +302,7 @@ describe("http application factories", () => {
     await registerContainerInLifecycle(kernel, {} as any);
 
     expect(kernel.getContainer).toHaveBeenCalledTimes(1);
+    expect(initializeMailerIntegration).toHaveBeenCalledWith(container);
     expect(registerLifeCycleListeners).toHaveBeenCalledTimes(1);
   });
 });

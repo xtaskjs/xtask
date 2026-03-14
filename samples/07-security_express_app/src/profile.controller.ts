@@ -1,9 +1,13 @@
 import { Auth, Authenticated, Roles } from "@xtaskjs/security";
-import { Controller, Get, Logger } from "@xtaskjs/common";
+import { Controller, Get, Logger, Post } from "@xtaskjs/common";
+import { ProfileMailerService } from "./profile-mailer.service";
 
 @Controller("/me")
 export class ProfileController {
-  constructor(private readonly logger: Logger) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly profileMailer: ProfileMailerService
+  ) {}
 
   @Get("/")
   @Authenticated()
@@ -13,6 +17,19 @@ export class ProfileController {
       message: "Authenticated with JWT",
       user: req.user,
       auth: req.auth,
+      adapter: "express",
+    };
+  }
+
+  @Post("/notify")
+  @Authenticated()
+  async sendProfileEmail(req: any) {
+    this.logger.info("Sending JWT-protected profile email via mailer package");
+    const delivery = await this.profileMailer.sendProfileSummary(req.user, req.body?.to);
+
+    return {
+      message: "Profile email queued",
+      delivery,
       adapter: "express",
     };
   }

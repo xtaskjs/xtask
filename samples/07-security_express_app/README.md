@@ -2,6 +2,8 @@
 
 Express sample application using `@xtaskjs/security` with JWT and JWE authentication.
 
+It also registers `@xtaskjs/mailer` with two named transports: `default` for transactional mail and `notifications` for internal alerts. The sample profile emails are generated through registered mail templates backed by EJS view files in `views/mail`, and if `MAILTRAP_SMTP_USER` and `MAILTRAP_SMTP_PASS` are present, both channels switch to Mailtrap SMTP automatically.
+
 ## Run
 
 ```bash
@@ -27,6 +29,8 @@ From this folder: `samples/07-security_express_app`.
   - http://127.0.0.1:3000/admin/
 - JWE-protected route:
   - http://127.0.0.1:3000/encrypted/
+- Send a protected profile email:
+  - `POST http://127.0.0.1:3000/me/notify`
 
 ## Example Flow
 
@@ -41,6 +45,7 @@ Example with `curl`:
 JWT_TOKEN=$(curl -s http://127.0.0.1:3000/auth/jwt/admin | node -e 'process.stdin.on("data", d => console.log(JSON.parse(d).token))')
 curl -H "Authorization: Bearer $JWT_TOKEN" http://127.0.0.1:3000/me/
 curl -H "Authorization: Bearer $JWT_TOKEN" http://127.0.0.1:3000/admin/
+curl -X POST -H "Authorization: Bearer $JWT_TOKEN" -H "Content-Type: application/json" -d '{"to":"demo@example.com"}' http://127.0.0.1:3000/me/notify
 ```
 
 ## Notes
@@ -49,3 +54,6 @@ curl -H "Authorization: Bearer $JWT_TOKEN" http://127.0.0.1:3000/admin/
 - The sample uses strategy `validate` callbacks to enforce the `security-sample` tenant claim.
 - User lookup is resolved from the XTaskJS DI container inside the validate callback.
 - The JWE example uses compact `dir` + `A256GCM`, matching the current package support.
+- By default, outgoing messages are rendered through Nodemailer's `jsonTransport` so the sample works without SMTP credentials.
+- `/me/notify` renders `profile-summary` and `profile-notification` templates, sends the user-facing message through the `default` transport, and sends an internal alert through the `notifications` transport.
+- The sample registers the `ejs-file` renderer and resolves template names against `views/mail/*.ejs`.

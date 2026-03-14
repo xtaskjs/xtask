@@ -14,7 +14,9 @@
       "@xtaskjs/fastify-http": ["../fastify-http/src"],
       "@xtaskjs/fastify-http/*": ["../fastify-http/src/*"],
       "@xtaskjs/security": ["../security/src"],
-      "@xtaskjs/security/*": ["../security/src/*"]
+      "@xtaskjs/security/*": ["../security/src/*"],
+      "@xtaskjs/mailer": ["../mailer/src"],
+      "@xtaskjs/mailer/*": ["../mailer/src/*"]
     }
   },
   "include": [
@@ -23,6 +25,7 @@
     "../common/src/**/*",
     "../express-http/src/**/*",
     "../fastify-http/src/**/*",
-    "../security/src/**/*"
+    "../security/src/**/*",
+    "../mailer/src/**/*"
   ]
 }

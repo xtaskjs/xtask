@@ -14,6 +14,7 @@
     "@xtaskjs/common": "file:../../packages/common",
     "@xtaskjs/core": "file:../../packages/core",
     "@xtaskjs/express-http": "file:../../packages/express-http",
+    "@xtaskjs/mailer": "file:../../packages/mailer",
     "@xtaskjs/security": "file:../../packages/security",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

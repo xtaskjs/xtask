@@ -20,7 +20,9 @@
       "@xtaskjs/typeorm": ["packages/typeorm/src/index.ts"],
       "@xtaskjs/typeorm/*": ["packages/typeorm/src/*"],
       "@xtaskjs/security": ["packages/security/src/index.ts"],
-      "@xtaskjs/security/*": ["packages/security/src/*"]
+      "@xtaskjs/security/*": ["packages/security/src/*"],
+      "@xtaskjs/mailer": ["packages/mailer/src/index.ts"],
+      "@xtaskjs/mailer/*": ["packages/mailer/src/*"]
     }
   },
   "include": ["packages/**/*","packages/**/**/*","packages/**/**/**/*","samples/**/*","samples/**/**/*"],

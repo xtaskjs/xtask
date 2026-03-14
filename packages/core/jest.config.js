@@ -17,6 +17,8 @@ module.exports = {
     "^@xtaskjs/fastify-http$": "<rootDir>/../fastify-http/src/index.ts",
     "^@xtaskjs/fastify-http/(.*)$": "<rootDir>/../fastify-http/src/$1",
     "^@xtaskjs/security$": "<rootDir>/../security/src/index.ts",
-    "^@xtaskjs/security/(.*)$": "<rootDir>/../security/src/$1"
+    "^@xtaskjs/security/(.*)$": "<rootDir>/../security/src/$1",
+    "^@xtaskjs/mailer$": "<rootDir>/../mailer/src/index.ts",
+    "^@xtaskjs/mailer/(.*)$": "<rootDir>/../mailer/src/$1"
   },
 };
