@@ -35,6 +35,7 @@ export function registerControllerRoutes(instance: any, app: ApplicationLifeCycl
       middlewares: [...controllerMeta.middlewares, ...route.middlewares],
       guards: [...controllerMeta.guards, ...route.guards],
       pipes: [...controllerMeta.pipes, ...route.pipes],
+      parameters: route.parameters,
       action: (...args: any[]) => instance[route.handler](...args),
     });
   }

@@ -1,5 +1,47 @@
-import { Controller, Get, Logger, Post } from "@xtaskjs/common";
+import { Body, Controller, Get, Logger, Post } from "@xtaskjs/common";
+import { Transform } from "class-transformer";
+import { IsEmail, IsOptional, IsString, IsUrl, MinLength } from "class-validator";
 import { EmailService } from "./email.service";
+
+const trimString = ({ value }: { value: unknown }) =>
+  typeof value === "string" ? value.trim() : value;
+
+class SendWelcomeEmailDto {
+  @Transform(trimString)
+  @IsEmail()
+  to!: string;
+
+  @Transform(trimString)
+  @IsString()
+  @MinLength(1)
+  name!: string;
+
+  @Transform(trimString)
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  product?: string;
+}
+
+class SendCampaignEmailDto {
+  @Transform(trimString)
+  @IsEmail()
+  to!: string;
+
+  @Transform(trimString)
+  @IsString()
+  @MinLength(1)
+  name!: string;
+
+  @Transform(trimString)
+  @IsString()
+  @MinLength(1)
+  campaign!: string;
+
+  @Transform(trimString)
+  @IsUrl({ require_tld: false })
+  ctaUrl!: string;
+}
 
 @Controller("/email")
 export class EmailController {
@@ -20,33 +62,16 @@ export class EmailController {
   }
 
   @Post("/welcome")
-  async sendWelcome(req: any) {
-    const to = String(req.body?.to || "").trim();
-    const name = String(req.body?.name || "").trim();
-    const product = String(req.body?.product || "").trim() || undefined;
+  async sendWelcome(@Body() body: SendWelcomeEmailDto) {
+    this.logger.info(`Received welcome email request for ${body.to}`);
 
-    if (!to || !name) {
-      throw new Error("Request body requires 'to' and 'name'");
-    }
-
-    this.logger.info(`Received welcome email request for ${to}`);
-
-    return this.emails.sendWelcomeEmail({ to, name, product });
+    return this.emails.sendWelcomeEmail(body);
   }
 
   @Post("/campaign")
-  async sendCampaign(req: any) {
-    const to = String(req.body?.to || "").trim();
-    const name = String(req.body?.name || "").trim();
-    const campaign = String(req.body?.campaign || "").trim();
-    const ctaUrl = String(req.body?.ctaUrl || "").trim();
+  async sendCampaign(@Body() body: SendCampaignEmailDto) {
+    this.logger.info(`Received campaign email request for ${body.to}`);
 
-    if (!to || !name || !campaign || !ctaUrl) {
-      throw new Error("Request body requires 'to', 'name', 'campaign', and 'ctaUrl'");
-    }
-
-    this.logger.info(`Received campaign email request for ${to}`);
-
-    return this.emails.sendCampaignEmail({ to, name, campaign, ctaUrl });
+    return this.emails.sendCampaignEmail(body);
   }
 }

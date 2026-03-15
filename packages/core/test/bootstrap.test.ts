@@ -4,6 +4,7 @@ const mockBoot = jest.fn(async (startFn: () => Promise<void>) => {
 
 const mockLifecycle = {
   boot: mockBoot,
+  useGlobalPipes: jest.fn(),
 };
 
 const mockKernelBoot = jest.fn(async () => {});
@@ -73,6 +74,7 @@ describe("bootstrap", () => {
     const app = await CreateApplication();
 
     expect(app).toBe(mockApp);
+    expect(mockLifecycle.useGlobalPipes).toHaveBeenCalledTimes(1);
     expect(registerEventHandlers).toHaveBeenCalledTimes(1);
     expect(mockKernelBoot).toHaveBeenCalledTimes(1);
     expect(registerContainerInLifecycle).toHaveBeenCalledTimes(1);

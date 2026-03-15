@@ -19,6 +19,7 @@ The sample loads `.env` automatically on startup. A ready-to-edit `.env` file is
 - A default transactional transport plus a named `notifications` transport.
 - `registerEjsTemplateRenderer()` resolving templates from `views/mail/*.ejs`.
 - `MailerService.sendTemplate()` used by a DI-managed service.
+- DTO request validation through the global `ValidationPipe` enabled by `CreateApplication()`.
 
 ## Endpoints
 
@@ -49,6 +50,14 @@ curl -X POST http://127.0.0.1:3000/email/campaign \
     "name": "Grace",
     "campaign": "Spring Launch",
     "ctaUrl": "https://xtaskjs.com/docs"
+  }'
+
+# invalid payload -> 400 validation error
+curl -X POST http://127.0.0.1:3000/email/welcome \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to": "invalid-email",
+    "name": ""
   }'
 ```
 

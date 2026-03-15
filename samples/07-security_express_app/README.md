@@ -32,6 +32,8 @@ From this folder: `samples/07-security_express_app`.
 - Send a protected profile email:
   - `POST http://127.0.0.1:3000/me/notify`
 
+The sample uses the global `ValidationPipe` enabled by `CreateApplication()`, so invalid request payloads now return HTTP `400` with validation details.
+
 ## Example Flow
 
 1. Open `/auth/jwt/admin` and copy the returned token.
@@ -46,6 +48,9 @@ JWT_TOKEN=$(curl -s http://127.0.0.1:3000/auth/jwt/admin | node -e 'process.stdi
 curl -H "Authorization: Bearer $JWT_TOKEN" http://127.0.0.1:3000/me/
 curl -H "Authorization: Bearer $JWT_TOKEN" http://127.0.0.1:3000/admin/
 curl -X POST -H "Authorization: Bearer $JWT_TOKEN" -H "Content-Type: application/json" -d '{"to":"demo@example.com"}' http://127.0.0.1:3000/me/notify
+
+# invalid email -> 400 validation error
+curl -X POST -H "Authorization: Bearer $JWT_TOKEN" -H "Content-Type: application/json" -d '{"to":"not-an-email"}' http://127.0.0.1:3000/me/notify
 ```
 
 ## Notes

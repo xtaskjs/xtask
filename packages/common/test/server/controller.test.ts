@@ -1,10 +1,15 @@
 import "reflect-metadata";
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Patch,
+  Param,
   Post,
+  Query,
+  Req,
+  Res,
   UseGuards,
   UseMiddlewares,
   UsePipes,
@@ -20,12 +25,20 @@ describe("Controller Decorators", () => {
   const routeGuard = jest.fn(() => true);
   const routePipe = jest.fn((value) => value);
 
+  class CreateUserDto {
+    name!: string;
+  }
+
+  class UpdateUserParamsDto {
+    id!: string;
+  }
+
   class UsersController {
     list() {}
 
-    create() {}
+    create(@Body() _body: CreateUserDto, @Req() _req: any, @Res() _res: any) {}
 
-    update() {}
+    update(@Param() _params: UpdateUserParamsDto, @Query("expand") _expand: string) {}
 
     remove() {}
   }
@@ -70,5 +83,18 @@ describe("Controller Decorators", () => {
     expect(listRoute?.middlewares.length).toBe(1);
     expect(listRoute?.guards.length).toBe(1);
     expect(listRoute?.pipes.length).toBe(1);
+
+    const createRoute = routes.find((route) => route.handler === "create");
+    expect(createRoute?.parameters).toEqual([
+      expect.objectContaining({ index: 0, source: "body", metatype: CreateUserDto }),
+      expect.objectContaining({ index: 1, source: "request" }),
+      expect.objectContaining({ index: 2, source: "response" }),
+    ]);
+
+    const updateRoute = routes.find((route) => route.handler === "update");
+    expect(updateRoute?.parameters).toEqual([
+      expect.objectContaining({ index: 0, source: "param", metatype: UpdateUserParamsDto }),
+      expect.objectContaining({ index: 1, source: "query", property: "expand", metatype: String }),
+    ]);
   });
 });

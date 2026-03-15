@@ -1,6 +1,7 @@
 import {
   CLASS_PIPELINE_KEY,
   CONTROLLERS_KEY,
+  METHOD_PARAMETERS_KEY,
   METHOD_PIPELINES_KEY,
   ROUTES_KEY,
 } from "./constants";
@@ -12,6 +13,8 @@ import {
   MiddlewareLike,
   PipeLike,
   PipelineMetadata,
+  RouteParameterMetadata,
+  RouteParameterSource,
   RouteMetadata,
   RouteOptions,
 } from "../../../types";
@@ -20,6 +23,13 @@ type MethodPipelineEntry = {
   handler: PropertyKey;
   pipeline: PipelineMetadata;
 };
+
+type MethodParameterEntry = {
+  handler: PropertyKey;
+  parameters: RouteParameterMetadata[];
+};
+
+type StoredRouteMetadata = Omit<RouteMetadata, keyof PipelineMetadata | "parameters">;
 
 const emptyPipeline = (): PipelineMetadata => ({
   middlewares: [],
@@ -58,6 +68,17 @@ const getMethodPipelines = (target: any): MethodPipelineEntry[] => {
 
 const setMethodPipelines = (target: any, entries: MethodPipelineEntry[]) => {
   Reflect.defineMetadata(METHOD_PIPELINES_KEY, entries, target);
+};
+
+const getMethodParameters = (target: any): MethodParameterEntry[] => {
+  const entries = Reflect.getMetadata(METHOD_PARAMETERS_KEY, target) as
+    | MethodParameterEntry[]
+    | undefined;
+  return entries || [];
+};
+
+const setMethodParameters = (target: any, entries: MethodParameterEntry[]) => {
+  Reflect.defineMetadata(METHOD_PARAMETERS_KEY, entries, target);
 };
 
 const ensureMethodPipeline = (target: any, handler: PropertyKey): PipelineMetadata => {
@@ -108,6 +129,31 @@ const appendMethodPipes = (target: any, handler: PropertyKey, pipes: PipeLike[])
   pipeline.pipes.push(...pipes);
 };
 
+const appendMethodParameter = (
+  target: any,
+  handler: PropertyKey,
+  parameter: RouteParameterMetadata
+) => {
+  const entries = getMethodParameters(target.constructor);
+  let entry = entries.find((candidate) => candidate.handler === handler);
+  if (!entry) {
+    entry = { handler, parameters: [] };
+    entries.push(entry);
+  }
+
+  const existing = entry.parameters.find((candidate) => candidate.index === parameter.index);
+  if (existing) {
+    existing.source = parameter.source;
+    existing.property = parameter.property;
+    existing.metatype = parameter.metatype;
+  } else {
+    entry.parameters.push(parameter);
+    entry.parameters.sort((left, right) => left.index - right.index);
+  }
+
+  setMethodParameters(target.constructor, entries);
+};
+
 const routeOptionsFrom = (pathOrOptions: string | RouteOptions | undefined): RouteOptions => {
   if (typeof pathOrOptions === "string") {
     return { path: pathOrOptions };
@@ -119,7 +165,7 @@ const buildRouteDecorator = (method: HttpMethod) => {
   return (pathOrOptions: string | RouteOptions = ""): MethodDecorator => {
     const options = routeOptionsFrom(pathOrOptions);
     return (target, propertyKey) => {
-      const routes: Omit<RouteMetadata, keyof PipelineMetadata>[] =
+      const routes: StoredRouteMetadata[] =
         Reflect.getMetadata(ROUTES_KEY, target.constructor) || [];
       routes.push({
         method,
@@ -170,6 +216,35 @@ export const Post = buildRouteDecorator("POST");
 export const Patch = buildRouteDecorator("PATCH");
 export const Delete = buildRouteDecorator("DELETE");
 
+const buildParameterDecorator = (
+  source: RouteParameterSource
+): ((property?: string) => ParameterDecorator) => {
+  return (property?: string): ParameterDecorator => {
+    return (target, propertyKey, parameterIndex) => {
+      if (!propertyKey) {
+        throw new Error(`${source} parameter decorator can only be used on controller methods`);
+      }
+
+      const parameterTypes = Reflect.getMetadata("design:paramtypes", target, propertyKey) as
+        | any[]
+        | undefined;
+
+      appendMethodParameter(target, propertyKey, {
+        index: parameterIndex,
+        source,
+        property,
+        metatype: parameterTypes?.[parameterIndex],
+      });
+    };
+  };
+};
+
+export const Body = buildParameterDecorator("body");
+export const Query = buildParameterDecorator("query");
+export const Param = buildParameterDecorator("param");
+export const Req = buildParameterDecorator("request");
+export const Res = buildParameterDecorator("response");
+
 export function UseMiddlewares(...middlewares: MiddlewareLike[]): MethodDecorator & ClassDecorator {
   return (target: any, propertyKey?: string | symbol) => {
     if (!propertyKey) {
@@ -215,16 +290,19 @@ export function getControllerMetadata(target: any): ControllerMetadata | undefin
 }
 
 export function getRouteMetadata(target: any): RouteMetadata[] {
-  const routes: Omit<RouteMetadata, keyof PipelineMetadata>[] =
+  const routes: StoredRouteMetadata[] =
     Reflect.getMetadata(ROUTES_KEY, target) || [];
   const methodPipelines = getMethodPipelines(target);
+  const methodParameters = getMethodParameters(target);
   return routes.map((route) => {
     const methodPipeline = methodPipelines.find((item) => item.handler === route.handler)?.pipeline;
+    const parameters = methodParameters.find((item) => item.handler === route.handler)?.parameters || [];
     return {
       ...route,
       middlewares: [...(methodPipeline?.middlewares || [])],
       guards: [...(methodPipeline?.guards || [])],
       pipes: [...(methodPipeline?.pipes || [])],
+      parameters: parameters.map((parameter) => ({ ...parameter })),
     };
   });
 }

@@ -48,6 +48,34 @@ For Fastify support, install the adapter package:
 npm install @xtaskjs/fastify-http
 ```
 
+## Request Validation
+
+`CreateApplication()` now enables a global validation pipe by default. Controllers can bind DTOs directly from the request using the decorators exported by `@xtaskjs/common`:
+
+```typescript
+import { Body, Controller, Param, Post } from "@xtaskjs/common";
+import { IsString } from "class-validator";
+
+class CreateUserDto {
+	@IsString()
+	name!: string;
+}
+
+@Controller("users")
+class UsersController {
+	@Post("/:id")
+	create(@Param("id") id: string, @Body() body: CreateUserDto) {
+		return { id, body };
+	}
+}
+```
+
+Install the validator dependencies in the app workspace:
+
+```bash
+npm install class-transformer class-validator
+```
+
 ## Template Engines
 
 Controllers can return rendered views with `view(...)`:

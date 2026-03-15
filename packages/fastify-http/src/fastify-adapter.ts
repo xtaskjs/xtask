@@ -16,6 +16,82 @@ const DEFAULT_VIEWS_FOLDER = "views";
 const DEFAULT_PUBLIC_FOLDER = "public";
 const DEFAULT_FILE_EXTENSION = ".html";
 
+const appendQueryValue = (
+  target: Record<string, any>,
+  key: string,
+  value: string
+) => {
+  const existingValue = target[key];
+  if (existingValue === undefined) {
+    target[key] = value;
+    return;
+  }
+
+  if (Array.isArray(existingValue)) {
+    existingValue.push(value);
+    return;
+  }
+
+  target[key] = [existingValue, value];
+};
+
+const toQueryObject = (url: URL): Record<string, any> => {
+  const query: Record<string, any> = {};
+  for (const [key, value] of url.searchParams.entries()) {
+    appendQueryValue(query, key, value);
+  }
+  return query;
+};
+
+const createNormalizedRequest = (request: any, path: string, parsedUrl: URL): HttpRequestLike => {
+  const normalizedRequest = Object.create(request);
+  Object.defineProperties(normalizedRequest, {
+    path: {
+      value: path,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    query: {
+      value: request.query || toQueryObject(parsedUrl),
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    params: {
+      value: request.params || {},
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    body: {
+      value: request.body,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    url: {
+      value: request.url,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    method: {
+      value: request.method,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    headers: {
+      value: request.headers,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+  });
+  return normalizedRequest;
+};
+
 const withLeadingSlash = (value: string): string => {
   if (!value) {
     return "/";
@@ -206,9 +282,11 @@ export class FastifyAdapter implements HttpAdapter {
           reply.code(405).send("Method Not Allowed");
           return;
         }
-        const path = request.url || "/";
+        const parsedUrl = new URL(request.url || request.path || "/", "http://localhost");
+        const path = request.path || parsedUrl.pathname || "/";
+        const normalizedRequest = createNormalizedRequest(request, path, parsedUrl);
         const response = this.createResponseProxy(reply);
-        await handler(method, path, request, response);
+        await handler(method, path, normalizedRequest, response);
       },
     });
   }

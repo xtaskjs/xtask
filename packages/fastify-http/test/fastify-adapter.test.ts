@@ -36,7 +36,40 @@ describe("FastifyAdapter", () => {
     expect(handler).toHaveBeenCalledWith(
       "GET",
       "/health",
-      request,
+      expect.objectContaining({ path: "/health", query: {}, params: {} }),
+      expect.objectContaining({ send: expect.any(Function), json: expect.any(Function) })
+    );
+  });
+
+  it("should not mutate getter-backed fastify request properties", async () => {
+    let routeConfig: any;
+    const app = {
+      route: jest.fn((config) => {
+        routeConfig = config;
+      }),
+      listen: jest.fn(async () => {}),
+      close: jest.fn(async () => {}),
+    };
+
+    const adapter = new FastifyAdapter(app);
+    const handler = jest.fn(async () => {});
+
+    adapter.registerRequestHandler(handler);
+
+    const request = {
+      method: "GET",
+      url: "/health?status=ok",
+      get path() {
+        return "/health";
+      },
+    };
+    const reply = { code: jest.fn().mockReturnThis(), send: jest.fn() };
+
+    await expect(routeConfig.handler(request, reply)).resolves.toBeUndefined();
+    expect(handler).toHaveBeenCalledWith(
+      "GET",
+      "/health",
+      expect.objectContaining({ path: "/health", query: { status: "ok" }, params: {} }),
       expect.objectContaining({ send: expect.any(Function), json: expect.any(Function) })
     );
   });

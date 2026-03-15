@@ -35,6 +35,20 @@ export type PipeFn = (
   context: RouteExecutionContext
 ) => any | Promise<any>;
 
+export type RouteParameterSource =
+  | "body"
+  | "query"
+  | "param"
+  | "request"
+  | "response";
+
+export interface RouteParameterMetadata {
+  index: number;
+  source: RouteParameterSource;
+  property?: string;
+  metatype?: any;
+}
+
 export type MiddlewareLike = MiddlewareFn | { use: MiddlewareFn };
 export type GuardLike = GuardFn | { canActivate: GuardFn };
 export type PipeLike = PipeFn | { transform: PipeFn };
@@ -61,4 +75,5 @@ export interface RouteMetadata extends PipelineMetadata {
   method: HttpMethod;
   path: string;
   handler: PropertyKey;
+  parameters: RouteParameterMetadata[];
 }

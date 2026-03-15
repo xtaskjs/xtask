@@ -1,6 +1,17 @@
 import { Auth, Authenticated, Roles } from "@xtaskjs/security";
-import { Controller, Get, Logger, Post } from "@xtaskjs/common";
+import { Body, Controller, Get, Logger, Post, Req } from "@xtaskjs/common";
+import { Transform } from "class-transformer";
+import { IsEmail } from "class-validator";
 import { ProfileMailerService } from "./profile-mailer.service";
+
+const trimString = ({ value }: { value: unknown }) =>
+  typeof value === "string" ? value.trim() : value;
+
+class SendProfileEmailDto {
+  @Transform(trimString)
+  @IsEmail()
+  to!: string;
+}
 
 @Controller("/me")
 export class ProfileController {
@@ -11,7 +22,7 @@ export class ProfileController {
 
   @Get("/")
   @Authenticated()
-  profile(req: any) {
+  profile(@Req() req: any) {
     this.logger.info("Returning JWT-protected profile via express adapter");
     return {
       message: "Authenticated with JWT",
@@ -23,9 +34,9 @@ export class ProfileController {
 
   @Post("/notify")
   @Authenticated()
-  async sendProfileEmail(req: any) {
+  async sendProfileEmail(@Req() req: any, @Body() body: SendProfileEmailDto) {
     this.logger.info("Sending JWT-protected profile email via mailer package");
-    const delivery = await this.profileMailer.sendProfileSummary(req.user, req.body?.to);
+    const delivery = await this.profileMailer.sendProfileSummary(req.user, body.to);
 
     return {
       message: "Profile email queued",
@@ -42,7 +53,7 @@ export class AdminController {
   @Get("/")
   @Authenticated()
   @Roles("admin")
-  dashboard(req: any) {
+  dashboard(@Req() req: any) {
     this.logger.info("Returning express admin-only resource");
     return {
       message: "Admin route granted",
@@ -59,7 +70,7 @@ export class EncryptedController {
 
   @Get("/")
   @Auth("encrypted")
-  encrypted(req: any) {
+  encrypted(@Req() req: any) {
     this.logger.info("Returning express JWE-protected resource");
     return {
       message: "Authenticated with JWE",

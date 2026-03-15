@@ -1,11 +1,19 @@
 import "reflect-metadata";
 import {
+  Body,
   Controller,
   Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  Res,
+  ValidationPipe,
   UseGuards,
   UseMiddlewares,
   UsePipes,
-} from "../../../common/src/decorators/core/server/controller";
+} from "../../../common/src";
+import { IsInt, IsString, Min } from "class-validator";
 import { ApplicationLifeCycle } from "../../src/server/application-lifecycle";
 import { registerControllerRoutes } from "../../src/server/registercontrollers";
 
@@ -90,5 +98,102 @@ describe("Controller route integration", () => {
       roles: ["admin"],
     });
     expect(contexts[0].state).toEqual({});
+  });
+
+  it("should resolve decorated route arguments and validate DTOs", async () => {
+    class CreateUserBody {
+      @IsString()
+      name!: string;
+
+      @IsInt()
+      @Min(18)
+      age!: number;
+    }
+
+    class UserParams {
+      @IsString()
+      id!: string;
+    }
+
+    class UsersController {
+      create(
+        @Body() body: CreateUserBody,
+        @Param() params: UserParams,
+        @Query("verbose") verbose: boolean,
+        @Req() request: any,
+        @Res() response: any
+      ) {
+        return { body, params, verbose, request, response };
+      }
+    }
+
+    Controller("users")(UsersController);
+
+    const createDescriptor = Object.getOwnPropertyDescriptor(UsersController.prototype, "create");
+    Post("/:id")(UsersController.prototype, "create", createDescriptor);
+
+    const app = new ApplicationLifeCycle();
+    app.useGlobalPipes(new ValidationPipe());
+
+    const controller = new UsersController();
+    registerControllerRoutes(controller, app);
+
+    const request = {
+      body: { name: "Ada", age: "23" },
+      query: { verbose: "true" },
+    };
+    const response = { statusCode: 200 };
+
+    const result = await app.dispatchControllerRoute("POST", "/users/user-1", request, response);
+
+    expect(result.body).toBeInstanceOf(CreateUserBody);
+    expect(result.body).toEqual(expect.objectContaining({ name: "Ada", age: 23 }));
+    expect(result.params).toBeInstanceOf(UserParams);
+    expect(result.params).toEqual(expect.objectContaining({ id: "user-1" }));
+    expect(result.verbose).toBe(true);
+    expect(result.request).toBe(request);
+    expect(result.response).toBe(response);
+  });
+
+  it("should reject invalid DTO payloads with a 400 validation error", async () => {
+    class CreateUserBody {
+      @IsString()
+      name!: string;
+
+      @IsInt()
+      @Min(18)
+      age!: number;
+    }
+
+    class UsersController {
+      create(@Body() body: CreateUserBody) {
+        return body;
+      }
+    }
+
+    Controller("users")(UsersController);
+
+    const createDescriptor = Object.getOwnPropertyDescriptor(UsersController.prototype, "create");
+    Post("/")(UsersController.prototype, "create", createDescriptor);
+
+    const app = new ApplicationLifeCycle();
+    app.useGlobalPipes(new ValidationPipe());
+
+    registerControllerRoutes(new UsersController(), app);
+
+    await expect(
+      app.dispatchControllerRoute(
+        "POST",
+        "/users",
+        { body: { name: "Ada", age: "12" }, query: {} },
+        {}
+      )
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      payload: expect.objectContaining({
+        message: "Validation failed",
+        fields: ["age"],
+      }),
+    });
   });
 });

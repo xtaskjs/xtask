@@ -328,7 +328,7 @@ export class XTaskHttpApplication {
       if (error instanceof HttpError || typeof error?.statusCode === "number") {
         const statusCode = error instanceof HttpError ? error.statusCode : error.statusCode;
         const payload =
-          error instanceof HttpError && error.payload !== undefined
+          error?.payload !== undefined
             ? error.payload
             : { message: error?.message || "Request failed" };
 

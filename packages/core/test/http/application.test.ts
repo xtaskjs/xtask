@@ -162,6 +162,44 @@ describe("XTaskHttpApplication", () => {
     expect(res.json).toHaveBeenCalledWith({ message: "Forbidden", code: "AUTH_FORBIDDEN" });
   });
 
+  it("should preserve payload for non-HttpError statusCode exceptions", async () => {
+    const adapter = new FakeNodeAdapter();
+    const lifecycle = {
+      dispatchControllerRoute: jest.fn(async () => {
+        const error = new Error("Validation failed") as Error & {
+          statusCode: number;
+          payload: any;
+        };
+        error.statusCode = 400;
+        error.payload = {
+          message: "Validation failed",
+          fields: ["to", "name"],
+          errors: [
+            { property: "to", constraints: ["to must be an email"] },
+            { property: "name", constraints: ["name should not be empty"] },
+          ],
+        };
+        throw error;
+      }),
+    } as any;
+    new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
+
+    const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
+
+    await requestHandler("POST", "/email/welcome", {}, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Validation failed",
+      fields: ["to", "name"],
+      errors: [
+        { property: "to", constraints: ["to must be an email"] },
+        { property: "name", constraints: ["name should not be empty"] },
+      ],
+    });
+  });
+
   it("should log startup with adapter and url", async () => {
     const adapter = new FakeNodeAdapter();
     const lifecycle = { dispatchControllerRoute: jest.fn() } as any;

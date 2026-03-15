@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import { ValidationPipe } from "@xtaskjs/common";
 import { ApplicationLifeCycle } from "./server/application-lifecycle";
 import { Kernel } from "./kernel/kernel";
 import { KernelListeners } from "./kernel/kernellisteners";
@@ -19,6 +20,7 @@ export async function CreateApplication(
     options: CreateApplicationOptions = {}
 ): Promise<XTaskHttpApplication> {
     const lifecycle = new ApplicationLifeCycle();
+    lifecycle.useGlobalPipes(new ValidationPipe());
     const kernel = new Kernel();
     const listeners = new KernelListeners();
     registerEventHandlers(listeners, lifecycle);

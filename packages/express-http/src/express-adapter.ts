@@ -16,6 +16,82 @@ const DEFAULT_VIEWS_FOLDER = "views";
 const DEFAULT_PUBLIC_FOLDER = "public";
 const DEFAULT_FILE_EXTENSION = ".html";
 
+const appendQueryValue = (
+  target: Record<string, any>,
+  key: string,
+  value: string
+) => {
+  const existingValue = target[key];
+  if (existingValue === undefined) {
+    target[key] = value;
+    return;
+  }
+
+  if (Array.isArray(existingValue)) {
+    existingValue.push(value);
+    return;
+  }
+
+  target[key] = [existingValue, value];
+};
+
+const toQueryObject = (url: URL): Record<string, any> => {
+  const query: Record<string, any> = {};
+  for (const [key, value] of url.searchParams.entries()) {
+    appendQueryValue(query, key, value);
+  }
+  return query;
+};
+
+const createNormalizedRequest = (req: any, path: string, parsedUrl: URL): HttpRequestLike => {
+  const normalizedRequest = Object.create(req);
+  Object.defineProperties(normalizedRequest, {
+    path: {
+      value: path,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    query: {
+      value: req.query || toQueryObject(parsedUrl),
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    params: {
+      value: req.params || {},
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    body: {
+      value: req.body,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    url: {
+      value: req.url,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    method: {
+      value: req.method,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    headers: {
+      value: req.headers,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+  });
+  return normalizedRequest;
+};
+
 const interpolateTemplate = (template: string, model: Record<string, any>): string => {
   return template.replace(/{{\s*([\w.]+)\s*}}/g, (_match, key: string) => {
     const value = key.split(".").reduce<any>((acc, segment) => acc?.[segment], model);
@@ -44,6 +120,16 @@ export class ExpressAdapter implements HttpAdapter {
     }
 
     const templateEngine = options?.templateEngine;
+    const expressModule = require("express");
+
+    if (typeof expressModule.json === "function") {
+      app.use(expressModule.json());
+    }
+
+    if (typeof expressModule.urlencoded === "function") {
+      app.use(expressModule.urlencoded({ extended: true }));
+    }
+
     this.viewsPath = templateEngine?.viewsPath || path.join(process.cwd(), DEFAULT_VIEWS_FOLDER);
     this.fileExtension = withLeadingDot(templateEngine?.fileExtension || DEFAULT_FILE_EXTENSION);
     if (typeof app.set === "function") {
@@ -60,7 +146,6 @@ export class ExpressAdapter implements HttpAdapter {
 
     const staticFiles = options?.staticFiles;
     if (staticFiles?.enabled !== false) {
-      const expressModule = require("express");
       const publicPath = staticFiles?.publicPath || path.join(process.cwd(), DEFAULT_PUBLIC_FOLDER);
       const urlPrefix = staticFiles?.urlPrefix || "/";
       const staticMiddleware = expressModule.static(publicPath);
@@ -90,8 +175,10 @@ export class ExpressAdapter implements HttpAdapter {
         res.status(405).send("Method Not Allowed");
         return;
       }
-      const path = req.path || req.url || "/";
-      await handler(method, path, req, res);
+      const parsedUrl = new URL(req.url || req.path || "/", "http://localhost");
+      const path = req.path || parsedUrl.pathname || "/";
+      const request = createNormalizedRequest(req, path, parsedUrl);
+      await handler(method, path, request, res);
     });
   }
 

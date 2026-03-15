@@ -12,6 +12,10 @@ export interface HttpRequestLike {
   url?: string;
   path?: string;
   body?: any;
+  params?: Record<string, any>;
+  query?: Record<string, any>;
+  headers?: Record<string, any>;
+  rawBody?: string;
 }
 
 export interface HttpViewResult {

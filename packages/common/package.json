@@ -39,6 +39,8 @@
   },
   "license": "MIT",
   "peerDependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "reflect-metadata": "^0.1.12 || ^0.2.0"
   },
   "peerDependenciesMeta": {
@@ -53,6 +55,8 @@
     "@jest/globals": "^30.1.2",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "jest": "^30.1.3",
     "nodemon": "^3.1.10",
     "ts-jest": "^29.4.4",

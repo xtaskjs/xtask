@@ -16,6 +16,8 @@
     "@xtaskjs/express-http": "file:../../packages/express-http",
     "@xtaskjs/mailer": "file:../../packages/mailer",
     "@xtaskjs/security": "file:../../packages/security",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.2.2"

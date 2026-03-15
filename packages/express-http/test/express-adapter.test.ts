@@ -55,7 +55,50 @@ describe("ExpressAdapter", () => {
     const res = {};
     await middlewareRegistry[middlewareRegistry.length - 1](req, res);
 
-    expect(handler).toHaveBeenCalledWith("GET", "/hello", req, res);
+    expect(handler).toHaveBeenCalledWith(
+      "GET",
+      "/hello",
+      expect.objectContaining({ path: "/hello", query: {}, params: {} }),
+      res
+    );
+  });
+
+  it("should not mutate getter-backed express request properties", async () => {
+    const middlewareRegistry: any[] = [];
+    const app = {
+      use: (fn: any) => middlewareRegistry.push(fn),
+      set: jest.fn(),
+      listen: jest.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
+        cb();
+        return { close: jest.fn() };
+      }),
+    };
+
+    const adapter = new ExpressAdapter(app);
+    const handler = jest.fn(async () => {});
+    adapter.registerRequestHandler(handler);
+
+    const req = {
+      method: "POST",
+      url: "/email/welcome?x=1",
+      body: { ok: true },
+      get path() {
+        return "/email/welcome";
+      },
+    };
+    const res = {};
+
+    await expect(middlewareRegistry[middlewareRegistry.length - 1](req, res)).resolves.toBeUndefined();
+    expect(handler).toHaveBeenCalledWith(
+      "POST",
+      "/email/welcome",
+      expect.objectContaining({
+        path: "/email/welcome",
+        query: { x: "1" },
+        body: { ok: true },
+      }),
+      res
+    );
   });
 
   it("should listen and close gracefully", async () => {
