@@ -8,8 +8,8 @@
   ],
   "scripts": {
     "build": "npm run clean; tsc",
-    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common && npm run test --prefix packages/express-http && npm run test --prefix packages/fastify-http && npm run test --prefix packages/typeorm && npm run test --prefix packages/security && npm run test --prefix packages/mailer",
-    "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common && npm run test:coverage --prefix packages/express-http && npm run test:coverage --prefix packages/fastify-http && npm run test:coverage --prefix packages/typeorm && npm run test:coverage --prefix packages/security && npm run test:coverage --prefix packages/mailer",
+    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common && npm run test --prefix packages/express-http && npm run test --prefix packages/fastify-http && npm run test --prefix packages/typeorm && npm run test --prefix packages/security && npm run test --prefix packages/mailer && npm run test --prefix packages/internationalization",
+    "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common && npm run test:coverage --prefix packages/express-http && npm run test:coverage --prefix packages/fastify-http && npm run test:coverage --prefix packages/typeorm && npm run test:coverage --prefix packages/security && npm run test:coverage --prefix packages/mailer && npm run test:coverage --prefix packages/internationalization",
     "coverage:open:core": "npm run coverage:open --prefix packages/core",
     "coverage:open:common": "npm run coverage:open --prefix packages/common",
     "coverage:open:express-http": "npm run coverage:open --prefix packages/express-http",
@@ -17,6 +17,7 @@
     "coverage:open:typeorm": "npm run coverage:open --prefix packages/typeorm",
     "coverage:open:security": "npm run coverage:open --prefix packages/security",
     "coverage:open:mailer": "npm run coverage:open --prefix packages/mailer",
+    "coverage:open:internationalization": "npm run coverage:open --prefix packages/internationalization",
     "benchmark:startup": "npm run benchmark:startup --prefix packages/core",
     "release:order": "node ./scripts/release-packages.js list",
     "pack:packages": "node ./scripts/release-packages.js pack",

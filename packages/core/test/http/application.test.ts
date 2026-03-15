@@ -6,10 +6,21 @@ import {
 import { ForbiddenError } from "../../src/http/errors";
 import { view } from "../../src/http/types";
 import { initializeMailerIntegration, shutdownMailerIntegration } from "@xtaskjs/mailer";
+import {
+  initializeInternationalizationIntegration,
+  runWithInternationalizationContext,
+  shutdownInternationalizationIntegration,
+} from "@xtaskjs/internationalization";
 
 jest.mock("@xtaskjs/mailer", () => ({
   initializeMailerIntegration: jest.fn(async () => {}),
   shutdownMailerIntegration: jest.fn(async () => {}),
+}));
+
+jest.mock("@xtaskjs/internationalization", () => ({
+  initializeInternationalizationIntegration: jest.fn(async () => {}),
+  shutdownInternationalizationIntegration: jest.fn(async () => {}),
+  runWithInternationalizationContext: jest.fn(async (_request: any, callback: any) => callback()),
 }));
 
 class FakeNodeAdapter {
@@ -28,6 +39,21 @@ describe("XTaskHttpApplication", () => {
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel });
 
     expect(adapter.registerRequestHandler).toHaveBeenCalledTimes(1);
+  });
+
+  it("should execute requests inside the internationalization context when available", async () => {
+    const adapter = new FakeNodeAdapter();
+    const lifecycle = { dispatchControllerRoute: jest.fn(async () => ({ ok: true })) } as any;
+    new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
+
+    const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
+    const req = { headers: { "accept-language": "es-ES" } };
+    const res = { json: jest.fn(), setHeader: jest.fn(), end: jest.fn() } as any;
+
+    await requestHandler("GET", "/health", req, res);
+
+    expect(runWithInternationalizationContext).toHaveBeenCalledWith(req, expect.any(Function));
+    expect(lifecycle.dispatchControllerRoute).toHaveBeenCalledWith("GET", "/health", req, res);
   });
 
   it("should return 204 when handler returns undefined", async () => {
@@ -239,6 +265,7 @@ describe("XTaskHttpApplication", () => {
 
     expect(adapter.close).toHaveBeenCalledTimes(1);
     expect(shutdownMailerIntegration).toHaveBeenCalledTimes(1);
+    expect(shutdownInternationalizationIntegration).toHaveBeenCalledTimes(1);
   });
 
   it("should render a view using adapter renderView", async () => {
@@ -341,6 +368,7 @@ describe("http application factories", () => {
 
     expect(kernel.getContainer).toHaveBeenCalledTimes(1);
     expect(initializeMailerIntegration).toHaveBeenCalledWith(container);
+    expect(initializeInternationalizationIntegration).toHaveBeenCalledWith(container);
     expect(registerLifeCycleListeners).toHaveBeenCalledTimes(1);
   });
 });

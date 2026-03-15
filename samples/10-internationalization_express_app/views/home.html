@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{pageTitle}}</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <main class="page shell">
+      <section class="hero card">
+        <p class="eyebrow">xTaskJS internationalization</p>
+        <h1>{{pageTitle}}</h1>
+        <p class="lede">{{subtitle}}</p>
+        <p class="meta">{{localeLabel}}: <strong>{{locale}}</strong></p>
+        <p>{{hero}}</p>
+        <p>{{activity}}</p>
+        <p>{{cartSummary}}</p>
+        <div class="actions">
+          <a class="button primary" href="{{checkoutHref}}">{{checkoutCta}}</a>
+          <a class="button ghost" href="{{healthHref}}">Health JSON</a>
+        </div>
+      </section>
+      <section class="card controls">
+        <h2>Switch locale</h2>
+        <div class="actions">
+          <a class="button ghost" href="{{englishHref}}">English</a>
+          <a class="button ghost" href="{{spanishHref}}">Spanish</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

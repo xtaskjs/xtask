@@ -19,6 +19,8 @@ module.exports = {
     "^@xtaskjs/security$": "<rootDir>/../security/src/index.ts",
     "^@xtaskjs/security/(.*)$": "<rootDir>/../security/src/$1",
     "^@xtaskjs/mailer$": "<rootDir>/../mailer/src/index.ts",
-    "^@xtaskjs/mailer/(.*)$": "<rootDir>/../mailer/src/$1"
+    "^@xtaskjs/mailer/(.*)$": "<rootDir>/../mailer/src/$1",
+    "^@xtaskjs/internationalization$": "<rootDir>/../internationalization/src/index.ts",
+    "^@xtaskjs/internationalization/(.*)$": "<rootDir>/../internationalization/src/$1"
   },
 };

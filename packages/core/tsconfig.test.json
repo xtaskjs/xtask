@@ -16,7 +16,9 @@
       "@xtaskjs/security": ["../security/src"],
       "@xtaskjs/security/*": ["../security/src/*"],
       "@xtaskjs/mailer": ["../mailer/src"],
-      "@xtaskjs/mailer/*": ["../mailer/src/*"]
+      "@xtaskjs/mailer/*": ["../mailer/src/*"],
+      "@xtaskjs/internationalization": ["../internationalization/src"],
+      "@xtaskjs/internationalization/*": ["../internationalization/src/*"]
     }
   },
   "include": [
@@ -26,6 +28,7 @@
     "../express-http/src/**/*",
     "../fastify-http/src/**/*",
     "../security/src/**/*",
-    "../mailer/src/**/*"
+    "../mailer/src/**/*",
+    "../internationalization/src/**/*"
   ]
 }

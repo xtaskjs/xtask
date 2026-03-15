@@ -63,6 +63,12 @@ type SecurityInitializeFn = (container: Container) => Promise<void>;
 type SecurityShutdownFn = () => Promise<void>;
 type MailerInitializeFn = (container: Container) => Promise<void>;
 type MailerShutdownFn = () => Promise<void>;
+type InternationalizationInitializeFn = (container: Container) => Promise<void>;
+type InternationalizationShutdownFn = () => Promise<void>;
+type InternationalizationContextRunnerFn = <T>(
+  request: any,
+  callback: () => Promise<T> | T
+) => Promise<T>;
 
 const resolveExpressAdapter = (): ExpressAdapterConstructor => {
   try {
@@ -248,6 +254,72 @@ const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
   return undefined;
 };
 
+const resolveInternationalizationInitialize = (): InternationalizationInitializeFn | undefined => {
+  try {
+    const internationalizationPackage = require("@xtaskjs/internationalization") as {
+      initializeInternationalizationIntegration?: InternationalizationInitializeFn;
+    };
+
+    if (typeof internationalizationPackage.initializeInternationalizationIntegration === "function") {
+      return internationalizationPackage.initializeInternationalizationIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/internationalization");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveInternationalizationShutdown = (): InternationalizationShutdownFn | undefined => {
+  try {
+    const internationalizationPackage = require("@xtaskjs/internationalization") as {
+      shutdownInternationalizationIntegration?: InternationalizationShutdownFn;
+    };
+
+    if (typeof internationalizationPackage.shutdownInternationalizationIntegration === "function") {
+      return internationalizationPackage.shutdownInternationalizationIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/internationalization");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveInternationalizationContextRunner = (): InternationalizationContextRunnerFn | undefined => {
+  try {
+    const internationalizationPackage = require("@xtaskjs/internationalization") as {
+      runWithInternationalizationContext?: InternationalizationContextRunnerFn;
+    };
+
+    if (typeof internationalizationPackage.runWithInternationalizationContext === "function") {
+      return internationalizationPackage.runWithInternationalizationContext;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/internationalization");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
 export class XTaskHttpApplication {
   private readonly adapter: HttpAdapter;
   private readonly lifecycle: ApplicationLifeCycle;
@@ -265,6 +337,23 @@ export class XTaskHttpApplication {
   }
 
   private async dispatchRequest(
+    method: HttpMethod,
+    path: string,
+    req: HttpRequestLike,
+    res: HttpResponseLike
+  ): Promise<void> {
+    const runWithInternationalizationContext = resolveInternationalizationContextRunner();
+    if (runWithInternationalizationContext) {
+      await runWithInternationalizationContext(req, () =>
+        this.dispatchRequestInternal(method, path, req, res)
+      );
+      return;
+    }
+
+    await this.dispatchRequestInternal(method, path, req, res);
+  }
+
+  private async dispatchRequestInternal(
     method: HttpMethod,
     path: string,
     req: HttpRequestLike,
@@ -391,6 +480,11 @@ export class XTaskHttpApplication {
       await shutdownMailerIntegration();
     }
 
+    const shutdownInternationalizationIntegration = resolveInternationalizationShutdown();
+    if (shutdownInternationalizationIntegration) {
+      await shutdownInternationalizationIntegration();
+    }
+
     if (this.kernel && typeof (this.kernel as any).getContainer === "function") {
       const container = await (this.kernel as any).getContainer();
       if (container && typeof container.destroy === "function") {
@@ -462,6 +556,11 @@ export async function registerContainerInLifecycle(
   const initializeMailerIntegration = resolveMailerInitialize();
   if (initializeMailerIntegration) {
     await initializeMailerIntegration(container);
+  }
+
+  const initializeInternationalizationIntegration = resolveInternationalizationInitialize();
+  if (initializeInternationalizationIntegration) {
+    await initializeInternationalizationIntegration(container);
   }
 
   container.registerLifeCycleListeners(lifecycle);

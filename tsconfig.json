@@ -22,7 +22,9 @@
       "@xtaskjs/security": ["packages/security/src/index.ts"],
       "@xtaskjs/security/*": ["packages/security/src/*"],
       "@xtaskjs/mailer": ["packages/mailer/src/index.ts"],
-      "@xtaskjs/mailer/*": ["packages/mailer/src/*"]
+      "@xtaskjs/mailer/*": ["packages/mailer/src/*"],
+      "@xtaskjs/internationalization": ["packages/internationalization/src/index.ts"],
+      "@xtaskjs/internationalization/*": ["packages/internationalization/src/*"]
     }
   },
   "include": ["packages/**/*","packages/**/**/*","packages/**/**/**/*","samples/**/*","samples/**/**/*"],

@@ -1,0 +1,151 @@
+:root {
+  color-scheme: light;
+  --bg: #f6efe3;
+  --ink: #1f1f1f;
+  --muted: #5d5a54;
+  --card: rgba(255, 252, 247, 0.84);
+  --accent: #c4512d;
+  --accent-strong: #7d2f18;
+  --line: rgba(31, 31, 31, 0.08);
+  --shadow: 0 24px 60px rgba(95, 61, 39, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(196, 81, 45, 0.18), transparent 28%),
+    radial-gradient(circle at right center, rgba(73, 119, 102, 0.16), transparent 24%),
+    linear-gradient(180deg, #fbf6ee 0%, var(--bg) 100%);
+}
+
+.page {
+  min-height: 100vh;
+  padding: 48px 20px;
+}
+
+.shell {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 20px;
+}
+
+.card {
+  padding: 28px;
+  border-radius: 24px;
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -40px -40px auto;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: rgba(196, 81, 45, 0.08);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.76rem;
+  color: var(--accent-strong);
+}
+
+h1,
+h2 {
+  margin: 0 0 12px;
+  line-height: 1.05;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+.lede,
+.meta,
+p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.meta strong {
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button.primary {
+  background: var(--accent);
+  color: #fff7f2;
+}
+
+.button.ghost {
+  background: rgba(255, 255, 255, 0.52);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.controls {
+  display: grid;
+  gap: 6px;
+}
+
+.summary-grid {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 28px 14px;
+  }
+
+  .card {
+    padding: 22px;
+    border-radius: 18px;
+  }
+}

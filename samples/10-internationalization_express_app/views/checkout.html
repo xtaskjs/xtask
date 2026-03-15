@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{pageTitle}}</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <main class="page shell">
+      <section class="card">
+        <p class="eyebrow">Lazy namespace demo</p>
+        <h1>{{pageTitle}}</h1>
+        <p class="lede">{{subtitle}}</p>
+        <p class="meta">Locale: <strong>{{locale}}</strong></p>
+        <div class="summary-grid">
+          <article>
+            <h2>{{summaryTitle}}</h2>
+            <p>{{totalText}}</p>
+            <p>{{processedText}}</p>
+          </article>
+        </div>
+        <div class="actions">
+          <a class="button primary" href="{{backHref}}">Back home</a>
+          <a class="button ghost" href="{{englishHref}}">English</a>
+          <a class="button ghost" href="{{spanishHref}}">Spanish</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
