@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/internationalization",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "xtaskjs internationalization integration package",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.com",
@@ -39,7 +39,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/core": "^1.0.17"
+    "@xtaskjs/core": "^1.0.19"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0"
