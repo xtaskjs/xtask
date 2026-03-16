@@ -41,6 +41,7 @@
 /src/packages/security/coverage
 /src/packages/mailer/coverage
 /src/packages/internationalization/coverage
+/src/packages/scheduler/coverages
 /packages/core/coverage
 /packages/common/coverage
 /packages/express-http/coverage
@@ -49,6 +50,7 @@
 /packages/security/coverage
 /packages/mailer/coverage
 /packages/internationalization/coverage
+/packages/scheduler/coverages
 #Dist
 packages/common/dist/
 packages/core/dist/
@@ -58,3 +60,4 @@ packages/typeorm/dist/
 packages/security/dist/
 packages/mailer/dist/
 packages/internationalization/dist/
+packages/scheduler/dist/

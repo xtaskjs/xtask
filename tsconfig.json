@@ -23,6 +23,8 @@
       "@xtaskjs/security/*": ["packages/security/src/*"],
       "@xtaskjs/mailer": ["packages/mailer/src/index.ts"],
       "@xtaskjs/mailer/*": ["packages/mailer/src/*"],
+      "@xtaskjs/scheduler": ["packages/scheduler/src/index.ts"],
+      "@xtaskjs/scheduler/*": ["packages/scheduler/src/*"],
       "@xtaskjs/internationalization": ["packages/internationalization/src/index.ts"],
       "@xtaskjs/internationalization/*": ["packages/internationalization/src/*"]
     }

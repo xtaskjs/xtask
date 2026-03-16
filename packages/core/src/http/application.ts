@@ -63,6 +63,8 @@ type SecurityInitializeFn = (container: Container) => Promise<void>;
 type SecurityShutdownFn = () => Promise<void>;
 type MailerInitializeFn = (container: Container) => Promise<void>;
 type MailerShutdownFn = () => Promise<void>;
+type SchedulerInitializeFn = (container: Container, lifecycle: ApplicationLifeCycle) => Promise<void>;
+type SchedulerShutdownFn = () => Promise<void>;
 type InternationalizationInitializeFn = (container: Container) => Promise<void>;
 type InternationalizationShutdownFn = () => Promise<void>;
 type InternationalizationContextRunnerFn = <T>(
@@ -245,6 +247,50 @@ const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
     const missingPackage =
       error?.code === "MODULE_NOT_FOUND" ||
       String(error?.message || "").includes("@xtaskjs/mailer");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveSchedulerInitialize = (): SchedulerInitializeFn | undefined => {
+  try {
+    const schedulerPackage = require("@xtaskjs/scheduler") as {
+      initializeSchedulerIntegration?: SchedulerInitializeFn;
+    };
+
+    if (typeof schedulerPackage.initializeSchedulerIntegration === "function") {
+      return schedulerPackage.initializeSchedulerIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/scheduler");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveSchedulerShutdown = (): SchedulerShutdownFn | undefined => {
+  try {
+    const schedulerPackage = require("@xtaskjs/scheduler") as {
+      shutdownSchedulerIntegration?: SchedulerShutdownFn;
+    };
+
+    if (typeof schedulerPackage.shutdownSchedulerIntegration === "function") {
+      return schedulerPackage.shutdownSchedulerIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/scheduler");
 
     if (!missingPackage) {
       throw error;
@@ -480,6 +526,11 @@ export class XTaskHttpApplication {
       await shutdownMailerIntegration();
     }
 
+    const shutdownSchedulerIntegration = resolveSchedulerShutdown();
+    if (shutdownSchedulerIntegration) {
+      await shutdownSchedulerIntegration();
+    }
+
     const shutdownInternationalizationIntegration = resolveInternationalizationShutdown();
     if (shutdownInternationalizationIntegration) {
       await shutdownInternationalizationIntegration();
@@ -556,6 +607,11 @@ export async function registerContainerInLifecycle(
   const initializeMailerIntegration = resolveMailerInitialize();
   if (initializeMailerIntegration) {
     await initializeMailerIntegration(container);
+  }
+
+  const initializeSchedulerIntegration = resolveSchedulerInitialize();
+  if (initializeSchedulerIntegration) {
+    await initializeSchedulerIntegration(container, lifecycle);
   }
 
   const initializeInternationalizationIntegration = resolveInternationalizationInitialize();

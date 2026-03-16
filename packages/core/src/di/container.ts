@@ -174,6 +174,10 @@ export class Container{
         this.namedInstances.set(name, instance);
     }
 
+    public getRegisteredTypes(): any[] {
+        return Array.from(this.providers.keys());
+    }
+
     private getWithQualifier<T>(type: new (...args: any[]) => T, qualifier?: string): T {
         if(qualifier){
             return this.getByName<T>(qualifier);
