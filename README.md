@@ -11,6 +11,7 @@
 - `08-email_express_app`: Express mailer sample with file-backed email templates.
 - `09-internationalization_app`: node-http internationalization sample with request-scoped locale resolution, custom formatters, and lazy namespaces.
 - `10-internationalization_express_app`: Express internationalization sample with localized pages, views, and lazy checkout translations.
+- `11-scheduler_app`: node-http scheduler sample with boot jobs, named groups, retries, and inspection endpoints.
 
 ## Release helpers
 
