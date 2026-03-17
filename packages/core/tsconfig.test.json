@@ -9,6 +9,8 @@
     "paths": {
       "@xtaskjs/common": ["../common/src"],
       "@xtaskjs/common/*": ["../common/src/*"],
+      "@xtaskjs/cache": ["../cache/src"],
+      "@xtaskjs/cache/*": ["../cache/src/*"],
       "@xtaskjs/express-http": ["../express-http/src"],
       "@xtaskjs/express-http/*": ["../express-http/src/*"],
       "@xtaskjs/fastify-http": ["../fastify-http/src"],
@@ -25,6 +27,7 @@
     "src/**/*",
     "test/**/*",
     "../common/src/**/*",
+    "../cache/src/**/*",
     "../express-http/src/**/*",
     "../fastify-http/src/**/*",
     "../security/src/**/*",

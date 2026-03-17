@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">HTTP Cache For Web</p>
+        <h1>{{ title }}</h1>
+        <p class="lead">{{ subtitle }}</p>
+      </section>
+
+      <section class="panel">
+        <h2>What this page demonstrates</h2>
+        <p>
+          This route uses <strong>@CacheView</strong>, so the rendered HTML receives ETag,
+          Last-Modified, Vary, and Cache-Control headers.
+        </p>
+        <code class="code">{{ cacheHeader }}</code>
+      </section>
+
+      <section class="panel links">
+        <a href="/articles/edge-caching">Rendered article page</a>
+        <a href="/api/articles/edge-caching">JSON article endpoint</a>
+        <a href="/preview">Uncached preview page</a>
+        <a href="/ops/cache/http/routes">HTTP cache route inspection</a>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

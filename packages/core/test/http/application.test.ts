@@ -6,6 +6,7 @@ import {
 import { ForbiddenError } from "../../src/http/errors";
 import { view } from "../../src/http/types";
 import { initializeMailerIntegration, shutdownMailerIntegration } from "@xtaskjs/mailer";
+import { initializeCacheIntegration, shutdownCacheIntegration } from "@xtaskjs/cache";
 import {
   initializeInternationalizationIntegration,
   runWithInternationalizationContext,
@@ -15,6 +16,11 @@ import {
 jest.mock("@xtaskjs/mailer", () => ({
   initializeMailerIntegration: jest.fn(async () => {}),
   shutdownMailerIntegration: jest.fn(async () => {}),
+}));
+
+jest.mock("@xtaskjs/cache", () => ({
+  initializeCacheIntegration: jest.fn(async () => {}),
+  shutdownCacheIntegration: jest.fn(async () => {}),
 }));
 
 jest.mock("@xtaskjs/internationalization", () => ({
@@ -265,6 +271,7 @@ describe("XTaskHttpApplication", () => {
 
     expect(adapter.close).toHaveBeenCalledTimes(1);
     expect(shutdownMailerIntegration).toHaveBeenCalledTimes(1);
+    expect(shutdownCacheIntegration).toHaveBeenCalledTimes(1);
     expect(shutdownInternationalizationIntegration).toHaveBeenCalledTimes(1);
   });
 
@@ -363,11 +370,13 @@ describe("http application factories", () => {
     const registerLifeCycleListeners = jest.fn();
     const container = { registerLifeCycleListeners };
     const kernel = { getContainer: jest.fn(async () => container) } as any;
+    const lifecycle = {} as any;
 
-    await registerContainerInLifecycle(kernel, {} as any);
+    await registerContainerInLifecycle(kernel, lifecycle);
 
     expect(kernel.getContainer).toHaveBeenCalledTimes(1);
     expect(initializeMailerIntegration).toHaveBeenCalledWith(container);
+    expect(initializeCacheIntegration).toHaveBeenCalledWith(container, lifecycle);
     expect(initializeInternationalizationIntegration).toHaveBeenCalledWith(container);
     expect(registerLifeCycleListeners).toHaveBeenCalledTimes(1);
   });

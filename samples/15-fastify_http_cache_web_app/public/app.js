@@ -1,0 +1,1 @@
+document.documentElement.dataset.cacheSample = "fastify-http-cache-web";

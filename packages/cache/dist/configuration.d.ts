@@ -1,0 +1,12 @@
+import { CacheConfiguration, CacheModelOptions, CacheModelReference, CacheTtlInput, HttpCachePolicyOptions, RegisteredCacheConfiguration, RegisteredCacheModelOptions } from "./types";
+export declare const parseCacheDuration: (value?: CacheTtlInput) => number | undefined;
+export declare const configureCache: (value: CacheConfiguration) => RegisteredCacheConfiguration;
+export declare const getCacheConfiguration: () => RegisteredCacheConfiguration;
+export declare const getConfiguredHttpCacheDefaults: () => CacheConfiguration["httpCacheDefaults"];
+export declare const resolveHttpCachePolicy: <T = any>(policy?: HttpCachePolicyOptions<T>) => HttpCachePolicyOptions<T>;
+export declare const clearCacheConfiguration: () => void;
+export declare const registerCacheModel: <T = any>(model: CacheModelReference<T>, options?: CacheModelOptions<T>) => RegisteredCacheModelOptions<T>;
+export declare const getRegisteredCacheModels: () => RegisteredCacheModelOptions[];
+export declare const getRegisteredCacheModel: <T = any>(model: CacheModelReference<T>) => RegisteredCacheModelOptions<T> | undefined;
+export declare const clearRegisteredCacheModels: () => void;
+export declare const resetCacheConfiguration: () => void;

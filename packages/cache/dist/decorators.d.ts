@@ -1,0 +1,11 @@
+import { CacheConfiguration as CacheConfigurationOptions, CacheEvictOptions, CacheModelOptions, CacheModelReference, CachePutOptions, CacheableOptions } from "./types";
+export declare const CacheSettings: (options: CacheConfigurationOptions) => ClassDecorator;
+export declare const CacheModel: <T = any>(options?: CacheModelOptions<T>) => ClassDecorator;
+export declare const InjectCacheService: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectCacheLifecycleManager: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectCacheAdminService: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectHttpCacheService: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectCacheRepository: (model: CacheModelReference) => ParameterDecorator & PropertyDecorator;
+export declare const Cacheable: <T = any>(options: CacheableOptions<T>) => MethodDecorator;
+export declare const CachePut: <T = any>(options: CachePutOptions<T>) => MethodDecorator;
+export declare const CacheEvict: <T = any>(options: CacheEvictOptions<T>) => MethodDecorator;

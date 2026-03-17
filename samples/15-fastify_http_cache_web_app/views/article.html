@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <article class="panel article">
+        <p class="eyebrow">Rendered Article</p>
+        <h1>{{ title }}</h1>
+        <p>
+          The slug for this page is <strong>{{ slug }}</strong>.
+        </p>
+        <p>
+          This page is configured with route-level HTML caching and a fixed Last-Modified date.
+        </p>
+        <p class="muted">Published at: {{ lastPublished }}</p>
+      </article>
+    </main>
+  </body>
+</html>

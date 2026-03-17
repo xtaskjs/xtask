@@ -1,0 +1,1 @@
+document.documentElement.dataset.cacheSample = "http-cache-web";

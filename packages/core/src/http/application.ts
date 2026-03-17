@@ -63,6 +63,8 @@ type SecurityInitializeFn = (container: Container) => Promise<void>;
 type SecurityShutdownFn = () => Promise<void>;
 type MailerInitializeFn = (container: Container) => Promise<void>;
 type MailerShutdownFn = () => Promise<void>;
+type CacheInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
+type CacheShutdownFn = () => Promise<void>;
 type SchedulerInitializeFn = (container: Container, lifecycle: ApplicationLifeCycle) => Promise<void>;
 type SchedulerShutdownFn = () => Promise<void>;
 type InternationalizationInitializeFn = (container: Container) => Promise<void>;
@@ -247,6 +249,50 @@ const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
     const missingPackage =
       error?.code === "MODULE_NOT_FOUND" ||
       String(error?.message || "").includes("@xtaskjs/mailer");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveCacheInitialize = (): CacheInitializeFn | undefined => {
+  try {
+    const cachePackage = require("@xtaskjs/cache") as {
+      initializeCacheIntegration?: CacheInitializeFn;
+    };
+
+    if (typeof cachePackage.initializeCacheIntegration === "function") {
+      return cachePackage.initializeCacheIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/cache");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveCacheShutdown = (): CacheShutdownFn | undefined => {
+  try {
+    const cachePackage = require("@xtaskjs/cache") as {
+      shutdownCacheIntegration?: CacheShutdownFn;
+    };
+
+    if (typeof cachePackage.shutdownCacheIntegration === "function") {
+      return cachePackage.shutdownCacheIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/cache");
 
     if (!missingPackage) {
       throw error;
@@ -526,6 +572,11 @@ export class XTaskHttpApplication {
       await shutdownMailerIntegration();
     }
 
+    const shutdownCacheIntegration = resolveCacheShutdown();
+    if (shutdownCacheIntegration) {
+      await shutdownCacheIntegration();
+    }
+
     const shutdownSchedulerIntegration = resolveSchedulerShutdown();
     if (shutdownSchedulerIntegration) {
       await shutdownSchedulerIntegration();
@@ -607,6 +658,11 @@ export async function registerContainerInLifecycle(
   const initializeMailerIntegration = resolveMailerInitialize();
   if (initializeMailerIntegration) {
     await initializeMailerIntegration(container);
+  }
+
+  const initializeCacheIntegration = resolveCacheInitialize();
+  if (initializeCacheIntegration) {
+    await initializeCacheIntegration(container, lifecycle);
   }
 
   const initializeSchedulerIntegration = resolveSchedulerInitialize();
