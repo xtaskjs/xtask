@@ -1,9 +1,9 @@
 {
   "name": "@xtaskjs/core",
   "version": "1.0.20",
-  "description": "xtaskjs - modern, fast, node.js web framework (@core)",
+  "description": "Core application runtime and DI container for xtaskjs.",
   "author": "Javier Rodríguez Soler",
-  "homepage": "https://xtaskjs.com",
+  "homepage": "https://xtaskjs.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -26,14 +26,17 @@
     "coverage:open": "xdg-open coverage/lcov-report/index.html",
     "benchmark:startup": "TS_NODE_PROJECT=../../tsconfig.json node --expose-gc -r ts-node/register/transpile-only -r tsconfig-paths/register ./scripts/startup-benchmark.ts"
   },
-  "funding": {
+    "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/xtaskjs"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xtaskjs/xtaskjs.git",
+    "url": "https://github.com/xtaskjs/xtask.git",
     "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/xtaskjs/xtask/issues"
   },
   "publishConfig": {
     "access": "public"

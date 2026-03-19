@@ -2,6 +2,8 @@
 
 Scheduler integration package for xtaskjs.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/scheduler node-cron reflect-metadata
@@ -116,3 +118,8 @@ const reportJobs = scheduler.listJobs("reports");
 - Jobs with `runOnBoot` execute once during integration initialization.
 - On lifecycle `ready`: recurring and delayed jobs start automatically.
 - During `app.close()`: all running jobs are stopped before the container is destroyed.
+
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/scheduler](https://www.npmjs.com/package/@xtaskjs/scheduler)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

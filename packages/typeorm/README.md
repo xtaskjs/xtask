@@ -2,6 +2,8 @@
 
 TypeORM integration package for xtaskjs.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/typeorm typeorm reflect-metadata
@@ -55,3 +57,8 @@ export class UserService {
 ## Lifecycle Behavior
 - During container registration (`CreateApplication` bootstrap): datasources are initialized.
 - During `app.close()`: initialized datasources are destroyed.
+
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/typeorm](https://www.npmjs.com/package/@xtaskjs/security)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

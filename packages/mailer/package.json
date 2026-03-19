@@ -1,9 +1,9 @@
 {
   "name": "@xtaskjs/mailer",
   "version": "1.0.5",
-  "description": "xtaskjs mailer integration package",
+  "description": "Mailer integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
-  "homepage": "https://xtaskjs.com",
+  "homepage": "https://xtaskjs.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -25,14 +25,17 @@
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"
   },
-  "funding": {
+    "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/xtaskjs"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xtaskjs/xtaskjs.git",
+    "url": "https://github.com/xtaskjs/xtask.git",
     "directory": "packages/mailer"
+  },
+  "bugs": {
+    "url": "https://github.com/xtaskjs/xtask/issues"
   },
   "publishConfig": {
     "access": "public"

@@ -2,6 +2,8 @@
 
 Security integration package for xtaskjs.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/security passport passport-jwt reflect-metadata
@@ -113,3 +115,8 @@ class SecurityAwareService {
   ) {}
 }
 ```
+
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/security](https://www.npmjs.com/package/@xtaskjs/security)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

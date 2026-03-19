@@ -1,9 +1,9 @@
 {
   "name": "@xtaskjs/cache",
   "version": "1.0.0",
-  "description": "xtaskjs cache integration package",
+  "description": "Cache and HTTP caching integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
-  "homepage": "https://xtaskjs.com",
+  "homepage": "https://xtaskjs.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -31,8 +31,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xtaskjs/xtaskjs.git",
+    "url": "https://github.com/xtaskjs/xtask.git",
     "directory": "packages/cache"
+  },
+  "bugs": {
+    "url": "https://github.com/xtaskjs/xtask/issues"
   },
   "publishConfig": {
     "access": "public"

@@ -2,6 +2,8 @@
 
 Internationalization integration package for xtaskjs.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/internationalization reflect-metadata
@@ -190,3 +192,8 @@ registerInternationalizationLocaleResolver(({ request, container }) => {
 ## Lifecycle Behavior
 - During `CreateApplication()`: the package initializes before container lifecycle listeners are resolved.
 - During `app.close()`: request context support is shut down before the DI container is destroyed.
+
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/internationalization](https://www.npmjs.com/package/@xtaskjs/internationalization)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

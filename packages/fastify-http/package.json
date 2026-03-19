@@ -1,9 +1,9 @@
 {
   "name": "@xtaskjs/fastify-http",
   "version": "1.0.20",
-  "description": "xtaskjs fastify http adapter",
+  "description": "Fastify HTTP adapter for xtaskjs.",
   "author": "Javier Rodríguez Soler",
-  "homepage": "https://xtaskjs.com",
+  "homepage": "https://xtaskjs.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -25,14 +25,17 @@
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"
   },
-  "funding": {
+    "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/xtaskjs"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xtaskjs/xtaskjs.git",
+    "url": "https://github.com/xtaskjs/xtask.git",
     "directory": "packages/fastify-http"
+  },
+  "bugs": {
+    "url": "https://github.com/xtaskjs/xtask/issues"
   },
   "publishConfig": {
     "access": "public"

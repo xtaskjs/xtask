@@ -1,9 +1,9 @@
 {
   "name": "@xtaskjs/common",
   "version": "1.0.20",
-  "description": "xtaskjs - modern, fast, node.js web framework (@common)",
+  "description": "Common decorators, validation, and utilities for xtaskjs.",
   "author": "Javier Rodríguez Soler",
-  "homepage": "https://xtaskjs.com",
+  "homepage": "https://xtaskjs.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -31,8 +31,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xtaskjs/xtaskjs.git",
+    "url": "https://github.com/xtaskjs/xtask.git",
     "directory": "packages/common"
+  },
+  "bugs": {
+    "url": "https://github.com/xtaskjs/xtask/issues"
   },
   "publishConfig": {
     "access": "public"

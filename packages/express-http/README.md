@@ -2,6 +2,8 @@
 
 Express adapter package for xtaskjs HTTP applications.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/express-http
@@ -71,3 +73,8 @@ await CreateApplication({
   adapterInstance: expressApp,
 });
 ```
+
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/express-http](https://www.npmjs.com/package/@xtaskjs/express-http)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

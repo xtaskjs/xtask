@@ -2,6 +2,8 @@
 
 Mailer integration package for xtaskjs.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/mailer nodemailer reflect-metadata
@@ -199,3 +201,8 @@ registerMailerTemplate({
 ## Lifecycle Behavior
 - During `CreateApplication()`: registered transports are created before container lifecycle listeners are resolved.
 - During `app.close()`: transporters are closed before the DI container is destroyed.
+
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/mailer](https://www.npmjs.com/package/@xtaskjs/mailer)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

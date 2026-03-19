@@ -2,6 +2,8 @@
 
 Cache integration package for xtaskjs.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/cache reflect-metadata
@@ -275,3 +277,8 @@ Supported policy options:
 ## Lifecycle Behavior
 - During `CreateApplication()`: registered cache models are materialized into repositories and added to the xtaskjs container.
 - During `app.close()`: owned Redis connections are closed before the DI container is destroyed.
+
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/cache](https://www.npmjs.com/package/@xtaskjs/cache)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

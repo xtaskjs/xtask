@@ -2,6 +2,8 @@
 
 Core package for xtaskjs, a modern, fast Node.js web framework.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/core
@@ -111,5 +113,7 @@ The selected adapter must implement view rendering (for example `@xtaskjs/expres
 - Example:
 	- `XTASKJS_BENCH_WARMUP=5 XTASKJS_BENCH_ITERATIONS=20 XTASKJS_BENCH_NODE_ENV=production npm run benchmark:startup --prefix packages/core`
 
-## Documentation
-See [xtaskjs.com](https://xtaskjs.com) for full documentation.
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/core](https://www.npmjs.com/package/@xtaskjs/core)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

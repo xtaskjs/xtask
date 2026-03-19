@@ -2,6 +2,8 @@
 
 Fastify adapter package for xtaskjs HTTP applications.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/fastify-http
@@ -55,3 +57,8 @@ await CreateApplication({
   adapterInstance: fastifyApp,
 });
 ```
+
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/express-http](https://www.npmjs.com/package/@xtaskjs/fastify-http)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

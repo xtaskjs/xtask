@@ -2,6 +2,8 @@
 
 Common utilities for xtaskjs, a modern, fast Node.js web framework.
 
+This package is part of the xtaskjs project, hosted at [xtaskjs.io](https://xtaskjs.io).
+
 ## Installation
 ```bash
 npm install @xtaskjs/common
@@ -86,5 +88,7 @@ npm install class-transformer class-validator
 
 `@xtaskjs/core` now registers `new ValidationPipe()` globally during `CreateApplication()`, so DTO validation is enabled by default at startup.
 
-## Documentation
-See [xtaskjs.com](https://xtaskjs.com) for full documentation.
+## Resources
+- Project site and documentation: [xtaskjs.io](https://xtaskjs.io)
+- npm package: [@xtaskjs/common](https://www.npmjs.com/package/@xtaskjs/common)
+- Source repository: [xtaskjs/xtaskjs](https://github.com/xtaskjs/xtaskjs)

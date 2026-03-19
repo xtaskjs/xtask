@@ -1,9 +1,9 @@
 {
   "name": "@xtaskjs/security",
   "version": "1.0.6",
-  "description": "xtaskjs security integration package",
+  "description": "Authentication and authorization integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
-  "homepage": "https://xtaskjs.com",
+  "homepage": "https://xtaskjs.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -24,15 +24,18 @@
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"
-  },
-  "funding": {
+   },
+    "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/xtaskjs"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xtaskjs/xtaskjs.git",
+    "url": "https://github.com/xtaskjs/xtask.git",
     "directory": "packages/security"
+  },
+  "bugs": {
+    "url": "https://github.com/xtaskjs/xtask/issues"
   },
   "publishConfig": {
     "access": "public"
