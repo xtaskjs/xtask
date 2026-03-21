@@ -1,4 +1,6 @@
 import { HttpMethod } from "@xtaskjs/common";
+import { createRequire } from "module";
+import { join } from "path";
 import { clearCurrentContainer, Container, setCurrentContainer } from "../di";
 import { Kernel } from "../kernel";
 import { ApplicationLifeCycle } from "../server";
@@ -23,6 +25,35 @@ export interface CreateApplicationOptions {
 const defaultServerOptions: Required<HttpServerOptions> = {
   host: "127.0.0.1",
   port: 3000,
+};
+
+const getApplicationRequire = (): NodeRequire | undefined => {
+  try {
+    return createRequire(join(process.cwd(), "package.json"));
+  } catch {
+    return undefined;
+  }
+};
+
+const requireFromApplication = <T = any>(moduleName: string): T => {
+  try {
+    return require(moduleName) as T;
+  } catch (error: any) {
+    const isMissingCurrentModule =
+      error?.code === "MODULE_NOT_FOUND" &&
+      String(error?.message || "").includes(`'${moduleName}'`);
+
+    if (!isMissingCurrentModule) {
+      throw error;
+    }
+
+    const applicationRequire = getApplicationRequire();
+    if (!applicationRequire) {
+      throw error;
+    }
+
+    return applicationRequire(moduleName) as T;
+  }
 };
 
 const normalizeServerOptions = (
@@ -67,6 +98,8 @@ type CacheInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle
 type CacheShutdownFn = () => Promise<void>;
 type SchedulerInitializeFn = (container: Container, lifecycle: ApplicationLifeCycle) => Promise<void>;
 type SchedulerShutdownFn = () => Promise<void>;
+type QueueInitializeFn = (container: Container, lifecycle: ApplicationLifeCycle) => Promise<void>;
+type QueueShutdownFn = () => Promise<void>;
 type InternationalizationInitializeFn = (container: Container) => Promise<void>;
 type InternationalizationShutdownFn = () => Promise<void>;
 type InternationalizationContextRunnerFn = <T>(
@@ -128,9 +161,9 @@ const resolveFastifyAdapter = (): FastifyAdapterConstructor => {
 
 const resolveTypeOrmInitialize = (): TypeOrmInitializeFn | undefined => {
   try {
-    const typeormPackage = require("@xtaskjs/typeorm") as {
+    const typeormPackage = requireFromApplication<{
       initializeTypeOrmIntegration?: TypeOrmInitializeFn;
-    };
+    }>("@xtaskjs/typeorm");
 
     if (typeof typeormPackage.initializeTypeOrmIntegration === "function") {
       return typeormPackage.initializeTypeOrmIntegration;
@@ -150,9 +183,9 @@ const resolveTypeOrmInitialize = (): TypeOrmInitializeFn | undefined => {
 
 const resolveTypeOrmShutdown = (): TypeOrmShutdownFn | undefined => {
   try {
-    const typeormPackage = require("@xtaskjs/typeorm") as {
+    const typeormPackage = requireFromApplication<{
       shutdownTypeOrmIntegration?: TypeOrmShutdownFn;
-    };
+    }>("@xtaskjs/typeorm");
 
     if (typeof typeormPackage.shutdownTypeOrmIntegration === "function") {
       return typeormPackage.shutdownTypeOrmIntegration;
@@ -172,9 +205,9 @@ const resolveTypeOrmShutdown = (): TypeOrmShutdownFn | undefined => {
 
 const resolveSecurityInitialize = (): SecurityInitializeFn | undefined => {
   try {
-    const securityPackage = require("@xtaskjs/security") as {
+    const securityPackage = requireFromApplication<{
       initializeSecurityIntegration?: SecurityInitializeFn;
-    };
+    }>("@xtaskjs/security");
 
     if (typeof securityPackage.initializeSecurityIntegration === "function") {
       return securityPackage.initializeSecurityIntegration;
@@ -194,9 +227,9 @@ const resolveSecurityInitialize = (): SecurityInitializeFn | undefined => {
 
 const resolveSecurityShutdown = (): SecurityShutdownFn | undefined => {
   try {
-    const securityPackage = require("@xtaskjs/security") as {
+    const securityPackage = requireFromApplication<{
       shutdownSecurityIntegration?: SecurityShutdownFn;
-    };
+    }>("@xtaskjs/security");
 
     if (typeof securityPackage.shutdownSecurityIntegration === "function") {
       return securityPackage.shutdownSecurityIntegration;
@@ -216,9 +249,9 @@ const resolveSecurityShutdown = (): SecurityShutdownFn | undefined => {
 
 const resolveMailerInitialize = (): MailerInitializeFn | undefined => {
   try {
-    const mailerPackage = require("@xtaskjs/mailer") as {
+    const mailerPackage = requireFromApplication<{
       initializeMailerIntegration?: MailerInitializeFn;
-    };
+    }>("@xtaskjs/mailer");
 
     if (typeof mailerPackage.initializeMailerIntegration === "function") {
       return mailerPackage.initializeMailerIntegration;
@@ -238,9 +271,9 @@ const resolveMailerInitialize = (): MailerInitializeFn | undefined => {
 
 const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
   try {
-    const mailerPackage = require("@xtaskjs/mailer") as {
+    const mailerPackage = requireFromApplication<{
       shutdownMailerIntegration?: MailerShutdownFn;
-    };
+    }>("@xtaskjs/mailer");
 
     if (typeof mailerPackage.shutdownMailerIntegration === "function") {
       return mailerPackage.shutdownMailerIntegration;
@@ -260,9 +293,9 @@ const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
 
 const resolveCacheInitialize = (): CacheInitializeFn | undefined => {
   try {
-    const cachePackage = require("@xtaskjs/cache") as {
+    const cachePackage = requireFromApplication<{
       initializeCacheIntegration?: CacheInitializeFn;
-    };
+    }>("@xtaskjs/cache");
 
     if (typeof cachePackage.initializeCacheIntegration === "function") {
       return cachePackage.initializeCacheIntegration;
@@ -282,9 +315,9 @@ const resolveCacheInitialize = (): CacheInitializeFn | undefined => {
 
 const resolveCacheShutdown = (): CacheShutdownFn | undefined => {
   try {
-    const cachePackage = require("@xtaskjs/cache") as {
+    const cachePackage = requireFromApplication<{
       shutdownCacheIntegration?: CacheShutdownFn;
-    };
+    }>("@xtaskjs/cache");
 
     if (typeof cachePackage.shutdownCacheIntegration === "function") {
       return cachePackage.shutdownCacheIntegration;
@@ -304,9 +337,9 @@ const resolveCacheShutdown = (): CacheShutdownFn | undefined => {
 
 const resolveSchedulerInitialize = (): SchedulerInitializeFn | undefined => {
   try {
-    const schedulerPackage = require("@xtaskjs/scheduler") as {
+    const schedulerPackage = requireFromApplication<{
       initializeSchedulerIntegration?: SchedulerInitializeFn;
-    };
+    }>("@xtaskjs/scheduler");
 
     if (typeof schedulerPackage.initializeSchedulerIntegration === "function") {
       return schedulerPackage.initializeSchedulerIntegration;
@@ -326,9 +359,9 @@ const resolveSchedulerInitialize = (): SchedulerInitializeFn | undefined => {
 
 const resolveSchedulerShutdown = (): SchedulerShutdownFn | undefined => {
   try {
-    const schedulerPackage = require("@xtaskjs/scheduler") as {
+    const schedulerPackage = requireFromApplication<{
       shutdownSchedulerIntegration?: SchedulerShutdownFn;
-    };
+    }>("@xtaskjs/scheduler");
 
     if (typeof schedulerPackage.shutdownSchedulerIntegration === "function") {
       return schedulerPackage.shutdownSchedulerIntegration;
@@ -346,11 +379,55 @@ const resolveSchedulerShutdown = (): SchedulerShutdownFn | undefined => {
   return undefined;
 };
 
+const resolveQueueInitialize = (): QueueInitializeFn | undefined => {
+  try {
+    const queuesPackage = requireFromApplication<{
+      initializeQueueIntegration?: QueueInitializeFn;
+    }>("@xtaskjs/queues");
+
+    if (typeof queuesPackage.initializeQueueIntegration === "function") {
+      return queuesPackage.initializeQueueIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/queues");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveQueueShutdown = (): QueueShutdownFn | undefined => {
+  try {
+    const queuesPackage = requireFromApplication<{
+      shutdownQueueIntegration?: QueueShutdownFn;
+    }>("@xtaskjs/queues");
+
+    if (typeof queuesPackage.shutdownQueueIntegration === "function") {
+      return queuesPackage.shutdownQueueIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/queues");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
 const resolveInternationalizationInitialize = (): InternationalizationInitializeFn | undefined => {
   try {
-    const internationalizationPackage = require("@xtaskjs/internationalization") as {
+    const internationalizationPackage = requireFromApplication<{
       initializeInternationalizationIntegration?: InternationalizationInitializeFn;
-    };
+    }>("@xtaskjs/internationalization");
 
     if (typeof internationalizationPackage.initializeInternationalizationIntegration === "function") {
       return internationalizationPackage.initializeInternationalizationIntegration;
@@ -370,9 +447,9 @@ const resolveInternationalizationInitialize = (): InternationalizationInitialize
 
 const resolveInternationalizationShutdown = (): InternationalizationShutdownFn | undefined => {
   try {
-    const internationalizationPackage = require("@xtaskjs/internationalization") as {
+    const internationalizationPackage = requireFromApplication<{
       shutdownInternationalizationIntegration?: InternationalizationShutdownFn;
-    };
+    }>("@xtaskjs/internationalization");
 
     if (typeof internationalizationPackage.shutdownInternationalizationIntegration === "function") {
       return internationalizationPackage.shutdownInternationalizationIntegration;
@@ -582,6 +659,11 @@ export class XTaskHttpApplication {
       await shutdownSchedulerIntegration();
     }
 
+    const shutdownQueueIntegration = resolveQueueShutdown();
+    if (shutdownQueueIntegration) {
+      await shutdownQueueIntegration();
+    }
+
     const shutdownInternationalizationIntegration = resolveInternationalizationShutdown();
     if (shutdownInternationalizationIntegration) {
       await shutdownInternationalizationIntegration();
@@ -668,6 +750,11 @@ export async function registerContainerInLifecycle(
   const initializeSchedulerIntegration = resolveSchedulerInitialize();
   if (initializeSchedulerIntegration) {
     await initializeSchedulerIntegration(container, lifecycle);
+  }
+
+  const initializeQueueIntegration = resolveQueueInitialize();
+  if (initializeQueueIntegration) {
+    await initializeQueueIntegration(container, lifecycle);
   }
 
   const initializeInternationalizationIntegration = resolveInternationalizationInitialize();

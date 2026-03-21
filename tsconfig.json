@@ -27,6 +27,8 @@
       "@xtaskjs/cache/*": ["packages/cache/src/*"],
       "@xtaskjs/scheduler": ["packages/scheduler/src/index.ts"],
       "@xtaskjs/scheduler/*": ["packages/scheduler/src/*"],
+      "@xtaskjs/queues": ["packages/queues/src/index.ts"],
+      "@xtaskjs/queues/*": ["packages/queues/src/*"],
       "@xtaskjs/internationalization": ["packages/internationalization/src/index.ts"],
       "@xtaskjs/internationalization/*": ["packages/internationalization/src/*"]
     }

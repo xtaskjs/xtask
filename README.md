@@ -12,6 +12,8 @@
 - `09-internationalization_app`: node-http internationalization sample with request-scoped locale resolution, custom formatters, and lazy namespaces.
 - `10-internationalization_express_app`: Express internationalization sample with localized pages, views, and lazy checkout translations.
 - `11-scheduler_app`: node-http scheduler sample with boot jobs, named groups, retries, and inspection endpoints.
+- `16-queues_memory_app`: node-http queues sample using the in-memory transport, queue handlers, pattern listeners, and publish decorators.
+- `17-queues_rabbitmq_app`: node-http queues sample using RabbitMQ, topic bindings, retries, and dead-letter handling.
 
 ## Release helpers
 

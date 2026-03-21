@@ -43,6 +43,7 @@
 /src/packages/internationalization/coverage
 /src/packages/scheduler/coverage
 /src/packages/cache/coverage
+/src/packages/queues/coverage
 /packages/core/coverage
 /packages/common/coverage
 /packages/express-http/coverage
@@ -51,8 +52,9 @@
 /packages/security/coverage
 /packages/mailer/coverage
 /packages/internationalization/coverage
-/packages/scheduler/coverages
+/packages/scheduler/coverage
 /packages/cache/coverage
+/packages/queues/coverage
 #Dist
 packages/common/dist/
 packages/core/dist/
@@ -63,4 +65,5 @@ packages/security/dist/
 packages/mailer/dist/
 packages/internationalization/dist/
 packages/scheduler/dist/
-packages/cache/dist/ss
+packages/cache/dist/
+packages/queues/dist/
