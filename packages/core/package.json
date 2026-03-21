@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/core",
-  "version": "1.0.20",
+  "version": "1.0.22",
   "description": "Core application runtime and DI container for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -26,7 +26,7 @@
     "coverage:open": "xdg-open coverage/lcov-report/index.html",
     "benchmark:startup": "TS_NODE_PROJECT=../../tsconfig.json node --expose-gc -r ts-node/register/transpile-only -r tsconfig-paths/register ./scripts/startup-benchmark.ts"
   },
-    "funding": {
+  "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/xtaskjs"
   },
@@ -43,7 +43,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.20"
+    "@xtaskjs/common": "^1.0.22"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0"

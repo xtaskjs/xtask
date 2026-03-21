@@ -21,8 +21,10 @@ Use the root scripts to pack or publish workspace packages in dependency order:
 
 ```bash
 npm run release:order
+npm run version:packages -- patch
 npm run pack:packages
 npm run publish:packages
+npm run publish:packages -- --bump patch
 ```
 
 Additional npm arguments can be passed through with `--`:

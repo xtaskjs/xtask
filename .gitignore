@@ -67,3 +67,5 @@ packages/internationalization/dist/
 packages/scheduler/dist/
 packages/cache/dist/
 packages/queues/dist/
+#Packages
+packages/*/*.tgz

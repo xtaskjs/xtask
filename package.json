@@ -23,6 +23,7 @@
     "coverage:open:internationalization": "npm run coverage:open --prefix packages/internationalization",
     "benchmark:startup": "npm run benchmark:startup --prefix packages/core",
     "release:order": "node ./scripts/release-packages.js list",
+    "version:packages": "node ./scripts/release-packages.js version",
     "pack:packages": "node ./scripts/release-packages.js pack",
     "publish:packages": "node ./scripts/release-packages.js publish",
     "clean": "rm -r dist"
