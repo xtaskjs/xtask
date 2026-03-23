@@ -13,6 +13,8 @@
       "@xtaskjs/common/*": ["packages/common/src/*"],
       "@xtaskjs/core": ["packages/core/src/index.ts"],
       "@xtaskjs/core/*": ["packages/core/src/*"],
+      "@xtaskjs/value-objects": ["packages/value-objects/src/index.ts"],
+      "@xtaskjs/value-objects/*": ["packages/value-objects/src/*"],
       "@xtaskjs/express-http": ["packages/express-http/src/index.ts"],
       "@xtaskjs/express-http/*": ["packages/express-http/src/*"],
       "@xtaskjs/fastify-http": ["packages/fastify-http/src/index.ts"],
