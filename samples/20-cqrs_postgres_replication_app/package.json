@@ -1,0 +1,34 @@
+{
+  "name": "20-cqrs_postgres_replication_app",
+  "version": "1.0.0",
+  "description": "xTaskJS CQRS sample with PostgreSQL master/slave replication in Docker.",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm run build --prefix ../../packages/cqrs",
+    "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
+    "prebuild": "npm run build --prefix ../../packages/cqrs",
+    "build": "npm run clean; tsc",
+    "clean": "rm -rf dist",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down -v",
+    "docker:logs": "docker-compose logs -f postgres-master postgres-slave"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@xtaskjs/common": "file:../../packages/common",
+    "@xtaskjs/core": "file:../../packages/core",
+    "@xtaskjs/cqrs": "file:../../packages/cqrs",
+    "@xtaskjs/typeorm": "file:../../packages/typeorm",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.28"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2"
+  }
+}

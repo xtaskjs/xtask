@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  postgres-master:
+    image: bitnami/postgresql
+    container_name: xtask-cqrs-postgres-master
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRESQL_POSTGRES_PASSWORD: postgres
+      POSTGRESQL_USERNAME: xtask
+      POSTGRESQL_PASSWORD: xtask
+      POSTGRESQL_DATABASE: xtask_cqrs
+      POSTGRESQL_REPLICATION_MODE: master
+      POSTGRESQL_REPLICATION_USER: replicator
+      POSTGRESQL_REPLICATION_PASSWORD: replicator
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xtask -d xtask_cqrs"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres-master-data:/bitnami/postgresql
+
+  postgres-slave:
+    image: bitnami/postgresql
+    container_name: xtask-cqrs-postgres-slave
+    depends_on:
+      postgres-master:
+        condition: service_healthy
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRESQL_POSTGRES_PASSWORD: postgres
+      POSTGRESQL_USERNAME: xtask
+      POSTGRESQL_PASSWORD: xtask
+      POSTGRESQL_DATABASE: xtask_cqrs
+      POSTGRESQL_REPLICATION_MODE: slave
+      POSTGRESQL_REPLICATION_USER: replicator
+      POSTGRESQL_REPLICATION_PASSWORD: replicator
+      POSTGRESQL_MASTER_HOST: postgres-master
+      POSTGRESQL_MASTER_PORT_NUMBER: 5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xtask -d xtask_cqrs"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres-slave-data:/bitnami/postgresql
+
+volumes:
+  postgres-master-data:
+  postgres-slave-data:

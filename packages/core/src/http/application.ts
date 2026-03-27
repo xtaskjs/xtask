@@ -100,6 +100,8 @@ type SchedulerInitializeFn = (container: Container, lifecycle: ApplicationLifeCy
 type SchedulerShutdownFn = () => Promise<void>;
 type QueueInitializeFn = (container: Container, lifecycle: ApplicationLifeCycle) => Promise<void>;
 type QueueShutdownFn = () => Promise<void>;
+type CqrsInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
+type CqrsShutdownFn = () => Promise<void>;
 type InternationalizationInitializeFn = (container: Container) => Promise<void>;
 type InternationalizationShutdownFn = () => Promise<void>;
 type InternationalizationContextRunnerFn = <T>(
@@ -423,6 +425,50 @@ const resolveQueueShutdown = (): QueueShutdownFn | undefined => {
   return undefined;
 };
 
+const resolveCqrsInitialize = (): CqrsInitializeFn | undefined => {
+  try {
+    const cqrsPackage = requireFromApplication<{
+      initializeCqrsIntegration?: CqrsInitializeFn;
+    }>("@xtaskjs/cqrs");
+
+    if (typeof cqrsPackage.initializeCqrsIntegration === "function") {
+      return cqrsPackage.initializeCqrsIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/cqrs");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveCqrsShutdown = (): CqrsShutdownFn | undefined => {
+  try {
+    const cqrsPackage = requireFromApplication<{
+      shutdownCqrsIntegration?: CqrsShutdownFn;
+    }>("@xtaskjs/cqrs");
+
+    if (typeof cqrsPackage.shutdownCqrsIntegration === "function") {
+      return cqrsPackage.shutdownCqrsIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/cqrs");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
 const resolveInternationalizationInitialize = (): InternationalizationInitializeFn | undefined => {
   try {
     const internationalizationPackage = requireFromApplication<{
@@ -635,6 +681,11 @@ export class XTaskHttpApplication {
     }
 
     const shutdownTypeOrmIntegration = resolveTypeOrmShutdown();
+    const shutdownCqrsIntegration = resolveCqrsShutdown();
+    if (shutdownCqrsIntegration) {
+      await shutdownCqrsIntegration();
+    }
+
     if (shutdownTypeOrmIntegration) {
       await shutdownTypeOrmIntegration();
     }
@@ -730,6 +781,11 @@ export async function registerContainerInLifecycle(
   const initializeTypeOrmIntegration = resolveTypeOrmInitialize();
   if (initializeTypeOrmIntegration) {
     await initializeTypeOrmIntegration(container);
+  }
+
+  const initializeCqrsIntegration = resolveCqrsInitialize();
+  if (initializeCqrsIntegration) {
+    await initializeCqrsIntegration(container, lifecycle);
   }
 
   const initializeSecurityIntegration = resolveSecurityInitialize();

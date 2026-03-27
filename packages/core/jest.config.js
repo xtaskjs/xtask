@@ -14,6 +14,8 @@ module.exports = {
     "^@xtaskjs/common/(.*)$": "<rootDir>/../common/src/$1",
     "^@xtaskjs/cache$": "<rootDir>/../cache/src/index.ts",
     "^@xtaskjs/cache/(.*)$": "<rootDir>/../cache/src/$1",
+    "^@xtaskjs/cqrs$": "<rootDir>/../cqrs/src/index.ts",
+    "^@xtaskjs/cqrs/(.*)$": "<rootDir>/../cqrs/src/$1",
     "^@xtaskjs/express-http$": "<rootDir>/../express-http/src/index.ts",
     "^@xtaskjs/express-http/(.*)$": "<rootDir>/../express-http/src/$1",
     "^@xtaskjs/fastify-http$": "<rootDir>/../fastify-http/src/index.ts",

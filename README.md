@@ -14,6 +14,9 @@
 - `11-scheduler_app`: node-http scheduler sample with boot jobs, named groups, retries, and inspection endpoints.
 - `16-queues_memory_app`: node-http queues sample using the in-memory transport, queue handlers, pattern listeners, and publish decorators.
 - `17-queues_rabbitmq_app`: node-http queues sample using RabbitMQ, topic bindings, retries, and dead-letter handling.
+- `18-value_objects_app`: node-http value objects sample with DTO hydration, normalization, JSON-backed properties, and DI-backed factories.
+- `19-cqrs_app`: node-http CQRS sample with a write model, read projection, command/query buses, and separate SQLite read/write databases.
+- `20-cqrs_postgres_replication_app`: node-http CQRS sample with PostgreSQL master/slave replication in Docker, master-only writes, and slave-only reads.
 
 ## Release helpers
 

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "rootDir": "./",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "paths": {
+      "@xtaskjs/common": ["../../packages/common/dist"],
+      "@xtaskjs/common/*": ["../../packages/common/dist/*"],
+      "@xtaskjs/core": ["../../packages/core/dist"],
+      "@xtaskjs/core/*": ["../../packages/core/dist/*"],
+      "@xtaskjs/value-objects": ["../../packages/value-objects/dist"],
+      "@xtaskjs/value-objects/*": ["../../packages/value-objects/dist/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

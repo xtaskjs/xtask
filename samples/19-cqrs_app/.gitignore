@@ -1,0 +1,21 @@
+
+# Build output
+/dist
+
+# IDE
+/.idea
+/.vscode
+
+# Dependencies
+/node_modules
+
+# Environment variables
+/.env
+
+# SQLite databases
+/xtask-cqrs-read.sqlite
+/xtask-cqrs-write.sqlite
+
+# Miscellaneous
+/.DS_Store
+/.tsbuildinfo

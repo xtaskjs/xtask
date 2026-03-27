@@ -1,0 +1,17 @@
+
+# Build output
+/dist
+
+# Dependencies
+/node_modules
+
+# Environment
+/.env
+
+# IDE
+/.idea
+/.vscode
+
+# Misc
+/.DS_Store
+/.tsbuildinfo

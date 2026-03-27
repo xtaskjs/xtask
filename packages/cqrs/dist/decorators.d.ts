@@ -1,0 +1,17 @@
+import { IdempotentCommandOptions, MessageReference } from "./types";
+export declare const CommandHandler: (command: MessageReference) => ClassDecorator;
+export declare const QueryHandler: (query: MessageReference) => ClassDecorator;
+export declare const EventHandler: (event: MessageReference | MessageReference[]) => ClassDecorator;
+export declare const ProcessManager: (event: MessageReference | MessageReference[]) => ClassDecorator;
+export declare const Saga: (event: MessageReference | MessageReference[]) => ClassDecorator;
+export declare const ProjectionRebuilder: (name: string) => ClassDecorator;
+export declare const IdempotentCommand: <TCommand = any>(options?: IdempotentCommandOptions<TCommand>) => ClassDecorator;
+export declare const InjectCommandBus: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectQueryBus: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectEventBus: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectIdempotencyStore: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectCqrsLifecycleManager: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectReadDataSource: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectWriteDataSource: () => ParameterDecorator & PropertyDecorator;
+export declare const InjectReadRepository: (entity: MessageReference) => ParameterDecorator & PropertyDecorator;
+export declare const InjectWriteRepository: (entity: MessageReference) => ParameterDecorator & PropertyDecorator;
