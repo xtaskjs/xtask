@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/core",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "Core application runtime and DI container for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -43,7 +43,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.23"
+    "@xtaskjs/common": "^1.0.24"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0"

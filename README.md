@@ -36,3 +36,21 @@ Additional npm arguments can be passed through with `--`:
 npm run pack:packages -- --dry-run
 npm run publish:packages -- --tag next
 ```
+
+## Release auth
+
+Publishing to npm for the `@xtaskjs` scope requires credentials that satisfy npm's 2FA policy.
+
+The publish helper now runs a preflight auth check before starting the batch and will stop early if npm auth is missing or no publish token is configured.
+
+- Prefer a granular access token with publish permissions for the scope and 2FA bypass enabled.
+- Export the token before publishing so `npm publish` can use it from each package directory.
+- For CI releases, prefer npm trusted publishing instead of a long-lived local token.
+
+Example local setup:
+
+```bash
+export NPM_TOKEN=your_token_here
+npm whoami
+npm run publish:packages
+```
