@@ -102,6 +102,8 @@ type QueueInitializeFn = (container: Container, lifecycle: ApplicationLifeCycle)
 type QueueShutdownFn = () => Promise<void>;
 type CqrsInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
 type CqrsShutdownFn = () => Promise<void>;
+type EventSourceInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
+type EventSourceShutdownFn = () => Promise<void>;
 type InternationalizationInitializeFn = (container: Container) => Promise<void>;
 type InternationalizationShutdownFn = () => Promise<void>;
 type InternationalizationContextRunnerFn = <T>(
@@ -469,6 +471,50 @@ const resolveCqrsShutdown = (): CqrsShutdownFn | undefined => {
   return undefined;
 };
 
+const resolveEventSourceInitialize = (): EventSourceInitializeFn | undefined => {
+  try {
+    const eventSourcePackage = requireFromApplication<{
+      initializeEventSourceIntegration?: EventSourceInitializeFn;
+    }>("@xtaskjs/event-source");
+
+    if (typeof eventSourcePackage.initializeEventSourceIntegration === "function") {
+      return eventSourcePackage.initializeEventSourceIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/event-source");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveEventSourceShutdown = (): EventSourceShutdownFn | undefined => {
+  try {
+    const eventSourcePackage = requireFromApplication<{
+      shutdownEventSourceIntegration?: EventSourceShutdownFn;
+    }>("@xtaskjs/event-source");
+
+    if (typeof eventSourcePackage.shutdownEventSourceIntegration === "function") {
+      return eventSourcePackage.shutdownEventSourceIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/event-source");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
 const resolveInternationalizationInitialize = (): InternationalizationInitializeFn | undefined => {
   try {
     const internationalizationPackage = requireFromApplication<{
@@ -682,8 +728,13 @@ export class XTaskHttpApplication {
 
     const shutdownTypeOrmIntegration = resolveTypeOrmShutdown();
     const shutdownCqrsIntegration = resolveCqrsShutdown();
+    const shutdownEventSourceIntegration = resolveEventSourceShutdown();
     if (shutdownCqrsIntegration) {
       await shutdownCqrsIntegration();
+    }
+
+    if (shutdownEventSourceIntegration) {
+      await shutdownEventSourceIntegration();
     }
 
     if (shutdownTypeOrmIntegration) {
@@ -786,6 +837,11 @@ export async function registerContainerInLifecycle(
   const initializeCqrsIntegration = resolveCqrsInitialize();
   if (initializeCqrsIntegration) {
     await initializeCqrsIntegration(container, lifecycle);
+  }
+
+  const initializeEventSourceIntegration = resolveEventSourceInitialize();
+  if (initializeEventSourceIntegration) {
+    await initializeEventSourceIntegration(container, lifecycle);
   }
 
   const initializeSecurityIntegration = resolveSecurityInitialize();

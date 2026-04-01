@@ -17,6 +17,8 @@
 - `18-value_objects_app`: node-http value objects sample with DTO hydration, normalization, JSON-backed properties, and DI-backed factories.
 - `19-cqrs_app`: node-http CQRS sample with a write model, read projection, command/query buses, and separate SQLite read/write databases.
 - `20-cqrs_postgres_replication_app`: node-http CQRS sample with PostgreSQL master/slave replication in Docker, master-only writes, and slave-only reads.
+- `21-event_source_rabbitmq_app`: node-http event-source sample with a TypeORM-backed SQLite event store, replayed aggregates, projection updates, and RabbitMQ delivery.
+- `22-event_source_cqrs_app`: node-http interoperability sample where event-source owns writes and CQRS builds the read model from persisted domain events.
 
 ## Release helpers
 

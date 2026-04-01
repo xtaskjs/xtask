@@ -31,6 +31,8 @@
       "@xtaskjs/scheduler/*": ["packages/scheduler/src/*"],
       "@xtaskjs/queues": ["packages/queues/src/index.ts"],
       "@xtaskjs/queues/*": ["packages/queues/src/*"],
+      "@xtaskjs/event-source": ["packages/event-source/src/index.ts"],
+      "@xtaskjs/event-source/*": ["packages/event-source/src/*"],
       "@xtaskjs/internationalization": ["packages/internationalization/src/index.ts"],
       "@xtaskjs/internationalization/*": ["packages/internationalization/src/*"]
     }

@@ -46,6 +46,7 @@
 /src/packages/queues/coverage
 /src/packages/value-objects/coverage
 /src/packages/cqrs/coverage
+/src/packages/event-source/coverage
 /packages/core/coverage
 /packages/common/coverage
 /packages/express-http/coverage
@@ -59,6 +60,7 @@
 /packages/queues/coverage
 /packages/value-objects/coverage
 /packages/cqrs/coverage
+/packages/event-source/coverage
 #Dist
 packages/common/dist/
 packages/core/dist/
@@ -72,7 +74,8 @@ packages/scheduler/dist/
 packages/cache/dist/
 packages/queues/dist/
 packages/value-objects/dist/
-pacakages/cqrs/dist/
+packages/cqrs/dist/
+packages/event-source/dist/
 
 #Packages
 packages/*/*.tgz
