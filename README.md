@@ -19,6 +19,7 @@
 - `20-cqrs_postgres_replication_app`: node-http CQRS sample with PostgreSQL master/slave replication in Docker, master-only writes, and slave-only reads.
 - `21-event_source_rabbitmq_app`: node-http event-source sample with a TypeORM-backed SQLite event store, replayed aggregates, projection updates, and RabbitMQ delivery.
 - `22-event_source_cqrs_app`: node-http interoperability sample where event-source owns writes and CQRS builds the read model from persisted domain events.
+- `23-socket_io_express_app`: Express + Socket.IO sample with decorated gateways, room joins, acknowledgements, and HTTP-triggered broadcasts.
 
 ## Release helpers
 

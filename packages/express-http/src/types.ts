@@ -47,6 +47,8 @@ export interface HttpAdapter {
   readonly type: HttpAdapterType;
   registerRequestHandler(handler: HttpRequestHandler): void;
   renderView?(req: HttpRequestLike, res: HttpResponseLike, payload: HttpViewResult): Promise<void>;
+  getHttpServer?(): any;
+  getNativeApp?(): any;
   listen(options: Required<HttpServerOptions>): Promise<void>;
   close(): Promise<void>;
 }

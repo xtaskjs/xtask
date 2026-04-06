@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Realtime Sample</p>
+        <h1>{{title}}</h1>
+        <p class="subtitle">{{subtitle}}</p>
+        <div class="chips">
+          <span>Namespace: {{namespace}}</span>
+          <span>Default room: {{room}}</span>
+          <span>Adapter: Express</span>
+        </div>
+      </section>
+
+      <section class="panel controls">
+        <div class="grid">
+          <label>
+            Display name
+            <input id="user" type="text" value="demo-user" />
+          </label>
+          <label>
+            Room
+            <input id="room" type="text" value="{{room}}" />
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="connect">Reconnect</button>
+          <button id="join">Join room</button>
+          <button id="announce">HTTP announcement</button>
+          <button id="refresh">Refresh status</button>
+        </div>
+
+        <label>
+          Message
+          <div class="composer">
+            <input id="message" type="text" placeholder="Write something to the room" />
+            <button id="send">Send</button>
+          </div>
+        </label>
+      </section>
+
+      <section class="columns">
+        <article class="panel">
+          <h2>Socket State</h2>
+          <pre id="status">Connecting...</pre>
+        </article>
+
+        <article class="panel">
+          <h2>Event Feed</h2>
+          <ul id="feed" class="feed"></ul>
+        </article>
+      </section>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

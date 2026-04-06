@@ -103,12 +103,13 @@ describe("ExpressAdapter", () => {
 
   it("should listen and close gracefully", async () => {
     const close = jest.fn((cb?: (error?: Error) => void) => cb?.());
+    const server = { close };
     const app = {
       use: jest.fn(),
       set: jest.fn(),
       listen: jest.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
         cb();
-        return { close };
+        return server;
       }),
     };
 
@@ -116,6 +117,7 @@ describe("ExpressAdapter", () => {
     await adapter.listen({ host: "127.0.0.1", port: 3000 });
 
     expect(app.listen).toHaveBeenCalledWith(3000, "127.0.0.1", expect.any(Function));
+    expect(adapter.getHttpServer()).toBe(server);
 
     await adapter.close();
     expect(close).toHaveBeenCalledTimes(1);

@@ -13,6 +13,7 @@ import {
   runWithInternationalizationContext,
   shutdownInternationalizationIntegration,
 } from "@xtaskjs/internationalization";
+import { initializeSocketIoIntegration, shutdownSocketIoIntegration } from "@xtaskjs/socket-io";
 
 jest.mock("@xtaskjs/mailer", () => ({
   initializeMailerIntegration: jest.fn(async () => {}),
@@ -35,14 +36,28 @@ jest.mock("@xtaskjs/internationalization", () => ({
   runWithInternationalizationContext: jest.fn(async (_request: any, callback: any) => callback()),
 }));
 
+jest.mock(
+  "@xtaskjs/socket-io",
+  () => ({
+    initializeSocketIoIntegration: jest.fn(async () => {}),
+    shutdownSocketIoIntegration: jest.fn(async () => {}),
+  }),
+  { virtual: true }
+);
+
 class FakeNodeAdapter {
   type = "node-http" as const;
   registerRequestHandler = jest.fn();
   listen = jest.fn(async () => {});
   close = jest.fn(async () => {});
+  getHttpServer = jest.fn(() => ({ close: jest.fn() }));
 }
 
 describe("XTaskHttpApplication", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should register request handler on construction", () => {
     const adapter = new FakeNodeAdapter();
     const lifecycle = { dispatchControllerRoute: jest.fn() } as any;
@@ -241,7 +256,9 @@ describe("XTaskHttpApplication", () => {
   it("should log startup with adapter and url", async () => {
     const adapter = new FakeNodeAdapter();
     const lifecycle = { dispatchControllerRoute: jest.fn() } as any;
-    const app = new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
+    const container = { registerLifeCycleListeners: jest.fn() };
+    const kernel = { getContainer: jest.fn(async () => container) };
+    const app = new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: kernel as any });
 
     const previous = process.env.NODE_ENV;
     process.env.NODE_ENV = "development";
@@ -250,6 +267,11 @@ describe("XTaskHttpApplication", () => {
     await app.listen({ host: "0.0.0.0", port: 4000 });
 
     expect(adapter.listen).toHaveBeenCalledWith({ host: "0.0.0.0", port: 4000 });
+    expect(initializeSocketIoIntegration).toHaveBeenCalledWith(
+      container,
+      lifecycle,
+      adapter
+    );
     expect(spy).toHaveBeenCalledWith(
       "[HTTP] Server started | adapter=node-http | url=http://localhost:4000"
     );
@@ -275,6 +297,7 @@ describe("XTaskHttpApplication", () => {
 
     await app.close();
 
+    expect(shutdownSocketIoIntegration).toHaveBeenCalledTimes(1);
     expect(adapter.close).toHaveBeenCalledTimes(1);
     expect(shutdownCqrsIntegration).toHaveBeenCalledTimes(1);
     expect(shutdownMailerIntegration).toHaveBeenCalledTimes(1);
@@ -326,6 +349,10 @@ describe("XTaskHttpApplication", () => {
 });
 
 describe("http application factories", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should create node adapter by default", () => {
     const adapter = createHttpAdapter();
     expect(adapter.type).toBe("node-http");
@@ -382,6 +409,7 @@ describe("http application factories", () => {
     await registerContainerInLifecycle(kernel, lifecycle);
 
     expect(kernel.getContainer).toHaveBeenCalledTimes(1);
+    expect(initializeSocketIoIntegration).toHaveBeenCalledWith(container, lifecycle);
     expect(initializeCqrsIntegration).toHaveBeenCalledWith(container, lifecycle);
     expect(initializeMailerIntegration).toHaveBeenCalledWith(container);
     expect(initializeCacheIntegration).toHaveBeenCalledWith(container, lifecycle);

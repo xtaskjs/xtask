@@ -92,6 +92,10 @@ export class NodeHttpAdapter implements HttpAdapter {
     this.handler = handler;
   }
 
+  getHttpServer(): Server | undefined {
+    return this.server;
+  }
+
   async listen(options: Required<HttpServerOptions>): Promise<void> {
     if (!this.handler) {
       throw new Error("No request handler registered for node-http adapter");

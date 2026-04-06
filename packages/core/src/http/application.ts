@@ -100,6 +100,12 @@ type SchedulerInitializeFn = (container: Container, lifecycle: ApplicationLifeCy
 type SchedulerShutdownFn = () => Promise<void>;
 type QueueInitializeFn = (container: Container, lifecycle: ApplicationLifeCycle) => Promise<void>;
 type QueueShutdownFn = () => Promise<void>;
+type SocketIoInitializeFn = (
+  container: Container,
+  lifecycle: ApplicationLifeCycle,
+  adapter?: HttpAdapter
+) => Promise<void>;
+type SocketIoShutdownFn = () => Promise<void>;
 type CqrsInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
 type CqrsShutdownFn = () => Promise<void>;
 type EventSourceInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
@@ -427,6 +433,50 @@ const resolveQueueShutdown = (): QueueShutdownFn | undefined => {
   return undefined;
 };
 
+const resolveSocketIoInitialize = (): SocketIoInitializeFn | undefined => {
+  try {
+    const socketIoPackage = requireFromApplication<{
+      initializeSocketIoIntegration?: SocketIoInitializeFn;
+    }>("@xtaskjs/socket-io");
+
+    if (typeof socketIoPackage.initializeSocketIoIntegration === "function") {
+      return socketIoPackage.initializeSocketIoIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/socket-io");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveSocketIoShutdown = (): SocketIoShutdownFn | undefined => {
+  try {
+    const socketIoPackage = requireFromApplication<{
+      shutdownSocketIoIntegration?: SocketIoShutdownFn;
+    }>("@xtaskjs/socket-io");
+
+    if (typeof socketIoPackage.shutdownSocketIoIntegration === "function") {
+      return socketIoPackage.shutdownSocketIoIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/socket-io");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
 const resolveCqrsInitialize = (): CqrsInitializeFn | undefined => {
   try {
     const cqrsPackage = requireFromApplication<{
@@ -708,6 +758,12 @@ export class XTaskHttpApplication {
     const serverOptions = normalizeServerOptions(options);
     await this.adapter.listen(serverOptions);
 
+    const initializeSocketIoIntegration = resolveSocketIoInitialize();
+    if (initializeSocketIoIntegration && this.kernel && typeof (this.kernel as any).getContainer === "function") {
+      const container = await (this.kernel as any).getContainer();
+      await initializeSocketIoIntegration(container, this.lifecycle, this.adapter);
+    }
+
     if (process.env.NODE_ENV !== "test") {
       const displayHost = toDisplayHost(serverOptions.host);
       const url = `http://${displayHost}:${serverOptions.port}`;
@@ -718,6 +774,11 @@ export class XTaskHttpApplication {
   async close(): Promise<void> {
     if (typeof (this.lifecycle as any).emit === "function") {
       await (this.lifecycle as any).emit("stopping");
+    }
+
+    const shutdownSocketIoIntegration = resolveSocketIoShutdown();
+    if (shutdownSocketIoIntegration) {
+      await shutdownSocketIoIntegration();
     }
 
     await this.adapter.close();
@@ -828,6 +889,11 @@ export async function registerContainerInLifecycle(
 ): Promise<void> {
   const container: Container = await kernel.getContainer();
   setCurrentContainer(container);
+
+  const initializeSocketIoIntegration = resolveSocketIoInitialize();
+  if (initializeSocketIoIntegration) {
+    await initializeSocketIoIntegration(container, lifecycle);
+  }
 
   const initializeTypeOrmIntegration = resolveTypeOrmInitialize();
   if (initializeTypeOrmIntegration) {

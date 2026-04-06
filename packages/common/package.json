@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/common",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "Common decorators, validation, and utilities for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",

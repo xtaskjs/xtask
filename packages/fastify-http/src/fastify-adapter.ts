@@ -291,6 +291,14 @@ export class FastifyAdapter implements HttpAdapter {
     });
   }
 
+  getHttpServer(): any {
+    return this.app.server;
+  }
+
+  getNativeApp(): any {
+    return this.app;
+  }
+
   async listen(options: Required<HttpServerOptions>): Promise<void> {
     await this.app.listen({ port: options.port, host: options.host });
   }

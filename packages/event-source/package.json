@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/event-source",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Event sourcing integration for xtaskjs with aggregate repositories, lifecycle wiring, and optional TypeORM and queue adapters.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -42,9 +42,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/core": "^1.0.24",
-    "@xtaskjs/queues": "^1.0.3",
-    "@xtaskjs/typeorm": "^1.0.12"
+    "@xtaskjs/core": "^1.0.25",
+    "@xtaskjs/queues": "^1.0.4",
+    "@xtaskjs/typeorm": "^1.0.13"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0",

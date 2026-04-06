@@ -32,6 +32,18 @@ export class FastifyAdapter implements HttpAdapter {
 		}
 	};
 
+	getHttpServer(): any {
+		return typeof (this.delegate as any).getHttpServer === "function"
+			? (this.delegate as any).getHttpServer()
+			: undefined;
+	}
+
+	getNativeApp(): any {
+		return typeof (this.delegate as any).getNativeApp === "function"
+			? (this.delegate as any).getNativeApp()
+			: undefined;
+	}
+
 	async listen(options: Required<HttpServerOptions>): Promise<void> {
 		await this.delegate.listen(options);
 	}

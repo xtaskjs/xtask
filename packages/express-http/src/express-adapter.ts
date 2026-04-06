@@ -182,6 +182,14 @@ export class ExpressAdapter implements HttpAdapter {
     });
   }
 
+  getHttpServer(): any {
+    return this.closeServer;
+  }
+
+  getNativeApp(): any {
+    return this.app;
+  }
+
   async listen(options: Required<HttpServerOptions>): Promise<void> {
     await new Promise<void>((resolve, reject) => {
       this.closeServer = this.app.listen(options.port, options.host, (error?: Error) => {
