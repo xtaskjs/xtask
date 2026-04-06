@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/security",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Authentication and authorization integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -42,8 +42,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.25",
-    "@xtaskjs/core": "^1.0.25",
+    "@xtaskjs/common": "^1.0.26",
+    "@xtaskjs/core": "^1.0.26",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-strategy": "^1.0.0"
