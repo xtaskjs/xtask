@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "paths": {
+      "@xtaskjs/common": ["../common/src"],
+      "@xtaskjs/common/*": ["../common/src/*"],
+      "@xtaskjs/core": ["../core/src"],
+      "@xtaskjs/core/*": ["../core/src/*"]
+    }
+  },
+  "include": ["src/**/*", "test/**/*", "../common/src/**/*", "../core/src/**/*"]
+}

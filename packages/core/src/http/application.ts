@@ -116,6 +116,8 @@ type InternationalizationContextRunnerFn = <T>(
   request: any,
   callback: () => Promise<T> | T
 ) => Promise<T>;
+type ThrottlerInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
+type ThrottlerShutdownFn = () => Promise<void>;
 
 const resolveExpressAdapter = (): ExpressAdapterConstructor => {
   try {
@@ -631,6 +633,50 @@ const resolveInternationalizationContextRunner = (): InternationalizationContext
   return undefined;
 };
 
+const resolveThrottlerInitialize = (): ThrottlerInitializeFn | undefined => {
+  try {
+    const throttlerPackage = requireFromApplication<{
+      initializeThrottlerIntegration?: ThrottlerInitializeFn;
+    }>("@xtaskjs/throttler");
+
+    if (typeof throttlerPackage.initializeThrottlerIntegration === "function") {
+      return throttlerPackage.initializeThrottlerIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/throttler");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveThrottlerShutdown = (): ThrottlerShutdownFn | undefined => {
+  try {
+    const throttlerPackage = requireFromApplication<{
+      shutdownThrottlerIntegration?: ThrottlerShutdownFn;
+    }>("@xtaskjs/throttler");
+
+    if (typeof throttlerPackage.shutdownThrottlerIntegration === "function") {
+      return throttlerPackage.shutdownThrottlerIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/throttler");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
 export class XTaskHttpApplication {
   private readonly adapter: HttpAdapter;
   private readonly lifecycle: ApplicationLifeCycle;
@@ -832,6 +878,11 @@ export class XTaskHttpApplication {
       await shutdownInternationalizationIntegration();
     }
 
+    const shutdownThrottlerIntegration = resolveThrottlerShutdown();
+    if (shutdownThrottlerIntegration) {
+      await shutdownThrottlerIntegration();
+    }
+
     if (this.kernel && typeof (this.kernel as any).getContainer === "function") {
       const container = await (this.kernel as any).getContainer();
       if (container && typeof container.destroy === "function") {
@@ -938,6 +989,11 @@ export async function registerContainerInLifecycle(
   const initializeInternationalizationIntegration = resolveInternationalizationInitialize();
   if (initializeInternationalizationIntegration) {
     await initializeInternationalizationIntegration(container);
+  }
+
+  const initializeThrottlerIntegration = resolveThrottlerInitialize();
+  if (initializeThrottlerIntegration) {
+    await initializeThrottlerIntegration(container, lifecycle);
   }
 
   container.registerLifeCycleListeners(lifecycle);

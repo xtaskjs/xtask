@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "paths": {
+      "@xtaskjs/common": ["../../packages/common/src/index.ts"],
+      "@xtaskjs/common/*": ["../../packages/common/src/*"],
+      "@xtaskjs/core": ["../../packages/core/src/index.ts"],
+      "@xtaskjs/core/*": ["../../packages/core/src/*"],
+      "@xtaskjs/throttler": ["../../packages/throttler/src/index.ts"],
+      "@xtaskjs/throttler/*": ["../../packages/throttler/src/*"]
+    }
+  },
+  "include": [
+    "src",
+    "../../packages/common/src/**/*",
+    "../../packages/core/src/**/*",
+    "../../packages/throttler/src/**/*"
+  ],
+  "exclude": ["node_modules", "dist"]
+}
