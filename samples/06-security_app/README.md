@@ -48,3 +48,9 @@ curl -H "Authorization: Bearer $JWT_TOKEN" http://127.0.0.1:3000/admin/
 - The sample uses strategy `validate` callbacks to enforce the `security-sample` tenant claim.
 - User lookup is resolved from the XTaskJS DI container inside the validate callback.
 - The JWE example uses compact `dir` + `A256GCM`, matching the current package support.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

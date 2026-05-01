@@ -46,3 +46,9 @@ Example request body for `POST /queues/orders`:
 
 - All messages stay inside process memory. Restarting the app clears queued state and event history.
 - The `orders.created` consumer republishes a local notification message so you can see handler-to-handler workflows in the status output.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

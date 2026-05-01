@@ -33,3 +33,9 @@ From this folder: `samples/11-scheduler_app`.
 
 - Uses the default `node-http` adapter.
 - The maintenance cron intentionally fails on the first run so you can see retry hooks recorded in the status payload.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

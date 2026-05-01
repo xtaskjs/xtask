@@ -19,3 +19,10 @@ From this folder: `samples/01-new_app`.
 ## Notes
 
 - Uses the default `node-http` adapter.
+
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

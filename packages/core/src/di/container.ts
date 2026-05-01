@@ -27,6 +27,7 @@ export class Container{
         "build",
         "out",
     ]);
+    private readonly registeredConstructors = new Set<any>();
 
     constructor() {
         this.registerWithName(Logger, { scope: "singleton" }, Logger.name);
@@ -38,15 +39,16 @@ export class Container{
         const scanRoot = join(process.cwd(), baseDir);
         const root = existsSync(baseDir) ? baseDir : scanRoot;
         const files = await this.scanDir(root);
-        const seenConstructors = new Set<any>();
-    
-        for (const file of files) {
-            const name = file.toString();
-            if (name.endsWith(".d.ts")) continue;
-            if (/(^|\/)index\.(ts|js)$/.test(name)) continue;
-            if (/\.(test|spec)\.(ts|js)$/.test(name)) continue;
+        await this.autoloadFiles(files);
+    }
 
-            const module = await import(file);
+    async autoloadFiles(files: string[]) {
+        const candidates = files.filter((file) => this.isAutoloadCandidate(file));
+        const loadedModules = await Promise.all(
+            candidates.map(async (file) => ({ file, module: await import(file) }))
+        );
+
+        for (const { module } of loadedModules) {
             const exportedValues = Object.values(module);
 
             for (const exportedValue of exportedValues) {
@@ -62,17 +64,25 @@ export class Container{
                     continue;
                 }
 
-                if (seenConstructors.has(classConstructor)) {
+                if (this.registeredConstructors.has(classConstructor)) {
                     continue;
                 }
 
-                seenConstructors.add(classConstructor);
+                this.registeredConstructors.add(classConstructor);
                 const metaData = getComponentMetadata(classConstructor) || { scope: "singleton" };
                 const beanName = metaData.name || classConstructor.name;
                 this.registerWithName(classConstructor, metaData, beanName);
             }
-        } 
-    }   
+        }
+    }
+
+    private isAutoloadCandidate(file: string): boolean {
+        if (file.endsWith(".d.ts")) return false;
+        if (/(^|\/)index\.(ts|js)$/.test(file)) return false;
+        if (/(^|\/)(app|main)\.(ts|js)$/.test(file)) return false;
+        if (/\.(test|spec)\.(ts|js)$/.test(file)) return false;
+        return true;
+    }
         
  
     public registerWithName(target: any, meta: ComponentMetadata, name?: string){
@@ -221,6 +231,7 @@ export class Container{
         this.namedInstances.clear();
         this.singletons.clear();
         this.providers.clear();
+        this.registeredConstructors.clear();
     }
     
     // Scan folder recursively for .ts or .js files

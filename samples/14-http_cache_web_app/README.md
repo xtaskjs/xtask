@@ -61,3 +61,9 @@ curl -i http://127.0.0.1:3000/preview
 - Static assets are served from `public/` by default.
 - Templates are loaded from `views/` by default.
 - The sample keeps the page content stable so repeated requests make the cache headers easier to inspect.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

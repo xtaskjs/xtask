@@ -9,4 +9,8 @@ export type LifeCyclePhase =
 | "ready"
 | "error"
 | "memoryReport"
-| "cpuReport" ;
+| "cpuReport"
+| "manifestCacheHit"
+| "manifestCacheMiss"
+| "manifestCacheInvalid"
+| "manifestCacheRebuilt" ;

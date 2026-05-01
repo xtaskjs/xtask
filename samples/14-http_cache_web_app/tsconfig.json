@@ -10,10 +10,10 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@xtaskjs/cache": ["../../packages/cache"],
-      "@xtaskjs/common": ["../../packages/common"],
-      "@xtaskjs/core": ["../../packages/core"],
-      "@xtaskjs/express-http": ["../../packages/express-http"]
+      "@xtaskjs/cache": ["../../packages/cache/src/index.ts"],
+      "@xtaskjs/common": ["../../packages/common/src/index.ts"],
+      "@xtaskjs/core": ["../../packages/core/src/index.ts"],
+      "@xtaskjs/express-http": ["../../packages/express-http/src/index.ts"]
     }
   },
   "include": ["src"],

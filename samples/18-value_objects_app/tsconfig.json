@@ -9,12 +9,12 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@xtaskjs/common": ["../../packages/common/dist"],
-      "@xtaskjs/common/*": ["../../packages/common/dist/*"],
-      "@xtaskjs/core": ["../../packages/core/dist"],
-      "@xtaskjs/core/*": ["../../packages/core/dist/*"],
-      "@xtaskjs/value-objects": ["../../packages/value-objects/dist"],
-      "@xtaskjs/value-objects/*": ["../../packages/value-objects/dist/*"]
+      "@xtaskjs/common": ["../../packages/common/src/index.ts"],
+      "@xtaskjs/common/*": ["../../packages/common/src/*"],
+      "@xtaskjs/core": ["../../packages/core/src/index.ts"],
+      "@xtaskjs/core/*": ["../../packages/core/src/*"],
+      "@xtaskjs/value-objects": ["../../packages/value-objects/src/index.ts"],
+      "@xtaskjs/value-objects/*": ["../../packages/value-objects/src/*"]
     }
   },
   "include": ["src"],

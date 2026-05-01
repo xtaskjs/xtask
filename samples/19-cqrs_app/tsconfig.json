@@ -9,14 +9,14 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@xtaskjs/common": ["../../packages/common/dist"],
-      "@xtaskjs/common/*": ["../../packages/common/dist/*"],
-      "@xtaskjs/core": ["../../packages/core/dist"],
-      "@xtaskjs/core/*": ["../../packages/core/dist/*"],
-      "@xtaskjs/cqrs": ["../../packages/cqrs/dist"],
-      "@xtaskjs/cqrs/*": ["../../packages/cqrs/dist/*"],
-      "@xtaskjs/typeorm": ["../../packages/typeorm/dist"],
-      "@xtaskjs/typeorm/*": ["../../packages/typeorm/dist/*"]
+      "@xtaskjs/common": ["../../packages/common/src/index.ts"],
+      "@xtaskjs/common/*": ["../../packages/common/src/*"],
+      "@xtaskjs/core": ["../../packages/core/src/index.ts"],
+      "@xtaskjs/core/*": ["../../packages/core/src/*"],
+      "@xtaskjs/cqrs": ["../../packages/cqrs/src/index.ts"],
+      "@xtaskjs/cqrs/*": ["../../packages/cqrs/src/*"],
+      "@xtaskjs/typeorm": ["../../packages/typeorm/src/index.ts"],
+      "@xtaskjs/typeorm/*": ["../../packages/typeorm/src/*"]
     }
   },
   "include": ["src"],

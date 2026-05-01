@@ -46,3 +46,9 @@ Example request body for `POST /value-objects/customers`:
 
 - The sample keeps created customers in memory only.
 - The `preferences` field is intentionally submitted as a JSON string so you can see `source: "json"` DTO hydration in action.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

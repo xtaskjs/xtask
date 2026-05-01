@@ -29,3 +29,4 @@ pacakge-lock.json
 /tmp
 /src/pacakges/**/.tmp
 /src/pacakges/core/.tmp
+.xtask-manifest.json

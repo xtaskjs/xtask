@@ -54,3 +54,9 @@ Example request body for `POST /cqrs/users`:
 - The process manager dispatches a follow-up command so the projection status changes from `ready` to `onboarded`.
 - Repeating the same `requestId` returns the cached command result instead of creating a duplicate write-side row.
 - Set `WRITE_DB_PATH` or `READ_DB_PATH` to override the default SQLite file locations.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

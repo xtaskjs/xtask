@@ -30,8 +30,11 @@ npm run release:order
 npm run version:packages -- patch
 npm run pack:packages
 npm run publish:packages
+npm run publish:packages:patch
 npm run publish:packages -- --bump patch
 ```
+
+Use `npm run publish:packages:patch` when you want a one-step release that bumps versions and publishes in order. This avoids npm `E403` errors caused by trying to publish versions that already exist.
 
 Additional npm arguments can be passed through with `--`:
 

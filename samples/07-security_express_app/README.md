@@ -62,3 +62,9 @@ curl -X POST -H "Authorization: Bearer $JWT_TOKEN" -H "Content-Type: application
 - By default, outgoing messages are rendered through Nodemailer's `jsonTransport` so the sample works without SMTP credentials.
 - `/me/notify` renders `profile-summary` and `profile-notification` templates, sends the user-facing message through the `default` transport, and sends an internal alert through the `notifications` transport.
 - The sample registers the `ejs-file` renderer and resolves template names against `views/mail/*.ejs`.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

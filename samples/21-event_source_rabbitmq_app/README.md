@@ -68,3 +68,9 @@ Example request body for `POST /event-source/users`:
 - The event-store table is created automatically by the TypeORM event-store adapter.
 - RabbitMQ delivery is additive here: the source of truth remains the stored event stream in SQLite.
 - Stop RabbitMQ with `npm run rabbitmq:down` when you are finished.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

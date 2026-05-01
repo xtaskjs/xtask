@@ -103,3 +103,9 @@ Example request body for `POST /cqrs/users/1/rename`:
 - `ListUsersQuery` reads the projection table from the slave only.
 - `GET /cqrs/debug/state` queries both connections and reports `pg_is_in_recovery()` so you can verify the master/slave split.
 - Because PostgreSQL replication is asynchronous, a new write may take a short moment to appear on the slave.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

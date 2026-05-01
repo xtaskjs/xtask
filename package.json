@@ -31,6 +31,7 @@
     "version:packages": "node ./scripts/release-packages.js version",
     "pack:packages": "node ./scripts/release-packages.js pack",
     "publish:packages": "node ./scripts/release-packages.js publish",
+    "publish:packages:patch": "node ./scripts/release-packages.js publish --bump patch",
     "clean": "rm -r dist"
   },
   "author": "",

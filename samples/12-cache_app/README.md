@@ -42,3 +42,9 @@ From this folder: `samples/12-cache_app`.
 
 - Cache storage is local memory only. Restarting the process clears all keys.
 - Repeating `GET /cache/products/42` returns the same payload until you call `refresh` or `evict`.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

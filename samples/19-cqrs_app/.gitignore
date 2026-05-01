@@ -19,3 +19,4 @@
 # Miscellaneous
 /.DS_Store
 /.tsbuildinfo
+.xtask-manifest.json

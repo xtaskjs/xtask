@@ -9,16 +9,16 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@xtaskjs/common": ["../../packages/common/dist"],
-      "@xtaskjs/common/*": ["../../packages/common/dist/*"],
-      "@xtaskjs/core": ["../../packages/core/dist"],
-      "@xtaskjs/core/*": ["../../packages/core/dist/*"],
-      "@xtaskjs/event-source": ["../../packages/event-source/dist"],
-      "@xtaskjs/event-source/*": ["../../packages/event-source/dist/*"],
-      "@xtaskjs/queues": ["../../packages/queues/dist"],
-      "@xtaskjs/queues/*": ["../../packages/queues/dist/*"],
-      "@xtaskjs/typeorm": ["../../packages/typeorm/dist"],
-      "@xtaskjs/typeorm/*": ["../../packages/typeorm/dist/*"]
+      "@xtaskjs/common": ["../../packages/common/src/index.ts"],
+      "@xtaskjs/common/*": ["../../packages/common/src/*"],
+      "@xtaskjs/core": ["../../packages/core/src/index.ts"],
+      "@xtaskjs/core/*": ["../../packages/core/src/*"],
+      "@xtaskjs/event-source": ["../../packages/event-source/src/index.ts"],
+      "@xtaskjs/event-source/*": ["../../packages/event-source/src/*"],
+      "@xtaskjs/queues": ["../../packages/queues/src/index.ts"],
+      "@xtaskjs/queues/*": ["../../packages/queues/src/*"],
+      "@xtaskjs/typeorm": ["../../packages/typeorm/src/index.ts"],
+      "@xtaskjs/typeorm/*": ["../../packages/typeorm/src/*"]
     }
   },
   "include": ["src"],

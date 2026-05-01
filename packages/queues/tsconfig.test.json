@@ -7,9 +7,11 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
+      "@xtaskjs/common": ["../common/src"],
+      "@xtaskjs/common/*": ["../common/src/*"],
       "@xtaskjs/core": ["../core/src"],
       "@xtaskjs/core/*": ["../core/src/*"]
     }
   },
-  "include": ["src/**/*", "test/**/*", "../core/src/**/*"]
+  "include": ["src/**/*", "test/**/*", "../core/src/**/*", "../common/src/**/*"]
 }

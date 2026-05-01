@@ -64,3 +64,9 @@ That starts:
 - The sample uses `connectOnStart: true`, so app startup fails fast if Redis is unavailable.
 - Repeating `GET /cache/products/42` returns the same cached payload until you call `refresh` or `evict`.
 - The `cache/state` route shows the active store kind, configured model, and the keys currently stored in Redis.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

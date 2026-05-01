@@ -24,3 +24,10 @@ From this folder: `samples/04-typeorm_app`.
 
 - SQLite file defaults to `samples/04-typeorm_app/xtask-typeorm.sqlite`.
 - Set `DB_PATH` to customize DB location.
+
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

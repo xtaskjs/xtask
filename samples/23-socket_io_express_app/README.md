@@ -34,3 +34,9 @@ From this folder: `samples/23-socket_io_express_app`.
 
 - Uses the Express adapter so the sample can serve the HTML, CSS, and browser client script from the same origin.
 - The browser client connects to the `/chat` namespace and joins the default `lobby` room automatically.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

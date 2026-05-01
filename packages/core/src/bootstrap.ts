@@ -26,7 +26,7 @@ export async function CreateApplication(
     registerEventHandlers(listeners, lifecycle);
 
     await lifecycle.boot(async () => {
-        await kernel.boot();
+        await kernel.boot(lifecycle);
         await registerContainerInLifecycle(kernel, lifecycle);
     });
 

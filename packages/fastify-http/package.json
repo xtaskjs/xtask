@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/fastify-http",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "Fastify HTTP adapter for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -42,7 +42,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.26"
+    "@xtaskjs/common": "^1.0.27"
   },
   "peerDependencies": {
     "fastify": "^4.0.0 || ^5.0.0",

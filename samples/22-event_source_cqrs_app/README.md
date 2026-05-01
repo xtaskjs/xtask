@@ -63,3 +63,9 @@ Example request body for `POST /interop/users`:
 - The event-store table is created automatically in the write database.
 - The bridge subscriber forwards only persisted domain events, not speculative aggregate state.
 - Set `EVENT_SOURCE_DB_PATH` or `READ_DB_PATH` to override the default SQLite file locations.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

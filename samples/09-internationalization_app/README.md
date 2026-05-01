@@ -30,3 +30,9 @@ From this folder: `samples/09-internationalization_app`.
   - built-in template helpers for number, currency, date, and datetime
   - custom formatters (`uppercase`, `relativeTime`)
   - lazy namespace loading for checkout translations
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

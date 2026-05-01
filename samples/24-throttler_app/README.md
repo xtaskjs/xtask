@@ -40,3 +40,10 @@ From this folder: `samples/24-throttler_app`.
 - Hit an endpoint more times than the limit within the TTL window to see a 429 response.
 - Call `/api/reset-limit` to clear your IP's counter and start again.
 - For Redis-backed throttling, set `driver: "redis"` and add connection options in `configureThrottler()`.
+
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

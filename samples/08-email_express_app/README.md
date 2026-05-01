@@ -67,3 +67,9 @@ curl -X POST http://127.0.0.1:3000/email/welcome \
 - If `MAILTRAP_SMTP_USER` and `MAILTRAP_SMTP_PASS` are set, both transports use Mailtrap SMTP.
 - Templates are file-backed EJS views in `views/mail`.
 - Copy `.env.example` to `.env` and replace the Mailtrap placeholders with your SMTP sandbox credentials.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

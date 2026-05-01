@@ -29,3 +29,4 @@
 /tmp
 /src/packages/**/.tmp
 /src/packages/core/.tmp
+.xtask-manifest.json

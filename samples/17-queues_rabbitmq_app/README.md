@@ -63,3 +63,9 @@ Example request body for `POST /queues/orders`:
 - `POST /queues/orders/:id/fail` publishes a message that throws on the first delivery attempt so you can see retry metadata and the handler recover on the next attempt.
 - The sample also consumes `orders.dead` so exhausted messages are visible in the runtime status payload.
 - Stop RabbitMQ with `npm run rabbitmq:down` when you are finished.
+## Manifest Cache
+
+- On first startup, xtaskjs performs a filesystem scan and creates `.xtask-manifest.json`.
+- On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
+- Delete `.xtask-manifest.json` to force a full rescan.
+- This file is ignored in `.gitignore` for each sample.

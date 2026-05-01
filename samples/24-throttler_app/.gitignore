@@ -9,3 +9,5 @@
 
 # Dependencies
 /node_modules
+
+.xtask-manifest.json
