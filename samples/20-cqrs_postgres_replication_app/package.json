@@ -11,7 +11,8 @@
     "clean": "rm -rf dist",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down -v",
-    "docker:logs": "docker-compose logs -f postgres-master postgres-slave"
+    "docker:logs": "docker-compose logs -f postgres-master postgres-slave",
+    "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts"
   },
   "author": "",
   "license": "ISC",

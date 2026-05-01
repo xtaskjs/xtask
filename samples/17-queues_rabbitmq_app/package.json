@@ -10,7 +10,8 @@
     "build": "npm run clean; tsc",
     "clean": "rm -rf dist",
     "rabbitmq:up": "docker compose up -d",
-    "rabbitmq:down": "docker compose down"
+    "rabbitmq:down": "docker compose down",
+    "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts"
   },
   "author": "",
   "license": "ISC",

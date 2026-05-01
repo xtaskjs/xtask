@@ -70,3 +70,9 @@ That starts:
 - On subsequent startups, xtaskjs loads this manifest directly to speed up boot time.
 - Delete `.xtask-manifest.json` to force a full rescan.
 - This file is ignored in `.gitignore` for each sample.
+## Parallel Load Configuration
+
+- xtaskjs scans autoload candidates in parallel using worker threads.
+- By default, it uses all available CPU parallelism.
+- Use `npm run start:parallel` in this sample to run with explicit parallel configuration (`XTASK_SCAN_WORKERS=auto`).
+- Optional: set `XTASK_SCAN_WORKERS=1` to force single-worker mode for debugging.

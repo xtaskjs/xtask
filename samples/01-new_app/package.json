@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
     "build": "npm run clean; tsc",
     "test": "npm run test --prefix packages/core && npm run test --prefix packages/common",
-    "clean": "rm -r dist"
+    "clean": "rm -r dist",
+    "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts"
   },
   "author": "",
   "license": "ISC",

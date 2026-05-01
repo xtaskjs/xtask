@@ -3,6 +3,8 @@ import { ComponentMetadata, getComponentMetadata } from "./component";
 import { getPostConstructMethod, getPreDestroyMethod } from "./lifecycle";  
 import { existsSync, readdirSync , statSync } from "fs";
 import { join } from "path";
+import { availableParallelism } from "os";
+import { Worker } from "worker_threads";
 import { ManagedInstance } from "./managedinstance";
 import { getAutoWiredProperties } from "./autowired";
 import { getConstructorQualifiers } from "./qualifier";
@@ -28,6 +30,27 @@ export class Container{
         "out",
     ]);
     private readonly registeredConstructors = new Set<any>();
+        private readonly discoveryWorkerSource = `
+const { parentPort, workerData } = require("worker_threads");
+const { readFileSync } = require("fs");
+
+const files = Array.isArray(workerData?.files) ? workerData.files : [];
+const markerRegex = /(@Service\\b|@Component\\b|@Controller\\b|\\bService\\s*\\(|\\bComponent\\s*\\(|\\bController\\s*\\(|CONTROLLERS_KEY|getComponentMetadata)/;
+const discovered = [];
+
+for (const file of files) {
+    try {
+        const content = readFileSync(file, "utf-8");
+        if (markerRegex.test(content)) {
+            discovered.push(file);
+        }
+    } catch {
+        discovered.push(file);
+    }
+}
+
+parentPort.postMessage({ files: discovered });
+`;
 
     constructor() {
         this.registerWithName(Logger, { scope: "singleton" }, Logger.name);
@@ -44,8 +67,9 @@ export class Container{
 
     async autoloadFiles(files: string[]) {
         const candidates = files.filter((file) => this.isAutoloadCandidate(file));
+        const discoverableFiles = await this.discoverAutoloadCandidates(candidates);
         const loadedModules = await Promise.all(
-            candidates.map(async (file) => ({ file, module: await import(file) }))
+            discoverableFiles.map(async (file) => ({ file, module: await import(file) }))
         );
 
         for (const { module } of loadedModules) {
@@ -74,6 +98,76 @@ export class Container{
                 this.registerWithName(classConstructor, metaData, beanName);
             }
         }
+    }
+
+    private async discoverAutoloadCandidates(files: string[]): Promise<string[]> {
+        if (files.length <= 1) {
+            return files;
+        }
+
+        const maxWorkers = this.resolveDiscoveryWorkerCount(files.length);
+        const workerCount = Math.min(maxWorkers, files.length);
+        const chunks = this.chunkFiles(files, workerCount);
+
+        try {
+            const discoveredGroups = await Promise.all(
+                chunks.map((chunk) => this.runDiscoveryWorker(chunk))
+            );
+            const discovered = [...new Set(discoveredGroups.flat())];
+            return discovered.length > 0 ? discovered : files;
+        } catch {
+            // Fallback to the original behavior if worker discovery fails.
+            return files;
+        }
+    }
+
+    private resolveDiscoveryWorkerCount(fileCount: number): number {
+        const configured = process.env.XTASK_SCAN_WORKERS?.trim().toLowerCase();
+        if (configured && configured !== "auto") {
+            const parsed = Number(configured);
+            if (Number.isFinite(parsed) && parsed >= 1) {
+                return Math.max(1, Math.min(Math.floor(parsed), fileCount));
+            }
+        }
+
+        return Math.max(1, availableParallelism());
+    }
+
+    private chunkFiles(files: string[], chunks: number): string[][] {
+        const result: string[][] = Array.from({ length: chunks }, () => []);
+        for (let i = 0; i < files.length; i++) {
+            result[i % chunks].push(files[i]);
+        }
+        return result.filter((group) => group.length > 0);
+    }
+
+    private runDiscoveryWorker(files: string[]): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            const worker = new Worker(this.discoveryWorkerSource, {
+                workerData: { files },
+                eval: true,
+            });
+
+            const timeout = setTimeout(() => {
+                void worker.terminate();
+                reject(new Error("Autoload discovery worker timed out"));
+            }, 5000);
+
+            worker.once("message", (message: { files?: string[] }) => {
+                clearTimeout(timeout);
+                resolve(Array.isArray(message?.files) ? message.files : []);
+            });
+            worker.once("error", (error: Error) => {
+                clearTimeout(timeout);
+                reject(error);
+            });
+            worker.once("exit", (code: number) => {
+                clearTimeout(timeout);
+                if (code !== 0) {
+                    reject(new Error(`Autoload discovery worker exited with code ${code}`));
+                }
+            });
+        });
     }
 
     private isAutoloadCandidate(file: string): boolean {
