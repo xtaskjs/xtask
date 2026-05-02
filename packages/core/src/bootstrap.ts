@@ -21,7 +21,9 @@ export async function CreateApplication(
 ): Promise<XTaskHttpApplication> {
     const lifecycle = new ApplicationLifeCycle();
     lifecycle.useGlobalPipes(new ValidationPipe());
-    const kernel = new Kernel();
+    const kernel = new Kernel({
+        containerOptions: options.container,
+    });
     const listeners = new KernelListeners();
     registerEventHandlers(listeners, lifecycle);
 

@@ -100,6 +100,61 @@ The selected adapter must implement view rendering (for example `@xtaskjs/expres
 - `ApplicationLifeCycle.registerControllerRoute(...)` stores resolved routes.
 - `ApplicationLifeCycle.dispatchControllerRoute(method, path, ...args)` executes guards, pipes, middlewares, and the route handler.
 
+## DI Lazy Resolution
+- Constructor dependencies are now injected as transparent lazy proxies.
+- A dependency instance is created only on first real access (property read, method call, etc.).
+- Singleton and transient scopes are preserved after lazy resolution.
+- Controller instances are still resolved during lifecycle registration so routes are available at startup.
+
+This improves startup time when your graph includes integrations that are not used on every execution path (for example scheduler, mailer, or queue services).
+
+```typescript
+import { CreateApplication } from "@xtaskjs/core";
+
+// Startup: controllers are registered so routes are available immediately.
+await CreateApplication({
+	container: {
+		resolutionStrategy: "lazy", // default: "lazy" | explicit eager: "eager"
+	},
+});
+
+// Services behind constructor deps are instantiated on first use.
+// Example: a controller dependency will be materialized when the handler accesses it.
+```
+
+Notes:
+- `@AutoWired` field injection remains eager to preserve required/optional validation semantics.
+- Lazy behavior currently applies to constructor-injected dependencies.
+
+To force eager constructor injection:
+
+```typescript
+await CreateApplication({
+	container: {
+		resolutionStrategy: "eager",
+	},
+});
+```
+
+## DI Instantiation Metrics
+- Container tracks per-component instantiation time and instance counts.
+- Metrics are enabled by default and can be disabled with `container.metricsEnabled: false`.
+
+```typescript
+const app = await CreateApplication({
+	container: {
+		resolutionStrategy: "lazy",
+		metricsEnabled: true,
+	},
+});
+
+const kernel = app.getKernel();
+const container = await kernel.getContainer();
+
+const metrics = container.getInstantiationMetrics();
+// [{ componentName, scope, instancesCreated, totalInstantiationMs, averageInstantiationMs, lastInstantiationMs }]
+```
+
 ## Metrics Log Configuration
 - Metrics logs are disabled by default.
 - Set `XTASKJS_SHOW_METRICS_LOGS=true` to show runtime metric logs like `[Metrics] Heap MB` and `CPU { ... }`.

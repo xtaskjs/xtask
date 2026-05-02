@@ -6,18 +6,24 @@ import { Logger } from "@xtaskjs/common";
 import type { ApplicationLifeCycle } from "../server/application-lifecycle";
 import { ManifestCacheService } from "./manifest-cache.service";
 
+export interface KernelOptions {
+    containerOptions?: ConstructorParameters<typeof Container>[0];
+}
+
 export class Kernel {
  
     private container:Container;
     private logger:Logger;
     private manifestCache: ManifestCacheService;
+    private readonly options: KernelOptions;
 
-    constructor(){
+    constructor(options: KernelOptions = {}){
+        this.options = options;
         this.manifestCache = new ManifestCacheService();
     }
     async boot(lifecycle?: ApplicationLifeCycle): Promise<void> {
         // Bootstrapping logic here
-        this.container = new Container();
+        this.container = new Container(this.options.containerOptions);
 
         const scanDirs = [
             join(process.cwd(), "src"),

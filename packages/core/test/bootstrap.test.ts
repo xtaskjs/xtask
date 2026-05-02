@@ -9,6 +9,7 @@ const mockLifecycle = {
 
 const mockKernelBoot = jest.fn(async () => {});
 const mockKernelGetContainer = jest.fn(async () => ({ registerLifeCycleListeners: jest.fn() }));
+const KernelMock = jest.fn(() => mockKernel);
 
 const mockKernel = {
   boot: mockKernelBoot,
@@ -37,7 +38,9 @@ jest.mock("../src/server/application-lifecycle", () => ({
 }));
 
 jest.mock("../src/kernel/kernel", () => ({
-  Kernel: jest.fn(() => mockKernel),
+  Kernel: function (...args: any[]) {
+    return KernelMock.apply(null, args as any);
+  },
 }));
 
 jest.mock("../src/kernel/kernellisteners", () => ({
@@ -77,9 +80,26 @@ describe("bootstrap", () => {
     expect(mockLifecycle.useGlobalPipes).toHaveBeenCalledTimes(1);
     expect(registerEventHandlers).toHaveBeenCalledTimes(1);
     expect(mockKernelBoot).toHaveBeenCalledTimes(1);
+    expect(KernelMock).toHaveBeenCalledWith({ containerOptions: undefined });
     expect(registerContainerInLifecycle).toHaveBeenCalledTimes(1);
     expect(createHttpAdapter).toHaveBeenCalledWith(undefined, undefined);
     expect(mockListen).not.toHaveBeenCalled();
+  });
+
+  it("should pass container options to kernel", async () => {
+    await CreateApplication({
+      container: {
+        resolutionStrategy: "eager",
+        metricsEnabled: true,
+      },
+    });
+
+    expect(KernelMock).toHaveBeenCalledWith({
+      containerOptions: {
+        resolutionStrategy: "eager",
+        metricsEnabled: true,
+      },
+    });
   });
 
   it("should call listen when autoListen is enabled", async () => {

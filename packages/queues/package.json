@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/queues",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Queue integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -42,7 +42,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/core": "^1.0.27"
+    "@xtaskjs/core": "^1.0.28"
   },
   "peerDependencies": {
     "amqplib": "^0.10.8",

@@ -7,6 +7,39 @@ class TestService{
     }   
 }
 
+@Service()
+class LazyDependencyService {
+    static createdCount = 0;
+
+    constructor() {
+        LazyDependencyService.createdCount += 1;
+    }
+
+    touch(): string {
+        return "touched";
+    }
+}
+
+@Service()
+class LazyConsumerService {
+    constructor(public readonly lazyDependency: LazyDependencyService) {}
+
+    noDependencyUsage(): string {
+        return "ok";
+    }
+
+    useDependency(): string {
+        return this.lazyDependency.touch();
+    }
+}
+
+@Service({ scope: "transient" })
+class TransientMetricService {
+    run(): string {
+        return "done";
+    }
+}
+
 
 
 describe("Container", () => {
@@ -14,6 +47,7 @@ describe("Container", () => {
     
     beforeEach(() => {
         container = new Container();
+        LazyDependencyService.createdCount = 0;
     });
 
     it("should register and resolve a singleton service", () => {
@@ -45,5 +79,69 @@ describe("Container", () => {
 
     it ("should throw error for unregistered services", () =>{
         expect(() => container.get(TestService)).toThrow("No provider found for TestService");
+    });
+
+    it("should lazily resolve constructor dependencies when first used", () => {
+        container.register(LazyDependencyService, { scope: "singleton" });
+        container.register(LazyConsumerService, { scope: "singleton" });
+
+        const consumer = container.get(LazyConsumerService);
+        expect(LazyDependencyService.createdCount).toBe(0);
+
+        expect(consumer.noDependencyUsage()).toBe("ok");
+        expect(LazyDependencyService.createdCount).toBe(0);
+
+        expect(consumer.useDependency()).toBe("touched");
+        expect(LazyDependencyService.createdCount).toBe(1);
+    });
+
+    it("should keep singleton semantics after lazy dependency resolution", () => {
+        container.register(LazyDependencyService, { scope: "singleton" });
+        container.register(LazyConsumerService, { scope: "singleton" });
+
+        const consumer = container.get(LazyConsumerService);
+        consumer.useDependency();
+        consumer.useDependency();
+
+        expect(LazyDependencyService.createdCount).toBe(1);
+    });
+
+    it("should resolve constructor dependencies eagerly when configured", () => {
+        const eagerContainer = new Container({ resolutionStrategy: "eager" });
+        eagerContainer.register(LazyDependencyService, { scope: "singleton" });
+        eagerContainer.register(LazyConsumerService, { scope: "singleton" });
+
+        const consumer = eagerContainer.get(LazyConsumerService);
+
+        expect(consumer).toBeInstanceOf(LazyConsumerService);
+        expect(LazyDependencyService.createdCount).toBe(1);
+    });
+
+    it("should track instantiation metrics per component", () => {
+        container.register(LazyDependencyService, { scope: "singleton" });
+        container.register(LazyConsumerService, { scope: "singleton" });
+        container.register(TransientMetricService, { scope: "transient" });
+
+        const consumer = container.get(LazyConsumerService);
+        consumer.useDependency();
+        container.get(TransientMetricService).run();
+        container.get(TransientMetricService).run();
+
+        const metrics = container.getInstantiationMetrics();
+        const dependencyMetric = metrics.find((entry) => entry.componentName === "LazyDependencyService");
+        const transientMetric = metrics.find((entry) => entry.componentName === "TransientMetricService");
+
+        expect(dependencyMetric).toBeDefined();
+        expect(dependencyMetric?.instancesCreated).toBe(1);
+        expect(dependencyMetric?.scope).toBe("singleton");
+        expect((dependencyMetric?.totalInstantiationMs || 0)).toBeGreaterThanOrEqual(0);
+
+        expect(transientMetric).toBeDefined();
+        expect(transientMetric?.instancesCreated).toBe(2);
+        expect(transientMetric?.scope).toBe("transient");
+        expect((transientMetric?.averageInstantiationMs || 0)).toBeGreaterThanOrEqual(0);
+
+        container.resetInstantiationMetrics();
+        expect(container.getInstantiationMetrics()).toEqual([]);
     });
 }); 

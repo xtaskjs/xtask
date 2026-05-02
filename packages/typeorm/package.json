@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/typeorm",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "TypeORM integration for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -42,8 +42,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.27",
-    "@xtaskjs/core": "^1.0.27"
+    "@xtaskjs/common": "^1.0.28",
+    "@xtaskjs/core": "^1.0.28"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0",

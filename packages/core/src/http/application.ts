@@ -1,7 +1,7 @@
 import { HttpMethod } from "@xtaskjs/common";
 import { createRequire } from "module";
 import { join } from "path";
-import { clearCurrentContainer, Container, setCurrentContainer } from "../di";
+import { clearCurrentContainer, Container, ContainerOptions, setCurrentContainer } from "../di";
 import { Kernel } from "../kernel";
 import { ApplicationLifeCycle } from "../server";
 import { HttpError } from "./errors";
@@ -20,6 +20,7 @@ export interface CreateApplicationOptions {
   adapterInstance?: any;
   server?: HttpServerOptions;
   autoListen?: boolean;
+  container?: ContainerOptions;
 }
 
 const defaultServerOptions: Required<HttpServerOptions> = {

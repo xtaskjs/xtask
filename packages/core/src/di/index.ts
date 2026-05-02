@@ -1,5 +1,10 @@
 export {Component, ComponentOptions} from "./component"
-export {Container} from "./container"
+export {
+	Container,
+	ContainerOptions,
+	ResolutionStrategy,
+	ComponentInstantiationMetrics,
+} from "./container"
 export * from "./lifecycle"
 export {ManagedInstance} from "./managedinstance"
 export {getComponentMetadata} from "./component"

@@ -11,6 +11,35 @@ import { getConstructorQualifiers } from "./qualifier";
 import { registerControllerRoutes, registerEventHandlers} from "../server";
 import { CONTROLLERS_KEY, HANDLERS_KEY, Logger, ROUTES_KEY, RUNNERS_KEY } from "@xtaskjs/common";
 
+export type ResolutionStrategy = "lazy" | "eager";
+
+export interface ContainerOptions {
+    resolutionStrategy?: ResolutionStrategy;
+    metricsEnabled?: boolean;
+}
+
+interface ContainerRuntimeOptions {
+    resolutionStrategy: ResolutionStrategy;
+    metricsEnabled: boolean;
+}
+
+interface ComponentMetricState {
+    componentName: string;
+    scope: "singleton" | "transient";
+    instancesCreated: number;
+    totalInstantiationNs: bigint;
+    lastInstantiationNs: bigint;
+}
+
+export interface ComponentInstantiationMetrics {
+    componentName: string;
+    scope: "singleton" | "transient";
+    instancesCreated: number;
+    totalInstantiationMs: number;
+    averageInstantiationMs: number;
+    lastInstantiationMs: number;
+}
+
 
 export class Container{
     private providers = new Map<any, () => any>();
@@ -29,8 +58,10 @@ export class Container{
         "build",
         "out",
     ]);
+    private readonly options: ContainerRuntimeOptions;
     private readonly registeredConstructors = new Set<any>();
-        private readonly discoveryWorkerSource = `
+    private readonly instantiationMetrics = new Map<any, ComponentMetricState>();
+    private readonly discoveryWorkerSource = `
 const { parentPort, workerData } = require("worker_threads");
 const { readFileSync } = require("fs");
 
@@ -52,8 +83,126 @@ for (const file of files) {
 parentPort.postMessage({ files: discovered });
 `;
 
-    constructor() {
+    constructor(options: ContainerOptions = {}) {
+        this.options = {
+            resolutionStrategy: options.resolutionStrategy || "lazy",
+            metricsEnabled: options.metricsEnabled !== false,
+        };
         this.registerWithName(Logger, { scope: "singleton" }, Logger.name);
+    }
+
+    private shouldUseLazyDependencies(): boolean {
+        return this.options.resolutionStrategy === "lazy";
+    }
+
+    private asMilliseconds(value: bigint): number {
+        return Number(value) / 1_000_000;
+    }
+
+    private recordInstantiationMetric(target: any, scope: "singleton" | "transient", startedAtNs: bigint): void {
+        if (!this.options.metricsEnabled) {
+            return;
+        }
+        const elapsedNs = process.hrtime.bigint() - startedAtNs;
+        const existing = this.instantiationMetrics.get(target);
+        if (existing) {
+            existing.instancesCreated += 1;
+            existing.totalInstantiationNs += elapsedNs;
+            existing.lastInstantiationNs = elapsedNs;
+            return;
+        }
+
+        this.instantiationMetrics.set(target, {
+            componentName: target?.name || "unknown",
+            scope,
+            instancesCreated: 1,
+            totalInstantiationNs: elapsedNs,
+            lastInstantiationNs: elapsedNs,
+        });
+    }
+
+    public getResolutionStrategy(): ResolutionStrategy {
+        return this.options.resolutionStrategy;
+    }
+
+    public getInstantiationMetrics(): ComponentInstantiationMetrics[] {
+        return Array.from(this.instantiationMetrics.values())
+            .map((metric) => ({
+                componentName: metric.componentName,
+                scope: metric.scope,
+                instancesCreated: metric.instancesCreated,
+                totalInstantiationMs: this.asMilliseconds(metric.totalInstantiationNs),
+                averageInstantiationMs: this.asMilliseconds(
+                    metric.totalInstantiationNs / BigInt(metric.instancesCreated)
+                ),
+                lastInstantiationMs: this.asMilliseconds(metric.lastInstantiationNs),
+            }))
+            .sort((a, b) => b.totalInstantiationMs - a.totalInstantiationMs);
+    }
+
+    public resetInstantiationMetrics(): void {
+        this.instantiationMetrics.clear();
+    }
+
+    private createLazyDependency<T>(resolver: () => T): T {
+        let hasResolved = false;
+        let resolvedValue: T;
+
+        const ensureResolved = (): T => {
+            if (!hasResolved) {
+                resolvedValue = resolver();
+                hasResolved = true;
+            }
+            return resolvedValue;
+        };
+
+        const proxyTarget = function lazyDependencyProxyTarget() {
+            return undefined;
+        };
+
+        return new Proxy(proxyTarget as any, {
+            get: (_target, property) => {
+                const instance = ensureResolved() as any;
+                const value = Reflect.get(instance, property, instance);
+                return typeof value === "function" ? value.bind(instance) : value;
+            },
+            set: (_target, property, value) => {
+                return Reflect.set(ensureResolved() as any, property, value);
+            },
+            has: (_target, property) => {
+                return property in (ensureResolved() as any);
+            },
+            ownKeys: () => {
+                return Reflect.ownKeys(ensureResolved() as any);
+            },
+            getOwnPropertyDescriptor: (_target, property) => {
+                return Reflect.getOwnPropertyDescriptor(ensureResolved() as any, property);
+            },
+            defineProperty: (_target, property, attributes) => {
+                return Reflect.defineProperty(ensureResolved() as any, property, attributes);
+            },
+            deleteProperty: (_target, property) => {
+                return Reflect.deleteProperty(ensureResolved() as any, property);
+            },
+            getPrototypeOf: () => {
+                return Reflect.getPrototypeOf(ensureResolved() as any);
+            },
+            setPrototypeOf: (_target, prototype) => {
+                return Reflect.setPrototypeOf(ensureResolved() as any, prototype);
+            },
+            isExtensible: () => {
+                return Reflect.isExtensible(ensureResolved() as any);
+            },
+            preventExtensions: () => {
+                return Reflect.preventExtensions(ensureResolved() as any);
+            },
+            apply: (_target, thisArg, argsList) => {
+                return Reflect.apply(ensureResolved() as any, thisArg, argsList);
+            },
+            construct: (_target, argsList, newTarget) => {
+                return Reflect.construct(ensureResolved() as any, argsList, newTarget);
+            },
+        }) as T;
     }
 
     // SCAN FOLDER BASE DIR FOR @Service() AND @Component()
@@ -200,12 +349,14 @@ parentPort.postMessage({ files: discovered });
     public register(target: any, meta: ComponentMetadata){
         const paramTypes: any[] =
             Reflect.getMetadata("design:paramtypes", target) || [];
+        const componentScope: "singleton" | "transient" = meta.scope === "transient" ? "transient" : "singleton";
 
         if (process.env.NODE_ENV !== "test") {
             console.log(`Registering component: ${target.name} with dependencies:`, paramTypes.map(t => t?.name || 'unknown'));
         }
         
         const provider = () => {
+            const startedAtNs = this.options.metricsEnabled ? process.hrtime.bigint() : 0n;
             if (this.resolving.has(target)) {
                 const resolvingNames = Array.from(this.resolving).map(t => t.name || 'unknown').join(" -> ");
                 throw new Error(`Circular dependency detected: ${resolvingNames} -> ${target.name}`);
@@ -218,6 +369,14 @@ parentPort.postMessage({ files: discovered });
                 const qualifiers = getConstructorQualifiers(target);
                 const dependencies = paramTypes.map((dep, index) => {
                     const qualifier = qualifiers?.[index];
+                    if (qualifier) {
+                        // Named/qualified bindings are often compared by identity.
+                        // Resolve them eagerly to preserve strict reference equality.
+                        return this.getWithQualifier(dep, qualifier);
+                    }
+                    if (this.shouldUseLazyDependencies()) {
+                        return this.createLazyDependency(() => this.getWithQualifier(dep, qualifier));
+                    }
                     return this.getWithQualifier(dep, qualifier);
                 });
                 
@@ -239,6 +398,7 @@ parentPort.postMessage({ files: discovered });
                         preDestroy: () => instance[preMethod](),
                     });
                 }
+                this.recordInstantiationMetric(target, componentScope, startedAtNs);
             
             return instance;
         } finally {
@@ -298,7 +458,7 @@ parentPort.postMessage({ files: discovered });
                     value = this.getByName(metaData.qualifier);
                 } else {
                     value = this.get(metaData.type);
-                } 
+                }
                 instance[propertyKey] = value;
             }catch (error) {
                 if (metaData.required) {
@@ -326,6 +486,7 @@ parentPort.postMessage({ files: discovered });
         this.singletons.clear();
         this.providers.clear();
         this.registeredConstructors.clear();
+        this.instantiationMetrics.clear();
     }
     
     // Scan folder recursively for .ts or .js files
