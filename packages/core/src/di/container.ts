@@ -10,6 +10,7 @@ import { ManagedInstance } from "./managedinstance";
 import { getAutoWiredProperties } from "./autowired";
 import { getConstructorQualifiers } from "./qualifier";
 import { registerControllerRoutes, registerEventHandlers} from "../server";
+import { importFilesWithConcurrency } from "../scanner/import-pool";
 import { CONTROLLERS_KEY, HANDLERS_KEY, Logger, ROUTES_KEY, RUNNERS_KEY } from "@xtaskjs/common";
 
 export type ResolutionStrategy = "lazy" | "eager";
@@ -311,14 +312,18 @@ parentPort.postMessage({ files: discovered });
     async autoloadFiles(files: string[], options: { forceRefresh?: boolean } = {}) {
         const candidates = files.filter((file) => this.isAutoloadCandidate(file));
         const discoverableFiles = await this.discoverAutoloadCandidates(candidates);
-        const loadedModules = await Promise.all(
-            discoverableFiles.map(async (file) => ({
-                file,
-                module: await this.importModule(file, options.forceRefresh === true),
-            }))
+        const importConcurrency = this.resolveImportConcurrency(discoverableFiles.length);
+        const loadedModules = await importFilesWithConcurrency(
+            discoverableFiles,
+            importConcurrency,
+            (file) => this.importModule(file, options.forceRefresh === true)
         );
 
-        for (const { file, module } of loadedModules) {
+        for (const file of discoverableFiles) {
+            const module = loadedModules.get(file);
+            if (!module) {
+                continue;
+            }
             const exportedValues = Object.values(module);
 
             for (const exportedValue of exportedValues) {
@@ -378,6 +383,18 @@ parentPort.postMessage({ files: discovered });
         }
 
         return Math.max(1, availableParallelism());
+    }
+
+    private resolveImportConcurrency(fileCount: number): number {
+        const configured = process.env.XTASK_IMPORT_CONCURRENCY?.trim().toLowerCase();
+        if (configured) {
+            const parsed = Number(configured);
+            if (Number.isFinite(parsed) && parsed >= 1) {
+                return Math.max(1, Math.min(Math.floor(parsed), Math.max(1, fileCount)));
+            }
+        }
+
+        return Math.max(1, Math.min(10, Math.max(1, fileCount)));
     }
 
     private chunkFiles(files: string[], chunks: number): string[][] {

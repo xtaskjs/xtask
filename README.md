@@ -60,3 +60,21 @@ export NPM_TOKEN=your_token_here
 npm whoami
 npm run publish:packages
 ```
+
+## Startup import concurrency
+
+The core autoload scanner imports discovered files using a bounded async pool.
+
+You can tune startup behavior with `XTASK_IMPORT_CONCURRENCY`:
+
+- Small apps (up to ~30 files): `6-10`
+- Medium apps (~30-120 files): `10-16`
+- Large apps (120+ files): `16-24`
+
+Default is `10` (and never higher than the amount of discovered files).
+
+```bash
+XTASK_IMPORT_CONCURRENCY=16 npm start
+```
+
+In constrained environments (CI/small containers), avoid very high values to prevent filesystem saturation.

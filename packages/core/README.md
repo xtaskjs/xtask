@@ -213,6 +213,25 @@ await CreateApplication({
 - Metrics logs are disabled by default.
 - Set `XTASKJS_SHOW_METRICS_LOGS=true` to show runtime metric logs like `[Metrics] Heap MB` and `CPU { ... }`.
 
+## Import Scan Concurrency
+- Autoload now imports discovered files with a bounded async pool.
+- Use `XTASK_IMPORT_CONCURRENCY` to tune how many files are imported in parallel during startup scan.
+- Default is `10` (and never higher than total discovered files).
+
+Recommended tuning by project size:
+- Small apps (up to ~30 files): `6-10`
+- Medium apps (~30-120 files): `10-16`
+- Large apps (120+ files): `16-24`
+
+Example:
+
+```bash
+XTASK_IMPORT_CONCURRENCY=16 npm start
+```
+
+Tip:
+- Avoid very high values in constrained environments (CI, small containers) because excessive parallel imports can increase filesystem pressure and reduce overall startup stability.
+
 ## Startup Benchmark
 - Run `npm run benchmark:startup --prefix packages/core` from the workspace root.
 - Optional env vars:
