@@ -2,9 +2,10 @@ import "reflect-metadata"
 import { ComponentMetadata, getComponentMetadata } from "./component";
 import { getPostConstructMethod, getPreDestroyMethod } from "./lifecycle";  
 import { existsSync, readdirSync , statSync } from "fs";
-import { join } from "path";
+import { join, normalize } from "path";
 import { availableParallelism } from "os";
 import { Worker } from "worker_threads";
+import { pathToFileURL } from "url";
 import { ManagedInstance } from "./managedinstance";
 import { getAutoWiredProperties } from "./autowired";
 import { getConstructorQualifiers } from "./qualifier";
@@ -61,6 +62,8 @@ export class Container{
     private readonly options: ContainerRuntimeOptions;
     private readonly registeredConstructors = new Set<any>();
     private readonly instantiationMetrics = new Map<any, ComponentMetricState>();
+    private readonly typeToFile = new Map<any, string>();
+    private readonly fileToTypes = new Map<string, Set<any>>();
     private readonly discoveryWorkerSource = `
 const { parentPort, workerData } = require("worker_threads");
 const { readFileSync } = require("fs");
@@ -89,6 +92,97 @@ parentPort.postMessage({ files: discovered });
             metricsEnabled: options.metricsEnabled !== false,
         };
         this.registerWithName(Logger, { scope: "singleton" }, Logger.name);
+    }
+
+    private async importModule(file: string, forceRefresh = false): Promise<any> {
+        if (forceRefresh) {
+            const fileUrl = pathToFileURL(file);
+            fileUrl.searchParams.set("xtaskHot", `${Date.now()}`);
+            try {
+                return await import(fileUrl.href);
+            } catch {
+                try {
+                    const resolved = require.resolve(file);
+                    delete require.cache[resolved];
+                } catch {
+                    // Best-effort cache busting.
+                }
+            }
+        }
+
+        return import(file);
+    }
+
+    private registerTypeFile(type: any, file: string): void {
+        const normalizedFile = normalize(file);
+        this.typeToFile.set(type, normalizedFile);
+        const mappedTypes = this.fileToTypes.get(normalizedFile) || new Set<any>();
+        mappedTypes.add(type);
+        this.fileToTypes.set(normalizedFile, mappedTypes);
+    }
+
+    private unregisterType(type: any): void {
+        const names = this.typeToNames.get(type) || [];
+        for (const name of names) {
+            this.nameToType.delete(name);
+        }
+        this.typeToNames.delete(type);
+        this.primaryBeans.delete(type);
+        this.providers.delete(type);
+        this.singletons.delete(type);
+        this.resolving.delete(type);
+        this.registeredConstructors.delete(type);
+        this.instantiationMetrics.delete(type);
+        this.managedInstances = this.managedInstances.filter((entry) => entry.instance?.constructor !== type);
+
+        const file = this.typeToFile.get(type);
+        if (file) {
+            const mappedTypes = this.fileToTypes.get(file);
+            if (mappedTypes) {
+                mappedTypes.delete(type);
+                if (mappedTypes.size === 0) {
+                    this.fileToTypes.delete(file);
+                }
+            }
+        }
+        this.typeToFile.delete(type);
+    }
+
+    public invalidate(targetOrName: any | string): void {
+        if (!targetOrName) {
+            return;
+        }
+
+        if (typeof targetOrName === "string") {
+            const type = this.nameToType.get(targetOrName);
+            if (type) {
+                this.unregisterType(type);
+            }
+            this.namedInstances.delete(targetOrName);
+            return;
+        }
+
+        this.unregisterType(targetOrName);
+    }
+
+    public async hotReloadFile(file: string): Promise<string[]> {
+        const normalizedFile = normalize(file);
+        const previousTypes = [...(this.fileToTypes.get(normalizedFile) || new Set<any>())];
+        for (const type of previousTypes) {
+            this.unregisterType(type);
+        }
+
+        await this.autoloadFiles([normalizedFile], { forceRefresh: true });
+        return [...(this.fileToTypes.get(normalizedFile) || new Set<any>())].map((type) => type.name || "unknown");
+    }
+
+    public unregisterFile(file: string): string[] {
+        const normalizedFile = normalize(file);
+        const types = [...(this.fileToTypes.get(normalizedFile) || new Set<any>())];
+        for (const type of types) {
+            this.unregisterType(type);
+        }
+        return types.map((type) => type.name || "unknown");
     }
 
     private shouldUseLazyDependencies(): boolean {
@@ -214,14 +308,17 @@ parentPort.postMessage({ files: discovered });
         await this.autoloadFiles(files);
     }
 
-    async autoloadFiles(files: string[]) {
+    async autoloadFiles(files: string[], options: { forceRefresh?: boolean } = {}) {
         const candidates = files.filter((file) => this.isAutoloadCandidate(file));
         const discoverableFiles = await this.discoverAutoloadCandidates(candidates);
         const loadedModules = await Promise.all(
-            discoverableFiles.map(async (file) => ({ file, module: await import(file) }))
+            discoverableFiles.map(async (file) => ({
+                file,
+                module: await this.importModule(file, options.forceRefresh === true),
+            }))
         );
 
-        for (const { module } of loadedModules) {
+        for (const { file, module } of loadedModules) {
             const exportedValues = Object.values(module);
 
             for (const exportedValue of exportedValues) {
@@ -245,6 +342,7 @@ parentPort.postMessage({ files: discovered });
                 const metaData = getComponentMetadata(classConstructor) || { scope: "singleton" };
                 const beanName = metaData.name || classConstructor.name;
                 this.registerWithName(classConstructor, metaData, beanName);
+                this.registerTypeFile(classConstructor, file);
             }
         }
     }
@@ -487,6 +585,8 @@ parentPort.postMessage({ files: discovered });
         this.providers.clear();
         this.registeredConstructors.clear();
         this.instantiationMetrics.clear();
+        this.typeToFile.clear();
+        this.fileToTypes.clear();
     }
     
     // Scan folder recursively for .ts or .js files

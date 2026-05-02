@@ -48,6 +48,21 @@ export class ManifestCacheService {
         return manifest;
     }
 
+    public upsertFile(scanRoots: string[], file: string): XTaskManifest {
+        const current = this.read(scanRoots);
+        const files = current ? [...current.files, file] : [file];
+        return this.write(scanRoots, files);
+    }
+
+    public removeFile(scanRoots: string[], file: string): XTaskManifest {
+        const current = this.read(scanRoots);
+        const normalizedFile = normalize(file);
+        const files = current
+            ? current.files.filter((entry) => normalize(entry) !== normalizedFile)
+            : [];
+        return this.write(scanRoots, files);
+    }
+
     private isValid(manifest: XTaskManifest, scanRoots: string[]): boolean {
         if (!manifest || manifest.version !== XTASK_MANIFEST_VERSION) {
             return false;

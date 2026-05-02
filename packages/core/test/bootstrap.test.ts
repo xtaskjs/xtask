@@ -80,7 +80,10 @@ describe("bootstrap", () => {
     expect(mockLifecycle.useGlobalPipes).toHaveBeenCalledTimes(1);
     expect(registerEventHandlers).toHaveBeenCalledTimes(1);
     expect(mockKernelBoot).toHaveBeenCalledTimes(1);
-    expect(KernelMock).toHaveBeenCalledWith({ containerOptions: undefined });
+    expect(KernelMock).toHaveBeenCalledWith({
+      containerOptions: undefined,
+      hotManifestWatcher: undefined,
+    });
     expect(registerContainerInLifecycle).toHaveBeenCalledTimes(1);
     expect(createHttpAdapter).toHaveBeenCalledWith(undefined, undefined);
     expect(mockListen).not.toHaveBeenCalled();
@@ -98,6 +101,24 @@ describe("bootstrap", () => {
       containerOptions: {
         resolutionStrategy: "eager",
         metricsEnabled: true,
+      },
+      hotManifestWatcher: undefined,
+    });
+  });
+
+  it("should pass hot manifest watcher options to kernel", async () => {
+    await CreateApplication({
+      hotManifestWatcher: {
+        enabled: true,
+        debounceMs: 75,
+      },
+    });
+
+    expect(KernelMock).toHaveBeenCalledWith({
+      containerOptions: undefined,
+      hotManifestWatcher: {
+        enabled: true,
+        debounceMs: 75,
       },
     });
   });

@@ -23,6 +23,7 @@ export async function CreateApplication(
     lifecycle.useGlobalPipes(new ValidationPipe());
     const kernel = new Kernel({
         containerOptions: options.container,
+        hotManifestWatcher: options.hotManifestWatcher,
     });
     const listeners = new KernelListeners();
     registerEventHandlers(listeners, lifecycle);

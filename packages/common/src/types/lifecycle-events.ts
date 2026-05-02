@@ -13,4 +13,7 @@ export type LifeCyclePhase =
 | "manifestCacheHit"
 | "manifestCacheMiss"
 | "manifestCacheInvalid"
-| "manifestCacheRebuilt" ;
+| "manifestCacheRebuilt"
+| "hotManifestUpdated"
+| "hotManifestMetrics"
+| "hotManifestReloadError" ;

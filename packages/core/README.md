@@ -155,6 +155,32 @@ const metrics = container.getInstantiationMetrics();
 // [{ componentName, scope, instancesCreated, totalInstantiationMs, averageInstantiationMs, lastInstantiationMs }]
 ```
 
+## Hot Manifest Watcher (Dev)
+- In development, core can watch source directories and apply incremental manifest updates.
+- On file change, only the changed file is reloaded and its container bindings are invalidated/re-registered.
+- This avoids full project rescans on each restart cycle during local development.
+
+```typescript
+const app = await CreateApplication({
+	hotManifestWatcher: {
+		enabled: true,   // default in NODE_ENV=development
+		debounceMs: 60,  // optional
+	},
+	container: {
+		resolutionStrategy: "lazy",
+	},
+});
+```
+
+Notes:
+- Watcher is disabled by default outside development.
+- It tracks `.ts` and `.js` files and ignores `.test` / `.spec` files.
+
+Watcher lifecycle events:
+- `hotManifestUpdated`: emitted after a file hot reload attempt, includes file, components, durationMs, and metrics snapshot.
+- `hotManifestMetrics`: emitted after update/error with aggregate metrics (`filesHotUpdated`, `reloadErrors`, `averageUpdateMs`, `totalUpdateMs`, `lastUpdateMs`).
+- `hotManifestReloadError`: emitted when a reload fails, includes file, error message, and metrics snapshot.
+
 ## Metrics Log Configuration
 - Metrics logs are disabled by default.
 - Set `XTASKJS_SHOW_METRICS_LOGS=true` to show runtime metric logs like `[Metrics] Heap MB` and `CPU { ... }`.

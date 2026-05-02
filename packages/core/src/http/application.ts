@@ -21,6 +21,10 @@ export interface CreateApplicationOptions {
   server?: HttpServerOptions;
   autoListen?: boolean;
   container?: ContainerOptions;
+  hotManifestWatcher?: {
+    enabled?: boolean;
+    debounceMs?: number;
+  };
 }
 
 const defaultServerOptions: Required<HttpServerOptions> = {

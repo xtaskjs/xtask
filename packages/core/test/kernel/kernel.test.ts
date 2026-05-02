@@ -12,6 +12,19 @@ jest.mock("../../src/kernel/manifest-cache.service", () => ({
   ManifestCacheService: jest.fn(),
 }));
 
+const hotWatcherStart = jest.fn();
+const hotWatcherStop = jest.fn();
+const HotManifestWatcherMock = jest.fn(() => ({
+  start: hotWatcherStart,
+  stop: hotWatcherStop,
+}));
+
+jest.mock("../../src/watcher", () => ({
+  HotManifestWatcher: function (...args: any[]) {
+    return HotManifestWatcherMock.apply(null, args as any);
+  },
+}));
+
 import { existsSync } from "fs";
 import { Container } from "../../src/di/container";
 import { Kernel } from "../../src/kernel/kernel";
@@ -21,6 +34,12 @@ describe("Kernel", () => {
   afterEach(() => {
     jest.restoreAllMocks();
     jest.clearAllMocks();
+  });
+
+  beforeEach(() => {
+    hotWatcherStart.mockClear();
+    hotWatcherStop.mockClear();
+    HotManifestWatcherMock.mockClear();
   });
 
   it("should autoload from manifest cache when available", async () => {
@@ -170,5 +189,60 @@ describe("Kernel", () => {
     await kernel.boot();
 
     expect(await kernel.getContainer()).toBe(container);
+  });
+
+  it("should emit hot manifest watcher lifecycle events", async () => {
+    const autoloadFiles = jest.fn(async () => {});
+    const scanDir = jest.fn(async () => []);
+    const logger = { info: jest.fn() };
+    const emit = jest.fn(async () => {});
+    const on = jest.fn();
+
+    const manifest = {
+      version: 1,
+      generatedAt: new Date().toISOString(),
+      scanRoots: ["/project/src"],
+      files: ["/project/src/app.service.ts"],
+    };
+
+    (Container as unknown as jest.Mock).mockImplementation(() => ({
+      autoloadFiles,
+      scanDir,
+      get: jest.fn(async () => logger),
+    }));
+
+    (existsSync as jest.Mock).mockImplementation(() => true);
+
+    (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
+      read: jest.fn(() => manifest),
+      write: jest.fn(),
+      getManifestPath: jest.fn(() => "/project/.xtask-manifest.json"),
+    }));
+
+    const kernel = new Kernel({
+      hotManifestWatcher: { enabled: true, debounceMs: 80 },
+    });
+    await kernel.boot({ emit, on } as any);
+
+    expect(HotManifestWatcherMock).toHaveBeenCalledTimes(1);
+    expect(hotWatcherStart).toHaveBeenCalledTimes(1);
+
+    const watcherOptions = (HotManifestWatcherMock as any).mock.calls[0][4] as {
+      onHotUpdate?: (payload: any) => Promise<void>;
+      onMetrics?: (payload: any) => Promise<void>;
+      onReloadError?: (payload: any) => Promise<void>;
+    };
+    await watcherOptions.onHotUpdate?.({ file: "a.ts" });
+    await watcherOptions.onMetrics?.({ source: "update" });
+    await watcherOptions.onReloadError?.({ file: "a.ts", error: "boom" });
+
+    expect(emit).toHaveBeenCalledWith("hotManifestUpdated", { file: "a.ts" });
+    expect(emit).toHaveBeenCalledWith("hotManifestMetrics", { source: "update" });
+    expect(emit).toHaveBeenCalledWith("hotManifestReloadError", { file: "a.ts", error: "boom" });
+
+    expect(on).toHaveBeenCalledTimes(1);
+    const stopHandler = on.mock.calls[0][1];
+    await stopHandler();
+    expect(hotWatcherStop).toHaveBeenCalledTimes(1);
   });
 });
