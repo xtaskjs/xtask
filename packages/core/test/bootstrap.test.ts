@@ -82,6 +82,7 @@ describe("bootstrap", () => {
     expect(mockKernelBoot).toHaveBeenCalledTimes(1);
     expect(KernelMock).toHaveBeenCalledWith({
       containerOptions: undefined,
+      prebuiltManifest: undefined,
       hotManifestWatcher: undefined,
     });
     expect(registerContainerInLifecycle).toHaveBeenCalledTimes(1);
@@ -102,6 +103,23 @@ describe("bootstrap", () => {
         resolutionStrategy: "eager",
         metricsEnabled: true,
       },
+      prebuiltManifest: undefined,
+      hotManifestWatcher: undefined,
+    });
+  });
+
+  it("should pass prebuilt manifest options to kernel", async () => {
+    await CreateApplication({
+      prebuiltManifest: {
+        enabled: true,
+      },
+    });
+
+    expect(KernelMock).toHaveBeenCalledWith({
+      containerOptions: undefined,
+      prebuiltManifest: {
+        enabled: true,
+      },
       hotManifestWatcher: undefined,
     });
   });
@@ -116,6 +134,7 @@ describe("bootstrap", () => {
 
     expect(KernelMock).toHaveBeenCalledWith({
       containerOptions: undefined,
+      prebuiltManifest: undefined,
       hotManifestWatcher: {
         enabled: true,
         debounceMs: 75,

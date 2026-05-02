@@ -19,7 +19,8 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "npm run build --prefix ../common && rm -rf dist && tsc",
+    "prebuild:manifest": "TS_NODE_PROJECT=./tsconfig.json node -r ts-node/register/transpile-only ./src/cli-build/prebuild.ts",
+    "build": "npm run build --prefix ../common && npm run prebuild:manifest && rm -rf dist && tsc",
     "prepack": "npm run build",
     "test": " jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",

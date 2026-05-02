@@ -2,6 +2,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join, normalize } from "path";
 
 const XTASK_MANIFEST_VERSION = 1;
+const XTASK_PREBUILT_MANIFEST_FILE = ".xtask-manifest.prebuilt.json";
 
 export interface XTaskManifest {
     version: number;
@@ -17,8 +18,29 @@ export class ManifestCacheService {
         return join(this.projectRoot, ".xtask-manifest.json");
     }
 
+    public getPrebuiltManifestPath(): string {
+        return join(this.projectRoot, XTASK_PREBUILT_MANIFEST_FILE);
+    }
+
     public read(scanRoots: string[]): XTaskManifest | null {
         const manifestPath = this.getManifestPath();
+        return this.readFromPath(manifestPath, scanRoots);
+    }
+
+    public readPrebuilt(scanRoots: string[]): XTaskManifest | null {
+        const manifestPath = this.getPrebuiltManifestPath();
+        return this.readFromPath(manifestPath, scanRoots);
+    }
+
+    public writePrebuilt(scanRoots: string[], files: string[]): XTaskManifest {
+        return this.writeToPath(this.getPrebuiltManifestPath(), scanRoots, files);
+    }
+
+    public write(scanRoots: string[], files: string[]): XTaskManifest {
+        return this.writeToPath(this.getManifestPath(), scanRoots, files);
+    }
+
+    private readFromPath(manifestPath: string, scanRoots: string[]): XTaskManifest | null {
         if (!existsSync(manifestPath)) {
             return null;
         }
@@ -35,8 +57,7 @@ export class ManifestCacheService {
         }
     }
 
-    public write(scanRoots: string[], files: string[]): XTaskManifest {
-        const manifestPath = this.getManifestPath();
+    private writeToPath(manifestPath: string, scanRoots: string[], files: string[]): XTaskManifest {
         const manifest: XTaskManifest = {
             version: XTASK_MANIFEST_VERSION,
             generatedAt: new Date().toISOString(),

@@ -181,6 +181,34 @@ Watcher lifecycle events:
 - `hotManifestMetrics`: emitted after update/error with aggregate metrics (`filesHotUpdated`, `reloadErrors`, `averageUpdateMs`, `totalUpdateMs`, `lastUpdateMs`).
 - `hotManifestReloadError`: emitted when a reload fails, includes file, error message, and metrics snapshot.
 
+## Prebuilt Manifest (Production)
+To avoid runtime scans in production cold starts, you can pre-generate a manifest during build:
+
+```bash
+npm run prebuild:manifest --prefix packages/core
+```
+
+Programmatic usage:
+
+```typescript
+import { prebuildManifest } from "@xtaskjs/core";
+
+await prebuildManifest({ projectRoot: process.cwd() });
+```
+
+Runtime load order in `Kernel.boot`:
+- prebuilt manifest (`.xtask-manifest.prebuilt.json`) when enabled (default in production)
+- cached manifest (`.xtask-manifest.json`)
+- full filesystem scan fallback
+
+You can override in app bootstrap:
+
+```typescript
+await CreateApplication({
+  prebuiltManifest: { enabled: true },
+});
+```
+
 ## Metrics Log Configuration
 - Metrics logs are disabled by default.
 - Set `XTASKJS_SHOW_METRICS_LOGS=true` to show runtime metric logs like `[Metrics] Heap MB` and `CPU { ... }`.

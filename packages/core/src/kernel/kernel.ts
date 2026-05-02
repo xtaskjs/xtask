@@ -9,6 +9,9 @@ import { HotManifestWatcher } from "../watcher";
 
 export interface KernelOptions {
     containerOptions?: ContainerOptions;
+    prebuiltManifest?: {
+        enabled?: boolean;
+    };
     hotManifestWatcher?: {
         enabled?: boolean;
         debounceMs?: number;
@@ -50,26 +53,53 @@ export class Kernel {
             return files;
         };
 
-        const manifest = this.manifestCache.read(existingScanDirs);
-
         let resolvedFiles: string[] = [];
+        const shouldUsePrebuiltManifest = this.options.prebuiltManifest?.enabled
+            ?? process.env.NODE_ENV === "production";
 
-        if (manifest) {
+        const tryManifest = async (manifestType: "prebuilt" | "cache"): Promise<boolean> => {
+            const manifest = manifestType === "prebuilt"
+                ? this.manifestCache.readPrebuilt(existingScanDirs)
+                : this.manifestCache.read(existingScanDirs);
+
+            if (!manifest) {
+                return false;
+            }
+
+            const manifestPath = manifestType === "prebuilt"
+                ? this.manifestCache.getPrebuiltManifestPath()
+                : this.manifestCache.getManifestPath();
+
             await lifecycle?.emit("manifestCacheHit", {
-                path: this.manifestCache.getManifestPath(),
+                path: manifestPath,
                 fileCount: manifest.files.length,
+                source: manifestType,
             });
+
             try {
                 await this.container.autoloadFiles(manifest.files);
                 resolvedFiles = manifest.files;
+                return true;
             } catch (error) {
                 await lifecycle?.emit("manifestCacheInvalid", {
-                    path: this.manifestCache.getManifestPath(),
+                    path: manifestPath,
                     reason: error instanceof Error ? error.message : String(error),
+                    source: manifestType,
                 });
-                resolvedFiles = await rebuildManifest();
+                return false;
             }
-        } else {
+        };
+
+        let loadedFromManifest = false;
+        if (shouldUsePrebuiltManifest) {
+            loadedFromManifest = await tryManifest("prebuilt");
+        }
+
+        if (!loadedFromManifest) {
+            loadedFromManifest = await tryManifest("cache");
+        }
+
+        if (!loadedFromManifest) {
             await lifecycle?.emit("manifestCacheMiss", {
                 path: this.manifestCache.getManifestPath(),
             });

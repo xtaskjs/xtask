@@ -21,6 +21,9 @@ export interface CreateApplicationOptions {
   server?: HttpServerOptions;
   autoListen?: boolean;
   container?: ContainerOptions;
+  prebuiltManifest?: {
+    enabled?: boolean;
+  };
   hotManifestWatcher?: {
     enabled?: boolean;
     debounceMs?: number;

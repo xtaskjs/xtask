@@ -65,12 +65,16 @@ describe("Kernel", () => {
     (existsSync as jest.Mock).mockImplementation(() => true);
 
     const read = jest.fn(() => manifest);
+    const readPrebuilt = jest.fn(() => null);
     const write = jest.fn();
     const getManifestPath = jest.fn(() => "/project/.xtask-manifest.json");
+    const getPrebuiltManifestPath = jest.fn(() => "/project/.xtask-manifest.prebuilt.json");
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
       read,
+      readPrebuilt,
       write,
       getManifestPath,
+      getPrebuiltManifestPath,
     }));
 
     const kernel = new Kernel();
@@ -83,6 +87,7 @@ describe("Kernel", () => {
     expect(emit).toHaveBeenCalledWith("manifestCacheHit", {
       path: "/project/.xtask-manifest.json",
       fileCount: 1,
+      source: "cache",
     });
     expect(get).toHaveBeenCalledTimes(1);
     expect(logger.info).toHaveBeenCalledWith("🚀 Kernel started successfully.");
@@ -103,12 +108,16 @@ describe("Kernel", () => {
     (existsSync as jest.Mock).mockImplementation(() => true);
 
     const read = jest.fn(() => null);
+    const readPrebuilt = jest.fn(() => null);
     const write = jest.fn();
     const getManifestPath = jest.fn(() => "/project/.xtask-manifest.json");
+    const getPrebuiltManifestPath = jest.fn(() => "/project/.xtask-manifest.prebuilt.json");
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
       read,
+      readPrebuilt,
       write,
       getManifestPath,
+      getPrebuiltManifestPath,
     }));
 
     const kernel = new Kernel();
@@ -149,12 +158,16 @@ describe("Kernel", () => {
       files: ["/project/src/missing.ts"],
     };
     const read = jest.fn(() => manifest);
+    const readPrebuilt = jest.fn(() => null);
     const write = jest.fn();
     const getManifestPath = jest.fn(() => "/project/.xtask-manifest.json");
+    const getPrebuiltManifestPath = jest.fn(() => "/project/.xtask-manifest.prebuilt.json");
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
       read,
+      readPrebuilt,
       write,
       getManifestPath,
+      getPrebuiltManifestPath,
     }));
 
     const kernel = new Kernel();
@@ -166,6 +179,7 @@ describe("Kernel", () => {
     expect(emit).toHaveBeenCalledWith("manifestCacheInvalid", {
       path: "/project/.xtask-manifest.json",
       reason: "Cannot find module",
+      source: "cache",
     });
   });
 
@@ -181,14 +195,73 @@ describe("Kernel", () => {
 
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
       read: jest.fn(() => null),
+      readPrebuilt: jest.fn(() => null),
       write: jest.fn(),
       getManifestPath: jest.fn(() => "/project/.xtask-manifest.json"),
+      getPrebuiltManifestPath: jest.fn(() => "/project/.xtask-manifest.prebuilt.json"),
     }));
 
     const kernel = new Kernel();
     await kernel.boot();
 
     expect(await kernel.getContainer()).toBe(container);
+  });
+
+  it("should prefer prebuilt manifest over cache when enabled", async () => {
+    const autoloadFiles = jest.fn(async () => {});
+    const scanDir = jest.fn(async () => []);
+    const logger = { info: jest.fn() };
+    const emit = jest.fn(async () => {});
+
+    const prebuiltManifest = {
+      version: 1,
+      generatedAt: new Date().toISOString(),
+      scanRoots: ["/project/src"],
+      files: ["/project/src/prebuilt.service.ts"],
+    };
+
+    (Container as unknown as jest.Mock).mockImplementation(() => ({
+      autoloadFiles,
+      scanDir,
+      get: jest.fn(async () => logger),
+    }));
+
+    (existsSync as jest.Mock).mockImplementation(() => true);
+
+    const read = jest.fn(() => ({
+      version: 1,
+      generatedAt: new Date().toISOString(),
+      scanRoots: ["/project/src"],
+      files: ["/project/src/cache.service.ts"],
+    }));
+    const readPrebuilt = jest.fn(() => prebuiltManifest);
+    const write = jest.fn();
+    const getManifestPath = jest.fn(() => "/project/.xtask-manifest.json");
+    const getPrebuiltManifestPath = jest.fn(() => "/project/.xtask-manifest.prebuilt.json");
+
+    (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
+      read,
+      readPrebuilt,
+      write,
+      getManifestPath,
+      getPrebuiltManifestPath,
+    }));
+
+    const kernel = new Kernel({
+      prebuiltManifest: { enabled: true },
+    });
+    await kernel.boot({ emit } as any);
+
+    expect(readPrebuilt).toHaveBeenCalledTimes(1);
+    expect(read).not.toHaveBeenCalled();
+    expect(autoloadFiles).toHaveBeenCalledWith(prebuiltManifest.files);
+    expect(emit).toHaveBeenCalledWith("manifestCacheHit", {
+      path: "/project/.xtask-manifest.prebuilt.json",
+      fileCount: 1,
+      source: "prebuilt",
+    });
+    expect(write).not.toHaveBeenCalled();
+    expect(scanDir).not.toHaveBeenCalled();
   });
 
   it("should emit hot manifest watcher lifecycle events", async () => {
@@ -215,8 +288,10 @@ describe("Kernel", () => {
 
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
       read: jest.fn(() => manifest),
+      readPrebuilt: jest.fn(() => null),
       write: jest.fn(),
       getManifestPath: jest.fn(() => "/project/.xtask-manifest.json"),
+      getPrebuiltManifestPath: jest.fn(() => "/project/.xtask-manifest.prebuilt.json"),
     }));
 
     const kernel = new Kernel({

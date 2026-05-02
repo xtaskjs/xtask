@@ -40,6 +40,40 @@ describe("ManifestCacheService", () => {
     expect(writeFileSync).toHaveBeenCalledTimes(1);
   });
 
+  it("should write prebuilt manifest to dedicated file", () => {
+    (existsSync as jest.Mock).mockReturnValue(true);
+    const service = new ManifestCacheService("/project");
+
+    const manifest = service.writePrebuilt(["/project/src"], ["/project/src/a.ts"]);
+
+    expect(manifest.scanRoots).toEqual(["/project/src"]);
+    expect(writeFileSync).toHaveBeenCalledWith(
+      "/project/.xtask-manifest.prebuilt.json",
+      expect.any(String),
+      "utf8"
+    );
+  });
+
+  it("should read prebuilt manifest when valid", () => {
+    (existsSync as jest.Mock).mockReturnValue(true);
+    (readFileSync as jest.Mock).mockReturnValue(
+      JSON.stringify({
+        version: 1,
+        generatedAt: new Date().toISOString(),
+        scanRoots: ["/project/src"],
+        files: ["/project/src/a.ts"],
+      })
+    );
+
+    const service = new ManifestCacheService("/project");
+    const manifest = service.readPrebuilt(["/project/src"]);
+
+    expect(manifest).toEqual(expect.objectContaining({
+      scanRoots: ["/project/src"],
+      files: ["/project/src/a.ts"],
+    }));
+  });
+
   it("should return null when scan roots do not match", () => {
     (existsSync as jest.Mock).mockReturnValue(true);
     (readFileSync as jest.Mock).mockReturnValue(
