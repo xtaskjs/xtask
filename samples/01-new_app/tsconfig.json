@@ -8,7 +8,10 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
-  
+    "paths": {
+      "@xtaskjs/testing": ["../../packages/testing/src/index.ts"],
+      "@xtaskjs/testing/*": ["../../packages/testing/src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

@@ -1,4 +1,5 @@
 import { Container, Service, AutoWired } from "../../src/di/index";
+import { Logger } from "@xtaskjs/common";
 
 @Service()
 class TestService{
@@ -40,6 +41,25 @@ class TransientMetricService {
     }
 }
 
+@Service()
+class ConstructorLoggerConsumer {
+    constructor(private readonly logger: Logger) {}
+
+    run(): void {
+        this.logger.info("constructor logger context");
+    }
+}
+
+@Service()
+class AutoWiredLoggerConsumer {
+    @AutoWired()
+    logger!: Logger;
+
+    run(): void {
+        this.logger.info("autowired logger context");
+    }
+}
+
 
 
 describe("Container", () => {
@@ -48,6 +68,10 @@ describe("Container", () => {
     beforeEach(() => {
         container = new Container();
         LazyDependencyService.createdCount = 0;
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
     });
 
     it("should register and resolve a singleton service", () => {
@@ -143,5 +167,45 @@ describe("Container", () => {
 
         container.resetInstantiationMetrics();
         expect(container.getInstantiationMetrics()).toEqual([]);
+    });
+
+    it("should set logger context automatically for constructor injection", () => {
+        container.register(ConstructorLoggerConsumer, { scope: "singleton" });
+        const spy = jest.spyOn(console, "log").mockImplementation();
+
+        container.get(ConstructorLoggerConsumer).run();
+
+        const latestCall = spy.mock.calls[spy.mock.calls.length - 1];
+        const output = (latestCall?.[0] || "") as string;
+        expect(output).toContain("[ConstructorLoggerConsumer]");
+    });
+
+    it("should set logger context automatically for autowired injection", () => {
+        container.register(AutoWiredLoggerConsumer, { scope: "singleton" });
+        const spy = jest.spyOn(console, "log").mockImplementation();
+
+        container.get(AutoWiredLoggerConsumer).run();
+
+        const latestCall = spy.mock.calls[spy.mock.calls.length - 1];
+        const output = (latestCall?.[0] || "") as string;
+        expect(output).toContain("[AutoWiredLoggerConsumer]");
+    });
+
+    it("should apply configured logger options to injected logger", () => {
+        const configuredContainer = new Container({
+            logger: {
+                appName: "MyApp",
+                useColors: false,
+            },
+        });
+        configuredContainer.register(ConstructorLoggerConsumer, { scope: "singleton" });
+        const spy = jest.spyOn(console, "log").mockImplementation();
+
+        configuredContainer.get(ConstructorLoggerConsumer).run();
+
+        const latestCall = spy.mock.calls[spy.mock.calls.length - 1];
+        const output = (latestCall?.[0] || "") as string;
+        expect(output).toContain("[MyApp]");
+        expect(output).toContain("[ConstructorLoggerConsumer]");
     });
 }); 

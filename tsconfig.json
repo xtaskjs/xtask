@@ -36,7 +36,9 @@
       "@xtaskjs/event-source": ["packages/event-source/src/index.ts"],
       "@xtaskjs/event-source/*": ["packages/event-source/src/*"],
       "@xtaskjs/internationalization": ["packages/internationalization/src/index.ts"],
-      "@xtaskjs/internationalization/*": ["packages/internationalization/src/*"]
+      "@xtaskjs/internationalization/*": ["packages/internationalization/src/*"],
+      "@xtaskjs/testing": ["packages/testing/src/index.ts"],
+      "@xtaskjs/testing/*": ["packages/testing/src/*"]
     }
   },
   "include": ["packages/**/*","packages/**/**/*","packages/**/**/**/*","samples/**/*","samples/**/**/*"],

@@ -7,8 +7,21 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@xtaskjs/testing": [
+        "../../packages/testing/src/index.ts"
+      ],
+      "@xtaskjs/testing/*": [
+        "../../packages/testing/src/*"
+      ]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

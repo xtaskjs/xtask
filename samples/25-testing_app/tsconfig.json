@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "rootDir": "./",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "paths": {
+      "@xtaskjs/core": ["../../packages/core/src/index.ts"],
+      "@xtaskjs/core/*": ["../../packages/core/src/*"],
+      "@xtaskjs/testing": ["../../packages/testing/src/index.ts"],
+      "@xtaskjs/testing/*": ["../../packages/testing/src/*"]
+    }
+  },
+  "include": ["src/**/*"]
+}

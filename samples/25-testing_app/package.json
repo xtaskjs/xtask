@@ -1,0 +1,23 @@
+{
+  "name": "25-testing_app",
+  "version": "1.0.0",
+  "description": "Sample for @xtaskjs/testing in-memory module runtime.",
+  "main": "index.js",
+  "scripts": {
+    "test": "ts-node -r tsconfig-paths/register ./src/testing.spec.ts",
+    "test:watch": "nodemon --watch src --ext ts --exec \"ts-node -r tsconfig-paths/register ./src/testing.spec.ts\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@xtaskjs/core": "file:../../packages/core",
+    "@xtaskjs/testing": "file:../../packages/testing",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2"
+  }
+}

@@ -20,6 +20,7 @@
 - `21-event_source_rabbitmq_app`: node-http event-source sample with a TypeORM-backed SQLite event store, replayed aggregates, projection updates, and RabbitMQ delivery.
 - `22-event_source_cqrs_app`: node-http interoperability sample where event-source owns writes and CQRS builds the read model from persisted domain events.
 - `23-socket_io_express_app`: Express + Socket.IO sample with decorated gateways, room joins, acknowledgements, and HTTP-triggered broadcasts.
+- `25-testing_app`: in-memory testing runtime sample showing module graph creation, DI overrides/mocking, lifecycle hooks, and isolated test containers with `@xtaskjs/testing`.
 
 ## Release helpers
 

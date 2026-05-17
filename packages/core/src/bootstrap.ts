@@ -21,8 +21,14 @@ export async function CreateApplication(
 ): Promise<XTaskHttpApplication> {
     const lifecycle = new ApplicationLifeCycle();
     lifecycle.useGlobalPipes(new ValidationPipe());
+    const containerOptions = options.logger
+        ? {
+            ...(options.container || {}),
+            logger: options.logger,
+        }
+        : options.container;
     const kernel = new Kernel({
-        containerOptions: options.container,
+        containerOptions,
         prebuiltManifest: options.prebuiltManifest,
         hotManifestWatcher: options.hotManifestWatcher,
     });

@@ -1,4 +1,5 @@
 import { HttpMethod } from "@xtaskjs/common";
+import type { LoggerOptions } from "@xtaskjs/common";
 import { createRequire } from "module";
 import { join } from "path";
 import { clearCurrentContainer, Container, ContainerOptions, setCurrentContainer } from "../di";
@@ -21,6 +22,7 @@ export interface CreateApplicationOptions {
   server?: HttpServerOptions;
   autoListen?: boolean;
   container?: ContainerOptions;
+  logger?: LoggerOptions;
   prebuiltManifest?: {
     enabled?: boolean;
   };

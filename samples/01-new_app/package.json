@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
     "build": "npm run clean; tsc",
-    "test": "npm run test --prefix packages/core && npm run test --prefix packages/common",
+    "test": "ts-node -r tsconfig-paths/register ./src/app.spec.ts",
     "clean": "rm -r dist",
     "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts"
   },
@@ -20,6 +20,7 @@
     "ts-morph": "^27.0.0"
   },
   "devDependencies": {
+    "@xtaskjs/testing": "file:../../packages/testing",
     "@babel/core": "^7.28.4",
     "@babel/preset-env": "^7.28.3",
     "@jest/globals": "^30.1.2",

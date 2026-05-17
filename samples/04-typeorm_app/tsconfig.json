@@ -9,12 +9,31 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@xtaskjs/common": ["../../packages/common/src/index.ts"],
-      "@xtaskjs/core": ["../../packages/core/src/index.ts"],
-      "@xtaskjs/fastify-http": ["../../packages/fastify-http/src/index.ts"],
-      "@xtaskjs/typeorm": ["../../packages/typeorm/src/index.ts"]
+      "@xtaskjs/common": [
+        "../../packages/common/src/index.ts"
+      ],
+      "@xtaskjs/core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@xtaskjs/fastify-http": [
+        "../../packages/fastify-http/src/index.ts"
+      ],
+      "@xtaskjs/typeorm": [
+        "../../packages/typeorm/src/index.ts"
+      ],
+      "@xtaskjs/testing": [
+        "../../packages/testing/src/index.ts"
+      ],
+      "@xtaskjs/testing/*": [
+        "../../packages/testing/src/*"
+      ]
     }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

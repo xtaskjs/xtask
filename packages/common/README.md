@@ -20,6 +20,37 @@ import { ... } from '@xtaskjs/common';
 - ValidationPipe with `class-validator` and `class-transformer`
 - Shared types and constants
 
+## Logger
+
+The `Logger` supports:
+- Colored console output by log level (`info`, `warn`, `error`)
+- Optional persistence to a `.log` file
+- Configurable file location and service context
+
+```typescript
+import { Logger } from "@xtaskjs/common";
+
+const logger = new Logger({
+	appName: "xTaskjs",
+	context: "MyService",
+	useColors: true,
+	file: {
+		enabled: true,
+		path: "./logs/my-service.log", // Can be a .log file path or a folder path
+	},
+});
+
+logger.info("Doing something with timestamp here");
+logger.warn("Potential issue detected");
+logger.error("Unexpected error");
+```
+
+Example output format:
+
+```text
+[xTaskjs] 19096   - 04/19/2024, 7:12:59 AM   [MyService] Doing something with timestamp here +5ms
+```
+
 ## HTTP Controllers (Nest-style)
 ```typescript
 import {

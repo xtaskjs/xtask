@@ -25,9 +25,19 @@ async function main() {
 		adapter: "node-http", // "express" | "fastify"
 		autoListen: true,
 		server: { host: "127.0.0.1", port: 3000 },
+		logger: {
+			appName: "xTaskjs",
+			useColors: true,
+			file: {
+				enabled: true,
+				path: "./logs/app.log",
+			},
+		},
 	});
 }
 ```
+
+`logger` is applied globally through the container, and each injected `Logger` automatically receives the class name as context.
 
 With `express` or `fastify`, pass your instance in `adapterInstance`:
 

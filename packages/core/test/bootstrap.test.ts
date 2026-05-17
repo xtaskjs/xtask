@@ -108,6 +108,34 @@ describe("bootstrap", () => {
     });
   });
 
+  it("should pass logger options to kernel container options", async () => {
+    await CreateApplication({
+      logger: {
+        appName: "MyApp",
+        useColors: false,
+        file: {
+          enabled: true,
+          path: "./logs/app.log",
+        },
+      },
+    });
+
+    expect(KernelMock).toHaveBeenCalledWith({
+      containerOptions: {
+        logger: {
+          appName: "MyApp",
+          useColors: false,
+          file: {
+            enabled: true,
+            path: "./logs/app.log",
+          },
+        },
+      },
+      prebuiltManifest: undefined,
+      hotManifestWatcher: undefined,
+    });
+  });
+
   it("should pass prebuilt manifest options to kernel", async () => {
     await CreateApplication({
       prebuiltManifest: {

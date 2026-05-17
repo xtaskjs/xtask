@@ -9,7 +9,8 @@
     "prebuild": "npm run build --prefix ../../packages/queues",
     "build": "npm run clean; tsc",
     "clean": "rm -rf dist",
-    "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts"
+    "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts",
+    "test": "ts-node -r tsconfig-paths/register ./src/app.spec.ts"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "@xtaskjs/testing": "file:../../packages/testing"
   }
 }

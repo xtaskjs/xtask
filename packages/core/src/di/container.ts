@@ -12,17 +12,20 @@ import { getConstructorQualifiers } from "./qualifier";
 import { registerControllerRoutes, registerEventHandlers} from "../server";
 import { importFilesWithConcurrency } from "../scanner/import-pool";
 import { CONTROLLERS_KEY, HANDLERS_KEY, Logger, ROUTES_KEY, RUNNERS_KEY } from "@xtaskjs/common";
+import type { LoggerOptions } from "@xtaskjs/common";
 
 export type ResolutionStrategy = "lazy" | "eager";
 
 export interface ContainerOptions {
     resolutionStrategy?: ResolutionStrategy;
     metricsEnabled?: boolean;
+    logger?: LoggerOptions;
 }
 
 interface ContainerRuntimeOptions {
     resolutionStrategy: ResolutionStrategy;
     metricsEnabled: boolean;
+    loggerOptions?: LoggerOptions;
 }
 
 interface ComponentMetricState {
@@ -91,8 +94,20 @@ parentPort.postMessage({ files: discovered });
         this.options = {
             resolutionStrategy: options.resolutionStrategy || "lazy",
             metricsEnabled: options.metricsEnabled !== false,
+            loggerOptions: options.logger
+                ? {
+                    ...options.logger,
+                    file: options.logger.file ? { ...options.logger.file } : undefined,
+                }
+                : undefined,
         };
-        this.registerWithName(Logger, { scope: "singleton" }, Logger.name);
+        this.registerFrameworkLogger();
+    }
+
+    private registerFrameworkLogger(): void {
+        this.nameToType.set(Logger.name, Logger);
+        this.typeToNames.set(Logger, [Logger.name]);
+        this.providers.set(Logger, () => new Logger(this.options.loggerOptions));
     }
 
     private async importModule(file: string, forceRefresh = false): Promise<any> {
@@ -487,12 +502,12 @@ parentPort.postMessage({ files: discovered });
                     if (qualifier) {
                         // Named/qualified bindings are often compared by identity.
                         // Resolve them eagerly to preserve strict reference equality.
-                        return this.getWithQualifier(dep, qualifier);
+                        return this.getWithQualifier(dep, qualifier, target);
                     }
                     if (this.shouldUseLazyDependencies()) {
-                        return this.createLazyDependency(() => this.getWithQualifier(dep, qualifier));
+                        return this.createLazyDependency(() => this.getWithQualifier(dep, qualifier, target));
                     }
-                    return this.getWithQualifier(dep, qualifier);
+                    return this.getWithQualifier(dep, qualifier, target);
                 });
                 
                 const instance = new target(...dependencies);
@@ -557,11 +572,19 @@ parentPort.postMessage({ files: discovered });
         return Array.from(this.providers.keys());
     }
 
-    private getWithQualifier<T>(type: new (...args: any[]) => T, qualifier?: string): T {
-        if(qualifier){
-            return this.getByName<T>(qualifier);
+    private getWithQualifier<T>(type: new (...args: any[]) => T, qualifier?: string, requesterType?: any): T {
+        const dependency = qualifier
+            ? this.getByName<T>(qualifier)
+            : this.get(type);
+
+        return this.applyLoggerContext(dependency, requesterType);
+    }
+
+    private applyLoggerContext<T>(dependency: T, requesterType?: any): T {
+        if (dependency instanceof Logger && requesterType?.name) {
+            dependency.setContext(requesterType.name);
         }
-        return this.get(type);
+        return dependency;
     }
 
     private injectAutoWiredFields(instance: any) {
@@ -574,6 +597,7 @@ parentPort.postMessage({ files: discovered });
                 } else {
                     value = this.get(metaData.type);
                 }
+                value = this.applyLoggerContext(value, instance.constructor);
                 instance[propertyKey] = value;
             }catch (error) {
                 if (metaData.required) {
