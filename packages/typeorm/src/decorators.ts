@@ -1,4 +1,5 @@
 import { AutoWired, Qualifier } from "@xtaskjs/core";
+import { registerTypeOrmMigration, registerTypeOrmSeeder } from "./configuration";
 import { getDataSourceToken, getRepositoryToken } from "./tokens";
 
 export const InjectDataSource = (name = "default"): ParameterDecorator & PropertyDecorator => {
@@ -29,5 +30,19 @@ export const InjectRepository = (
     if (propertyKey !== undefined) {
       AutoWired({ qualifier: token })(target, propertyKey);
     }
+  };
+};
+
+export const TypeOrmMigration = (options: { dataSourceName?: string; name?: string } = {}): ClassDecorator => {
+  return (target) => {
+    registerTypeOrmMigration(target as any, options);
+  };
+};
+
+export const TypeOrmSeeder = (
+  options: { dataSourceName?: string; name?: string; order?: number } = {}
+): ClassDecorator => {
+  return (target) => {
+    registerTypeOrmSeeder(target as any, options);
   };
 };

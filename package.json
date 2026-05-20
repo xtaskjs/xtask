@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run clean; tsc",
+    "build": "npm run clean && tsc",
     "test": "npm run test --prefix packages/core && npm run test --prefix packages/common && npm run test --prefix packages/value-objects && npm run test --prefix packages/express-http && npm run test --prefix packages/fastify-http && npm run test --prefix packages/typeorm && npm run test --prefix packages/cqrs && npm run test --prefix packages/event-source && npm run test --prefix packages/security && npm run test --prefix packages/mailer && npm run test --prefix packages/cache && npm run test --prefix packages/internationalization && npm run test --prefix packages/scheduler && npm run test --prefix packages/queues && npm run test --prefix packages/socket-io && npm run test --prefix packages/throttler && npm run test --prefix packages/testing",
     "test:coverage": "npm run test:coverage --prefix packages/core && npm run test:coverage --prefix packages/common && npm run test:coverage --prefix packages/value-objects && npm run test:coverage --prefix packages/express-http && npm run test:coverage --prefix packages/fastify-http && npm run test:coverage --prefix packages/typeorm && npm run test:coverage --prefix packages/cqrs && npm run test:coverage --prefix packages/event-source && npm run test:coverage --prefix packages/security && npm run test:coverage --prefix packages/mailer && npm run test:coverage --prefix packages/cache && npm run test:coverage --prefix packages/internationalization && npm run test:coverage --prefix packages/scheduler && npm run test:coverage --prefix packages/queues && npm run test:coverage --prefix packages/socket-io && npm run test:coverage --prefix packages/throttler && npm run test:coverage --prefix packages/testing",
     "coverage:open:core": "npm run coverage:open --prefix packages/core",
@@ -35,7 +35,7 @@
     "pack:packages": "node ./scripts/release-packages.js pack",
     "publish:packages": "node ./scripts/release-packages.js publish",
     "publish:packages:patch": "node ./scripts/release-packages.js publish --bump patch",
-    "clean": "rm -r dist"
+    "clean": "rm -rf dist"
   },
   "author": "",
   "license": "ISC",

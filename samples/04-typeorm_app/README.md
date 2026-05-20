@@ -2,6 +2,8 @@
 
 Fastify sample application using `@xtaskjs/core` + `@xtaskjs/fastify-http` + `@xtaskjs/typeorm` with SQLite.
 
+This sample boots the database through a TypeORM migration and a startup seeder.
+
 ## Run
 
 ```bash
@@ -15,6 +17,8 @@ From this folder: `samples/04-typeorm_app`.
 
 - List users:
   - http://127.0.0.1:3000/users/
+- Startup seeder result:
+  - the first `GET /users/` returns `Ada Lovelace` after a clean boot
 - Seed one user:
   - `POST` http://127.0.0.1:3000/users/seed
 - Health endpoint:
@@ -24,6 +28,9 @@ From this folder: `samples/04-typeorm_app`.
 
 - SQLite file defaults to `samples/04-typeorm_app/xtask-typeorm.sqlite`.
 - Set `DB_PATH` to customize DB location.
+- `src/migrations/create-users-table.migration.ts` creates the `users` table on startup.
+- `src/seeders/default-users.seeder.ts` inserts the initial `Ada Lovelace` row once.
+- Delete `xtask-typeorm.sqlite` if you want to replay the migration and startup seeder from scratch.
 
 ## Manifest Cache
 

@@ -6,6 +6,8 @@ import { UserEntity } from "./user.entity";
   type: "sqlite",
   database: process.env.DB_PATH || "xtask-typeorm.sqlite",
   entities: [UserEntity],
-  synchronize: true,
+  synchronize: false,
+  runMigrationsOnServerStart: true,
+  runSeedersOnServerStart: true,
 })
 export class DatabaseConfig {}
