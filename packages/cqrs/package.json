@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/cqrs",
-  "version": "1.1.8",
+  "version": "1.1.10",
   "description": "CQRS integration for xtaskjs with read/write datasource bindings.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -42,8 +42,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/core": "^1.0.31",
-    "@xtaskjs/typeorm": "^1.0.19"
+    "@xtaskjs/core": "^1.0.33",
+    "@xtaskjs/typeorm": "^1.0.21"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0",

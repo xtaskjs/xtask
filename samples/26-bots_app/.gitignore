@@ -1,0 +1,22 @@
+# Build output
+/dist
+
+# IDE
+/.idea
+/.vscode
+
+# Dependencies
+/node_modules
+/package-lock.json
+
+# Environment variables
+/src/.env
+/.env
+
+# Misc
+/.npmrc
+/.yarnrc
+/yarn.lock
+/.DS_Store
+/.tsbuildinfo
+.xtask-manifest.json

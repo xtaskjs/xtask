@@ -49,6 +49,7 @@
 /src/packages/event-source/coverage
 /src/packages/socket-io/coverage
 /src/packages/throttler/coverage
+/src/packages/bots/coverage
 /packages/core/coverage
 /packages/common/coverage
 /packages/express-http/coverage
@@ -65,6 +66,7 @@
 /packages/event-source/coverage
 /packages/socket-io/coverage
 /packages/throttler/coverage
+/packages/bots/coverage
 #Dist
 packages/common/dist/
 packages/core/dist/
@@ -82,5 +84,6 @@ packages/cqrs/dist/
 packages/event-source/dist/
 packages/socket-io/dist/
 packages/throttler/dist/
+packages/bots/dist/
 #Packages
 packages/*/*.tgz

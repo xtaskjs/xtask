@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/cache",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "Cache and HTTP caching integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -42,8 +42,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.31",
-    "@xtaskjs/core": "^1.0.31",
+    "@xtaskjs/common": "^1.0.33",
+    "@xtaskjs/core": "^1.0.33",
     "redis": "^4.7.0"
   },
   "peerDependencies": {

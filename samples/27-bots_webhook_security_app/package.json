@@ -1,0 +1,34 @@
+{
+  "name": "27-bots_webhook_security_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm run build --prefix ../../packages/core && npm run build --prefix ../../packages/express-http && npm run build --prefix ../../packages/security && npm run build --prefix ../../packages/bots",
+    "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
+    "prebuild": "npm run build --prefix ../../packages/core && npm run build --prefix ../../packages/express-http && npm run build --prefix ../../packages/security && npm run build --prefix ../../packages/bots",
+    "build": "npm run clean; tsc",
+    "clean": "rm -rf dist",
+    "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts",
+    "test": "ts-node -r tsconfig-paths/register ./src/app.spec.ts",
+    "curl:webhooks": "bash ./scripts/send-webhooks.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@xtaskjs/bots": "file:../../packages/bots",
+    "@xtaskjs/common": "file:../../packages/common",
+    "@xtaskjs/core": "file:../../packages/core",
+    "@xtaskjs/express-http": "file:../../packages/express-http",
+    "@xtaskjs/security": "file:../../packages/security",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2"
+  }
+}

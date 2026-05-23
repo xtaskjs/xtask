@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/mailer",
-  "version": "1.0.15",
+  "version": "1.0.17",
   "description": "Mailer integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -42,7 +42,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/core": "^1.0.31",
+    "@xtaskjs/core": "^1.0.33",
     "ejs": "^3.1.10",
     "handlebars": "^4.7.8",
     "nodemailer": "^6.10.1"

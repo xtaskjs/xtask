@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/throttler",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "Rate limiting (throttler) integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -42,8 +42,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.31",
-    "@xtaskjs/core": "^1.0.31"
+    "@xtaskjs/common": "^1.0.33",
+    "@xtaskjs/core": "^1.0.33"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0"

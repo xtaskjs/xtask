@@ -21,6 +21,33 @@
 - `22-event_source_cqrs_app`: node-http interoperability sample where event-source owns writes and CQRS builds the read model from persisted domain events.
 - `23-socket_io_express_app`: Express + Socket.IO sample with decorated gateways, room joins, acknowledgements, and HTTP-triggered broadcasts.
 - `25-testing_app`: in-memory testing runtime sample showing module graph creation, DI overrides/mocking, lifecycle hooks, and isolated test containers with `@xtaskjs/testing`.
+- `26-bots_app`: unified bots sample with Telegram, Slack, and WhatsApp adapters in a single `@xtaskjs/bots` runtime.
+- `27-bots_webhook_security_app`: unified bots webhook sample for Slack/Telegram with HMAC signature validation and JWT-protected audit routes via `@xtaskjs/security`.
+
+## Follow The Latest Bots Samples
+
+Recommended order:
+
+1. `samples/26-bots_app`
+2. `samples/27-bots_webhook_security_app`
+
+Quick commands:
+
+```bash
+cd samples/26-bots_app && npm install && npm test && npm start
+```
+
+Then in a new terminal:
+
+```bash
+cd samples/27-bots_webhook_security_app && npm install && npm test && npm start
+```
+
+With the webhook sample running, trigger signed test calls:
+
+```bash
+cd samples/27-bots_webhook_security_app && npm run curl:webhooks
+```
 
 ## Release helpers
 
