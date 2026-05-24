@@ -60,7 +60,7 @@ async function main() {
   await BotsModule.register({
     adapters: [telegramAdapter, slackAdapter],
   });
-  await BotsModule.initialize(container, lifecycle);
+  await BotsModule.initialize(container as any, lifecycle as any);
 
   await telegramAdapter.receive({
     chatId: "tg-1",

@@ -13,7 +13,6 @@ import {
   runWithInternationalizationContext,
   shutdownInternationalizationIntegration,
 } from "@xtaskjs/internationalization";
-import { initializeSocketIoIntegration, shutdownSocketIoIntegration } from "@xtaskjs/socket-io";
 
 jest.mock("@xtaskjs/mailer", () => ({
   initializeMailerIntegration: jest.fn(async () => {}),
@@ -44,6 +43,14 @@ jest.mock(
   }),
   { virtual: true }
 );
+
+const {
+  initializeSocketIoIntegration,
+  shutdownSocketIoIntegration,
+} = jest.requireMock("@xtaskjs/socket-io") as {
+  initializeSocketIoIntegration: jest.Mock;
+  shutdownSocketIoIntegration: jest.Mock;
+};
 
 class FakeNodeAdapter {
   type = "node-http" as const;

@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/common",
-  "version": "1.0.33",
+  "version": "1.0.37",
   "description": "Common decorators, validation, and utilities for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "prepack": "npm run build",
+    "prepack": "pnpm build",
     "test": " jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"

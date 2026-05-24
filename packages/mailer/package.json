@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/mailer",
-  "version": "1.0.17",
+  "version": "1.0.21",
   "description": "Mailer integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -19,8 +19,8 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "npm run build --prefix ../core && rm -rf dist && tsc",
-    "prepack": "npm run build",
+    "build": "pnpm -C ../core build && rm -rf dist && tsc",
+    "prepack": "pnpm build",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"
@@ -42,7 +42,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/core": "^1.0.33",
+    "@xtaskjs/core": "workspace:^",
     "ejs": "^3.1.10",
     "handlebars": "^4.7.8",
     "nodemailer": "^6.10.1"

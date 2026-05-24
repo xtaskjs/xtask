@@ -45,6 +45,35 @@ const getApplicationRequire = (): NodeRequire | undefined => {
   }
 };
 
+const isPackageDeclaredInApplication = (moduleName: string): boolean => {
+  if (process.env.NODE_ENV === "test" || Boolean(process.env.JEST_WORKER_ID)) {
+    return true;
+  }
+
+  const applicationRequire = getApplicationRequire();
+  if (!applicationRequire) {
+    return false;
+  }
+
+  try {
+    const applicationPackage = applicationRequire("./package.json") as {
+      dependencies?: Record<string, string>;
+      devDependencies?: Record<string, string>;
+      peerDependencies?: Record<string, string>;
+      optionalDependencies?: Record<string, string>;
+    };
+
+    return [
+      applicationPackage.dependencies,
+      applicationPackage.devDependencies,
+      applicationPackage.peerDependencies,
+      applicationPackage.optionalDependencies,
+    ].some((dependencyMap) => Boolean(dependencyMap?.[moduleName]));
+  } catch {
+    return false;
+  }
+};
+
 const requireFromApplication = <T = any>(moduleName: string): T => {
   try {
     return require(moduleName) as T;
@@ -182,6 +211,10 @@ const resolveFastifyAdapter = (): FastifyAdapterConstructor => {
 };
 
 const resolveTypeOrmInitialize = (): TypeOrmInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/typeorm")) {
+    return undefined;
+  }
+
   try {
     const typeormPackage = requireFromApplication<{
       initializeTypeOrmIntegration?: TypeOrmInitializeFn;
@@ -226,6 +259,10 @@ const resolveTypeOrmShutdown = (): TypeOrmShutdownFn | undefined => {
 };
 
 const resolveSecurityInitialize = (): SecurityInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/security")) {
+    return undefined;
+  }
+
   try {
     const securityPackage = requireFromApplication<{
       initializeSecurityIntegration?: SecurityInitializeFn;
@@ -270,6 +307,10 @@ const resolveSecurityShutdown = (): SecurityShutdownFn | undefined => {
 };
 
 const resolveMailerInitialize = (): MailerInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/mailer")) {
+    return undefined;
+  }
+
   try {
     const mailerPackage = requireFromApplication<{
       initializeMailerIntegration?: MailerInitializeFn;
@@ -314,6 +355,10 @@ const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
 };
 
 const resolveCacheInitialize = (): CacheInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/cache")) {
+    return undefined;
+  }
+
   try {
     const cachePackage = requireFromApplication<{
       initializeCacheIntegration?: CacheInitializeFn;
@@ -358,6 +403,10 @@ const resolveCacheShutdown = (): CacheShutdownFn | undefined => {
 };
 
 const resolveSchedulerInitialize = (): SchedulerInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/scheduler")) {
+    return undefined;
+  }
+
   try {
     const schedulerPackage = requireFromApplication<{
       initializeSchedulerIntegration?: SchedulerInitializeFn;
@@ -402,6 +451,10 @@ const resolveSchedulerShutdown = (): SchedulerShutdownFn | undefined => {
 };
 
 const resolveQueueInitialize = (): QueueInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/queues")) {
+    return undefined;
+  }
+
   try {
     const queuesPackage = requireFromApplication<{
       initializeQueueIntegration?: QueueInitializeFn;
@@ -446,6 +499,10 @@ const resolveQueueShutdown = (): QueueShutdownFn | undefined => {
 };
 
 const resolveSocketIoInitialize = (): SocketIoInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/socket-io")) {
+    return undefined;
+  }
+
   try {
     const socketIoPackage = requireFromApplication<{
       initializeSocketIoIntegration?: SocketIoInitializeFn;
@@ -490,6 +547,10 @@ const resolveSocketIoShutdown = (): SocketIoShutdownFn | undefined => {
 };
 
 const resolveCqrsInitialize = (): CqrsInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/cqrs")) {
+    return undefined;
+  }
+
   try {
     const cqrsPackage = requireFromApplication<{
       initializeCqrsIntegration?: CqrsInitializeFn;
@@ -534,6 +595,10 @@ const resolveCqrsShutdown = (): CqrsShutdownFn | undefined => {
 };
 
 const resolveEventSourceInitialize = (): EventSourceInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/event-source")) {
+    return undefined;
+  }
+
   try {
     const eventSourcePackage = requireFromApplication<{
       initializeEventSourceIntegration?: EventSourceInitializeFn;
@@ -578,6 +643,10 @@ const resolveEventSourceShutdown = (): EventSourceShutdownFn | undefined => {
 };
 
 const resolveInternationalizationInitialize = (): InternationalizationInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/internationalization")) {
+    return undefined;
+  }
+
   try {
     const internationalizationPackage = requireFromApplication<{
       initializeInternationalizationIntegration?: InternationalizationInitializeFn;
@@ -622,10 +691,14 @@ const resolveInternationalizationShutdown = (): InternationalizationShutdownFn |
 };
 
 const resolveInternationalizationContextRunner = (): InternationalizationContextRunnerFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/internationalization")) {
+    return undefined;
+  }
+
   try {
-    const internationalizationPackage = require("@xtaskjs/internationalization") as {
+    const internationalizationPackage = requireFromApplication<{
       runWithInternationalizationContext?: InternationalizationContextRunnerFn;
-    };
+    }>("@xtaskjs/internationalization");
 
     if (typeof internationalizationPackage.runWithInternationalizationContext === "function") {
       return internationalizationPackage.runWithInternationalizationContext;
@@ -644,6 +717,10 @@ const resolveInternationalizationContextRunner = (): InternationalizationContext
 };
 
 const resolveThrottlerInitialize = (): ThrottlerInitializeFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/throttler")) {
+    return undefined;
+  }
+
   try {
     const throttlerPackage = requireFromApplication<{
       initializeThrottlerIntegration?: ThrottlerInitializeFn;
@@ -967,7 +1044,10 @@ export async function registerContainerInLifecycle(
   }
 
   const initializeEventSourceIntegration = resolveEventSourceInitialize();
-  if (initializeEventSourceIntegration) {
+  if (
+    initializeEventSourceIntegration &&
+    typeof (container as any).getRegisteredTypes === "function"
+  ) {
     await initializeEventSourceIntegration(container, lifecycle);
   }
 

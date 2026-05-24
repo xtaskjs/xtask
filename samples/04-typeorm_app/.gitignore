@@ -1,5 +1,27 @@
-node_modules/
-dist/
-xtask-typeorm.sqlite
+# Build output
+/dist
 
+# IDE
+/.idea
+/.vscode
+
+# Dependencies
+/node_modules
+/package-lock.json
+/pnpm-lock.yaml
+
+# Environment variables
+/src/.env
+/.env
+
+# Runtime files
+/xtask-typeorm.sqlite
+
+# Misc
+/.npmrc
+/.yarnrc
+/yarn.lock
+/.DS_Store
+/.tsbuildinfo
+/.turbo
 .xtask-manifest.json

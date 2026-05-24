@@ -34,19 +34,19 @@ Recommended order:
 Quick commands:
 
 ```bash
-cd samples/26-bots_app && npm install && npm test && npm start
+cd samples/26-bots_app && pnpm install && pnpm test && pnpm start
 ```
 
 Then in a new terminal:
 
 ```bash
-cd samples/27-bots_webhook_security_app && npm install && npm test && npm start
+cd samples/27-bots_webhook_security_app && pnpm install && pnpm test && pnpm start
 ```
 
 With the webhook sample running, trigger signed test calls:
 
 ```bash
-cd samples/27-bots_webhook_security_app && npm run curl:webhooks
+cd samples/27-bots_webhook_security_app && pnpm run curl:webhooks
 ```
 
 ## Release helpers
@@ -54,21 +54,21 @@ cd samples/27-bots_webhook_security_app && npm run curl:webhooks
 Use the root scripts to pack or publish workspace packages in dependency order:
 
 ```bash
-npm run release:order
-npm run version:packages -- patch
-npm run pack:packages
-npm run publish:packages
-npm run publish:packages:patch
-npm run publish:packages -- --bump patch
+pnpm run release:order
+pnpm run version:packages -- patch
+pnpm run pack:packages
+pnpm run publish:packages
+pnpm run publish:packages:patch
+pnpm run publish:packages -- --bump patch
 ```
 
-Use `npm run publish:packages:patch` when you want a one-step release that bumps versions and publishes in order. This avoids npm `E403` errors caused by trying to publish versions that already exist.
+Use `pnpm run publish:packages:patch` when you want a one-step release that bumps versions and publishes in order.
 
 Additional npm arguments can be passed through with `--`:
 
 ```bash
-npm run pack:packages -- --dry-run
-npm run publish:packages -- --tag next
+pnpm run pack:packages -- --dry-run
+pnpm run publish:packages -- --tag next
 ```
 
 ## Release auth
@@ -85,8 +85,8 @@ Example local setup:
 
 ```bash
 export NPM_TOKEN=your_token_here
-npm whoami
-npm run publish:packages
+pnpm whoami
+pnpm run publish:packages
 ```
 
 ## Startup import concurrency
@@ -102,7 +102,7 @@ You can tune startup behavior with `XTASK_IMPORT_CONCURRENCY`:
 Default is `10` (and never higher than the amount of discovered files).
 
 ```bash
-XTASK_IMPORT_CONCURRENCY=16 npm start
+XTASK_IMPORT_CONCURRENCY=16 pnpm start
 ```
 
 In constrained environments (CI/small containers), avoid very high values to prevent filesystem saturation.

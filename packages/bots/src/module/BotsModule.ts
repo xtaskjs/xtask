@@ -1,5 +1,5 @@
-import type { ApplicationLifeCycle, Container } from "@xtaskjs/core";
 import type { IBotAdapter } from "../interfaces/IBotAdapter";
+import type { BotContainerLike, BotLifecycleLike } from "../types";
 import {
   getBotsLifecycleManager,
   initializeBotsIntegration,
@@ -19,7 +19,7 @@ export class BotsModule {
     }
   }
 
-  static async initialize(container?: Container, lifecycle?: ApplicationLifeCycle): Promise<void> {
+  static async initialize(container?: BotContainerLike, lifecycle?: BotLifecycleLike): Promise<void> {
     await initializeBotsIntegration(container, lifecycle);
   }
 

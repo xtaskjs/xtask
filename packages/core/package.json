@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/core",
-  "version": "1.0.33",
+  "version": "1.0.37",
   "description": "Core application runtime and DI container for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -20,8 +20,8 @@
   ],
   "scripts": {
     "prebuild:manifest": "TS_NODE_PROJECT=./tsconfig.json node -r ts-node/register/transpile-only ./src/cli-build/prebuild.ts",
-    "build": "npm run build --prefix ../common && npm run prebuild:manifest && rm -rf dist && tsc",
-    "prepack": "npm run build",
+    "build": "pnpm -C ../common build && pnpm prebuild:manifest && rm -rf dist && tsc",
+    "prepack": "pnpm build",
     "test": " jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html",
@@ -44,7 +44,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.33"
+    "@xtaskjs/common": "workspace:^"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0"
@@ -61,6 +61,8 @@
     "@jest/globals": "^30.1.2",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "jest": "^30.1.3",
     "nodemon": "^3.1.10",
     "ts-jest": "^29.4.4",

@@ -145,9 +145,9 @@ function printOrder(packages) {
   });
 }
 
-function runNpmCommand(command, pkg, extraArgs) {
+function runPackageCommand(command, pkg, extraArgs) {
   const args = [command, ...extraArgs];
-  const result = spawnSync("npm", args, {
+  const result = spawnSync("pnpm", args, {
     cwd: pkg.dirPath,
     stdio: "inherit",
     env: process.env,
@@ -162,8 +162,8 @@ function runNpmCommand(command, pkg, extraArgs) {
   }
 }
 
-function runNpmCapture(args, cwd = workspaceRoot) {
-  const result = spawnSync("npm", args, {
+function runPackageCapture(args, cwd = workspaceRoot) {
+  const result = spawnSync("pnpm", args, {
     cwd,
     encoding: "utf8",
     env: process.env,
@@ -191,15 +191,15 @@ function getConfiguredPublishToken() {
 
 function assertPublishAuthReady() {
   const token = getConfiguredPublishToken();
-  const whoamiResult = runNpmCapture(["whoami"]);
+  const whoamiResult = runPackageCapture(["whoami"]);
 
   if (whoamiResult.status !== 0) {
     const details = String(whoamiResult.stderr || whoamiResult.stdout || "").trim();
     throw new Error(
       [
-        "npm publish preflight failed: no authenticated npm session is available.",
+        "publish preflight failed: no authenticated registry session is available.",
         details,
-        "Configure npm auth first, preferably with NPM_TOKEN or NODE_AUTH_TOKEN.",
+        "Configure registry auth first, preferably with NPM_TOKEN or NODE_AUTH_TOKEN.",
       ]
         .filter(Boolean)
         .join("\n")
@@ -209,14 +209,14 @@ function assertPublishAuthReady() {
   if (!token) {
     throw new Error(
       [
-        "npm publish preflight failed: no publish token was found in NPM_TOKEN or NODE_AUTH_TOKEN.",
+        "publish preflight failed: no publish token was found in NPM_TOKEN or NODE_AUTH_TOKEN.",
         "Batch publishing for @xtaskjs should use a granular access token with publish permissions and bypass-2FA enabled.",
       ].join("\n")
     );
   }
 
   const username = String(whoamiResult.stdout || "").trim();
-  console.log(`\nPublish auth preflight passed for npm user '${username}' using ${token.name}.`);
+  console.log(`\nPublish auth preflight passed for registry user '${username}' using ${token.name}.`);
 }
 
 function parseSemver(version) {
@@ -339,8 +339,8 @@ function main() {
   }
 
   for (const pkg of packages) {
-    console.log(`\n==> npm ${command} ${pkg.name}`);
-    runNpmCommand(command, pkg, extraArgs);
+    console.log(`\n==> pnpm ${command} ${pkg.name}`);
+    runPackageCommand(command, pkg, extraArgs);
   }
 }
 

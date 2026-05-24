@@ -1,6 +1,16 @@
-import type { ApplicationLifeCycle, Container } from "@xtaskjs/core";
 import type { IBotAdapter, BotOutgoingMessage } from "./interfaces/IBotAdapter";
 import type { IBotContext } from "./interfaces/IBotContext";
+
+export interface BotContainerLike {
+  getRegisteredTypes?: () => any[];
+  get?: <T>(target: new (...args: any[]) => T) => T;
+  registerNamedInstance?: <T>(name: string, instance: T) => void;
+  registerWithName?: (target: any, meta: { scope: "singleton" | "transient" }, name?: string) => void;
+}
+
+export interface BotLifecycleLike {
+  on?: (event: string, listener: (...args: any[]) => any) => void;
+}
 
 export type BotHandlerKind = "message" | "command" | "callback";
 
@@ -35,8 +45,8 @@ export interface BotHandlerMetadata {
 }
 
 export interface BotHandlerContext {
-  container?: Container;
-  lifecycle?: ApplicationLifeCycle;
+  container?: BotContainerLike;
+  lifecycle?: BotLifecycleLike;
   adapter?: IBotAdapter;
   gateway: string;
   handler: string;

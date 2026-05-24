@@ -1,11 +1,12 @@
-import type { ApplicationLifeCycle, Container } from "@xtaskjs/core";
 import { getBotsConfiguration, resetBotsConfiguration } from "./configuration";
 import { getBotGatewayMetadata, getBotHandlerMetadata, normalizeCommand, stringifyPattern } from "./metadata";
 import { getBotAdapterToken, getBotsLifecycleToken, getBotsServiceToken } from "./tokens";
 import type {
   BotAdapterSummary,
+  BotContainerLike,
   BotGatewaySummary,
   BotHandlerKind,
+  BotLifecycleLike,
   DispatchedBotMessage,
 } from "./types";
 import type { BotSendInput } from "./types";
@@ -68,11 +69,11 @@ export class BotsLifecycleManager {
   private readonly gateways = new Map<string, DiscoveredGateway>();
   private readonly adapters = new Map<string, IBotAdapter>();
   private readonly adapterStatus = new Map<string, boolean>();
-  private container?: Container;
-  private lifecycle?: ApplicationLifeCycle;
+  private container?: BotContainerLike;
+  private lifecycle?: BotLifecycleLike;
   private started = false;
 
-  async initialize(container?: Container, lifecycle?: ApplicationLifeCycle): Promise<void> {
+  async initialize(container?: BotContainerLike, lifecycle?: BotLifecycleLike): Promise<void> {
     await this.stopAll();
     this.gateways.clear();
     this.container = container;
@@ -254,7 +255,7 @@ export class BotsLifecycleManager {
     return matchesPattern(context.callbackData, handler.pattern);
   }
 
-  private discoverGateways(container?: Container): void {
+  private discoverGateways(container?: BotContainerLike): void {
     if (!container || typeof (container as any).getRegisteredTypes !== "function") {
       return;
     }
@@ -300,7 +301,7 @@ export class BotsLifecycleManager {
     }
   }
 
-  private registerContainerBindings(container?: Container): void {
+  private registerContainerBindings(container?: BotContainerLike): void {
     if (!container) {
       return;
     }
@@ -351,8 +352,8 @@ export class BotsLifecycleManager {
 const lifecycleManager = new BotsLifecycleManager();
 
 export const initializeBotsIntegration = async (
-  container?: Container,
-  lifecycle?: ApplicationLifeCycle
+  container?: BotContainerLike,
+  lifecycle?: BotLifecycleLike
 ): Promise<void> => {
   await lifecycleManager.initialize(container, lifecycle);
 };

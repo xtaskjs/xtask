@@ -1,7 +1,5 @@
-
 # Build output
 /dist
-
 
 # IDE
 /.idea
@@ -9,5 +7,18 @@
 
 # Dependencies
 /node_modules
+/package-lock.json
+/pnpm-lock.yaml
 
+# Environment variables
+/src/.env
+/.env
+
+# Misc
+/.npmrc
+/.yarnrc
+/yarn.lock
+/.DS_Store
+/.tsbuildinfo
+/.turbo
 .xtask-manifest.json

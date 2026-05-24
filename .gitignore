@@ -12,6 +12,8 @@
 # Dependencies
 /src/node_modules
 /node_modules
+/packages/*/node_modules
+/samples/*/node_modules
 
 # Environment variables
 /src/.env
@@ -23,6 +25,7 @@
 /src/.yarnrc
 /src/yarn.lock
 /src/package-lock.json
+/src/pnpm-lock.yaml
 /src/.DS_Store
 /src/.tsbuildinfo
 .DS_Store
@@ -31,6 +34,9 @@
 /src/.tmp
 /tmp
 /.tmp
+/.turbo
+/packages/*/.turbo
+/samples/*/.turbo
 /src/packages/**/.tmp
 /src/packages/core/.tmp
 /src/packages/core/coverage

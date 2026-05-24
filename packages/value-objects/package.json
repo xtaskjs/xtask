@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/value-objects",
-  "version": "1.0.11",
+  "version": "1.0.15",
   "description": "Value object primitives, converters, and XTaskJS integration helpers.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -19,8 +19,8 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "npm run build --prefix ../core && rm -rf dist && tsc",
-    "prepack": "npm run build",
+    "build": "pnpm -C ../core build && rm -rf dist && tsc",
+    "prepack": "pnpm build",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"
@@ -42,7 +42,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/core": "^1.0.33"
+    "@xtaskjs/core": "workspace:^"
   },
   "peerDependencies": {
     "class-transformer": "^0.5.1",

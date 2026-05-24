@@ -1,5 +1,5 @@
-import type { ApplicationLifeCycle, Container } from "@xtaskjs/core";
 import type { IBotContext } from "./IBotContext";
+import type { BotContainerLike, BotLifecycleLike } from "../types";
 
 export type BotMessageHandler = (context: IBotContext) => Promise<void> | void;
 
@@ -10,8 +10,8 @@ export interface BotOutgoingMessage {
 }
 
 export interface BotAdapterInitializeOptions {
-  container?: Container;
-  lifecycle?: ApplicationLifeCycle;
+  container?: BotContainerLike;
+  lifecycle?: BotLifecycleLike;
 }
 
 export interface IBotAdapter {

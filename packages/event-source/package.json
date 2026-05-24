@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/event-source",
-  "version": "1.0.9",
+  "version": "1.0.13",
   "description": "Event sourcing integration for xtaskjs with aggregate repositories, lifecycle wiring, and optional TypeORM and queue adapters.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -19,8 +19,8 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "npm run build --prefix ../core && npm run build --prefix ../typeorm && npm run build --prefix ../queues && rm -rf dist && tsc",
-    "prepack": "npm run build",
+    "build": "pnpm -C ../core build && pnpm -C ../typeorm build && pnpm -C ../queues build && rm -rf dist && tsc",
+    "prepack": "pnpm build",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"
@@ -42,9 +42,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/core": "^1.0.33",
-    "@xtaskjs/queues": "^1.0.12",
-    "@xtaskjs/typeorm": "^1.0.21"
+    "@xtaskjs/core": "workspace:^",
+    "@xtaskjs/queues": "workspace:^",
+    "@xtaskjs/typeorm": "workspace:^"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0",

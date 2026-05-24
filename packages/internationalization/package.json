@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/internationalization",
-  "version": "1.0.14",
+  "version": "1.0.18",
   "description": "Internationalization integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -19,8 +19,8 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "npm run build --prefix ../core && rm -rf dist && tsc",
-    "prepack": "npm run build",
+    "build": "pnpm -C ../core build && rm -rf dist && tsc",
+    "prepack": "pnpm build",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"
@@ -42,7 +42,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/core": "^1.0.33"
+    "@xtaskjs/core": "workspace:^"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.12 || ^0.2.0"

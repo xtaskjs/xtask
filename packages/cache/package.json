@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/cache",
-  "version": "1.0.12",
+  "version": "1.0.16",
   "description": "Cache and HTTP caching integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -19,8 +19,8 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "npm run build --prefix ../core && rm -rf dist && tsc",
-    "prepack": "npm run build",
+    "build": "pnpm -C ../core build && rm -rf dist && tsc",
+    "prepack": "pnpm build",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage --runInBand",
     "coverage:open": "xdg-open coverage/lcov-report/index.html"
@@ -42,8 +42,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@xtaskjs/common": "^1.0.33",
-    "@xtaskjs/core": "^1.0.33",
+    "@xtaskjs/common": "workspace:^",
+    "@xtaskjs/core": "workspace:^",
     "redis": "^4.7.0"
   },
   "peerDependencies": {

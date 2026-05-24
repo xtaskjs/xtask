@@ -20,7 +20,7 @@ async function main() {
   await BotsModule.register({
     adapters: [slackAdapter, telegramAdapter],
   });
-  await BotsModule.initialize(container, lifecycle);
+  await BotsModule.initialize(container as any, lifecycle as any);
 
   const signatures = container.get(WebhookSignatureService);
   const controller = container.get(WebhookController);

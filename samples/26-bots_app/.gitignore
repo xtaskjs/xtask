@@ -8,6 +8,7 @@
 # Dependencies
 /node_modules
 /package-lock.json
+/pnpm-lock.yaml
 
 # Environment variables
 /src/.env
@@ -19,4 +20,5 @@
 /yarn.lock
 /.DS_Store
 /.tsbuildinfo
+/.turbo
 .xtask-manifest.json

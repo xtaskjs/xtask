@@ -1,4 +1,3 @@
-
 # Build output
 /dist
 
@@ -9,6 +8,7 @@
 # Dependencies
 /node_modules
 /package-lock.json
+/pnpm-lock.yaml
 
 # Runtime files
 /*.sqlite
@@ -18,10 +18,11 @@
 /src/.env
 /.env
 
-# Miscellaneous
+# Misc
 /.npmrc
 /.yarnrc
 /yarn.lock
 /.DS_Store
 /.tsbuildinfo
+/.turbo
 .xtask-manifest.json
