@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { describe, beforeEach, afterEach, expect, test } from "@jest/globals";
+import { describe, beforeEach, afterEach, expect, test } from "vitest";
 import { Container } from "@xtaskjs/core";
 import { Column, DataSource, Entity, PrimaryGeneratedColumn, Repository } from "typeorm";
 import {

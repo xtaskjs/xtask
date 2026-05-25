@@ -16,11 +16,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/bots": "file:../../packages/bots",
-    "@xtaskjs/common": "file:../../packages/common",
-    "@xtaskjs/core": "file:../../packages/core",
-    "@xtaskjs/express-http": "file:../../packages/express-http",
-    "@xtaskjs/security": "file:../../packages/security",
+    "@xtaskjs/bots": "workspace:*",
+    "@xtaskjs/common": "workspace:*",
+    "@xtaskjs/core": "workspace:*",
+    "@xtaskjs/express-http": "workspace:*",
+    "@xtaskjs/security": "workspace:*",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.2.2"

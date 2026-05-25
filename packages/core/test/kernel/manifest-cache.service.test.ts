@@ -1,7 +1,7 @@
-jest.mock("fs", () => ({
-  existsSync: jest.fn(),
-  readFileSync: jest.fn(),
-  writeFileSync: jest.fn(),
+vi.mock("fs", () => ({
+  existsSync: vi.fn(),
+  readFileSync: vi.fn(),
+  writeFileSync: vi.fn(),
 }));
 
 import { existsSync, readFileSync, writeFileSync } from "fs";
@@ -9,7 +9,7 @@ import { ManifestCacheService } from "../../src/kernel/manifest-cache.service";
 
 describe("ManifestCacheService", () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should return null when manifest file does not exist", () => {

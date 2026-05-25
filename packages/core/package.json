@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/core",
-  "version": "1.0.37",
+  "version": "1.0.42",
   "description": "Core application runtime and DI container for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
@@ -20,10 +20,10 @@
   ],
   "scripts": {
     "prebuild:manifest": "TS_NODE_PROJECT=./tsconfig.json node -r ts-node/register/transpile-only ./src/cli-build/prebuild.ts",
-    "build": "pnpm -C ../common build && pnpm prebuild:manifest && rm -rf dist && tsc",
+    "build": "pnpm prebuild:manifest && rm -rf dist && tsc",
     "prepack": "pnpm build",
-    "test": " jest --passWithNoTests",
-    "test:coverage": "jest --coverage --runInBand",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
     "coverage:open": "xdg-open coverage/lcov-report/index.html",
     "benchmark:startup": "TS_NODE_PROJECT=../../tsconfig.json node --expose-gc -r ts-node/register/transpile-only -r tsconfig-paths/register ./scripts/startup-benchmark.ts"
   },
@@ -58,16 +58,14 @@
     }
   },
   "devDependencies": {
-    "@jest/globals": "^30.1.2",
     "@types/express": "^5.0.3",
-    "@types/jest": "^30.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
-    "jest": "^30.1.3",
     "nodemon": "^3.1.10",
-    "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.8"
   }
 }

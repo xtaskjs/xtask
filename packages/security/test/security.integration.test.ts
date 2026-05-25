@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { createCipheriv, randomBytes } from "crypto";
-import { describe, beforeEach, afterEach, expect, test } from "@jest/globals";
+import { describe, beforeEach, afterEach, expect, test } from "vitest";
 import { Controller, Get } from "@xtaskjs/common";
 import { ApplicationLifeCycle, Container, registerControllerRoutes } from "@xtaskjs/core";
 import {

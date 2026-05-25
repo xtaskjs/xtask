@@ -1,7 +1,9 @@
 import {
   XTaskHttpApplication,
+  clearHttpIntegrationResolverOverridesForTesting,
   createHttpAdapter,
   registerContainerInLifecycle,
+  setHttpIntegrationResolverOverridesForTesting,
 } from "../../src/http/application";
 import { ForbiddenError } from "../../src/http/errors";
 import { view } from "../../src/http/types";
@@ -14,60 +16,73 @@ import {
   shutdownInternationalizationIntegration,
 } from "@xtaskjs/internationalization";
 
-jest.mock("@xtaskjs/mailer", () => ({
-  initializeMailerIntegration: jest.fn(async () => {}),
-  shutdownMailerIntegration: jest.fn(async () => {}),
+vi.mock("@xtaskjs/mailer", () => ({
+  initializeMailerIntegration: vi.fn(async () => {}),
+  shutdownMailerIntegration: vi.fn(async () => {}),
 }));
 
-jest.mock("@xtaskjs/cache", () => ({
-  initializeCacheIntegration: jest.fn(async () => {}),
-  shutdownCacheIntegration: jest.fn(async () => {}),
+vi.mock("@xtaskjs/cache", () => ({
+  initializeCacheIntegration: vi.fn(async () => {}),
+  shutdownCacheIntegration: vi.fn(async () => {}),
 }));
 
-jest.mock("@xtaskjs/cqrs", () => ({
-  initializeCqrsIntegration: jest.fn(async () => {}),
-  shutdownCqrsIntegration: jest.fn(async () => {}),
+vi.mock("@xtaskjs/cqrs", () => ({
+  initializeCqrsIntegration: vi.fn(async () => {}),
+  shutdownCqrsIntegration: vi.fn(async () => {}),
 }));
 
-jest.mock("@xtaskjs/internationalization", () => ({
-  initializeInternationalizationIntegration: jest.fn(async () => {}),
-  shutdownInternationalizationIntegration: jest.fn(async () => {}),
-  runWithInternationalizationContext: jest.fn(async (_request: any, callback: any) => callback()),
+vi.mock("@xtaskjs/internationalization", () => ({
+  initializeInternationalizationIntegration: vi.fn(async () => {}),
+  shutdownInternationalizationIntegration: vi.fn(async () => {}),
+  runWithInternationalizationContext: vi.fn(async (_request: any, callback: any) => callback()),
 }));
 
-jest.mock(
+const socketIoMocks = vi.hoisted(() => ({
+  initializeSocketIoIntegration: vi.fn(async () => {}),
+  shutdownSocketIoIntegration: vi.fn(async () => {}),
+}));
+
+vi.mock(
   "@xtaskjs/socket-io",
-  () => ({
-    initializeSocketIoIntegration: jest.fn(async () => {}),
-    shutdownSocketIoIntegration: jest.fn(async () => {}),
-  }),
+  () => socketIoMocks,
   { virtual: true }
 );
 
-const {
-  initializeSocketIoIntegration,
-  shutdownSocketIoIntegration,
-} = jest.requireMock("@xtaskjs/socket-io") as {
-  initializeSocketIoIntegration: jest.Mock;
-  shutdownSocketIoIntegration: jest.Mock;
-};
+const { initializeSocketIoIntegration, shutdownSocketIoIntegration } = socketIoMocks;
 
 class FakeNodeAdapter {
   type = "node-http" as const;
-  registerRequestHandler = jest.fn();
-  listen = jest.fn(async () => {});
-  close = jest.fn(async () => {});
-  getHttpServer = jest.fn(() => ({ close: jest.fn() }));
+  registerRequestHandler = vi.fn();
+  listen = vi.fn(async () => {});
+  close = vi.fn(async () => {});
+  getHttpServer = vi.fn(() => ({ close: vi.fn() }));
 }
 
 describe("XTaskHttpApplication", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
+    setHttpIntegrationResolverOverridesForTesting({
+      socketIoInitialize: initializeSocketIoIntegration,
+      socketIoShutdown: shutdownSocketIoIntegration,
+      cqrsInitialize: initializeCqrsIntegration,
+      cqrsShutdown: shutdownCqrsIntegration,
+      mailerInitialize: initializeMailerIntegration,
+      mailerShutdown: shutdownMailerIntegration,
+      cacheInitialize: initializeCacheIntegration,
+      cacheShutdown: shutdownCacheIntegration,
+      internationalizationInitialize: initializeInternationalizationIntegration,
+      internationalizationShutdown: shutdownInternationalizationIntegration,
+      internationalizationContextRunner: runWithInternationalizationContext,
+    });
+  });
+
+  afterEach(() => {
+    clearHttpIntegrationResolverOverridesForTesting();
   });
 
   it("should register request handler on construction", () => {
     const adapter = new FakeNodeAdapter();
-    const lifecycle = { dispatchControllerRoute: jest.fn() } as any;
+    const lifecycle = { dispatchControllerRoute: vi.fn() } as any;
     const kernel = {} as any;
 
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel });
@@ -77,12 +92,12 @@ describe("XTaskHttpApplication", () => {
 
   it("should execute requests inside the internationalization context when available", async () => {
     const adapter = new FakeNodeAdapter();
-    const lifecycle = { dispatchControllerRoute: jest.fn(async () => ({ ok: true })) } as any;
+    const lifecycle = { dispatchControllerRoute: vi.fn(async () => ({ ok: true })) } as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
     const req = { headers: { "accept-language": "es-ES" } };
-    const res = { json: jest.fn(), setHeader: jest.fn(), end: jest.fn() } as any;
+    const res = { json: vi.fn(), setHeader: vi.fn(), end: vi.fn() } as any;
 
     await requestHandler("GET", "/health", req, res);
 
@@ -92,12 +107,12 @@ describe("XTaskHttpApplication", () => {
 
   it("should return 204 when handler returns undefined", async () => {
     const adapter = new FakeNodeAdapter();
-    const lifecycle = { dispatchControllerRoute: jest.fn(async () => undefined) } as any;
+    const lifecycle = { dispatchControllerRoute: vi.fn(async () => undefined) } as any;
     const kernel = {} as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
-    const res = { end: jest.fn(), setHeader: jest.fn() } as any;
+    const res = { end: vi.fn(), setHeader: vi.fn() } as any;
 
     await requestHandler("GET", "/health", {}, res);
 
@@ -108,11 +123,11 @@ describe("XTaskHttpApplication", () => {
   it("should use json response when available", async () => {
     const adapter = new FakeNodeAdapter();
     const payload = { ok: true };
-    const lifecycle = { dispatchControllerRoute: jest.fn(async () => payload) } as any;
+    const lifecycle = { dispatchControllerRoute: vi.fn(async () => payload) } as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
-    const res = { json: jest.fn(), setHeader: jest.fn(), end: jest.fn() } as any;
+    const res = { json: vi.fn(), setHeader: vi.fn(), end: vi.fn() } as any;
 
     await requestHandler("GET", "/health", {}, res);
 
@@ -122,11 +137,11 @@ describe("XTaskHttpApplication", () => {
 
   it("should serialize object payload when json is unavailable", async () => {
     const adapter = new FakeNodeAdapter();
-    const lifecycle = { dispatchControllerRoute: jest.fn(async () => ({ ok: true })) } as any;
+    const lifecycle = { dispatchControllerRoute: vi.fn(async () => ({ ok: true })) } as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
-    const res = { setHeader: jest.fn(), end: jest.fn() } as any;
+    const res = { setHeader: vi.fn(), end: vi.fn() } as any;
 
     await requestHandler("GET", "/health", {}, res);
 
@@ -137,11 +152,11 @@ describe("XTaskHttpApplication", () => {
 
   it("should use send for primitive payload when available", async () => {
     const adapter = new FakeNodeAdapter();
-    const lifecycle = { dispatchControllerRoute: jest.fn(async () => "OK") } as any;
+    const lifecycle = { dispatchControllerRoute: vi.fn(async () => "OK") } as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
-    const res = { send: jest.fn(), end: jest.fn() } as any;
+    const res = { send: vi.fn(), end: vi.fn() } as any;
 
     await requestHandler("GET", "/health", {}, res);
 
@@ -152,11 +167,11 @@ describe("XTaskHttpApplication", () => {
 
   it("should return early when headers were already sent", async () => {
     const adapter = new FakeNodeAdapter();
-    const lifecycle = { dispatchControllerRoute: jest.fn(async () => "OK") } as any;
+    const lifecycle = { dispatchControllerRoute: vi.fn(async () => "OK") } as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
-    const res = { headersSent: true, send: jest.fn(), end: jest.fn() } as any;
+    const res = { headersSent: true, send: vi.fn(), end: vi.fn() } as any;
 
     await requestHandler("GET", "/health", {}, res);
 
@@ -167,7 +182,7 @@ describe("XTaskHttpApplication", () => {
   it("should map missing route error to 404", async () => {
     const adapter = new FakeNodeAdapter();
     const lifecycle = {
-      dispatchControllerRoute: jest.fn(async () => {
+      dispatchControllerRoute: vi.fn(async () => {
         throw new Error("No route registered for GET /missing");
       }),
     } as any;
@@ -175,9 +190,9 @@ describe("XTaskHttpApplication", () => {
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
     const res = {
-      status: jest.fn().mockReturnThis(),
-      send: jest.fn(),
-      end: jest.fn(),
+      status: vi.fn().mockReturnThis(),
+      send: vi.fn(),
+      end: vi.fn(),
     } as any;
 
     await requestHandler("GET", "/missing", {}, res);
@@ -189,14 +204,14 @@ describe("XTaskHttpApplication", () => {
   it("should map generic error to 500 json", async () => {
     const adapter = new FakeNodeAdapter();
     const lifecycle = {
-      dispatchControllerRoute: jest.fn(async () => {
+      dispatchControllerRoute: vi.fn(async () => {
         throw new Error("boom");
       }),
     } as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
-    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
+    const res = { status: vi.fn().mockReturnThis(), json: vi.fn() } as any;
 
     await requestHandler("GET", "/health", {}, res);
 
@@ -207,14 +222,14 @@ describe("XTaskHttpApplication", () => {
   it("should map HttpError instances to their status code", async () => {
     const adapter = new FakeNodeAdapter();
     const lifecycle = {
-      dispatchControllerRoute: jest.fn(async () => {
+      dispatchControllerRoute: vi.fn(async () => {
         throw new ForbiddenError("nope", { message: "Forbidden", code: "AUTH_FORBIDDEN" });
       }),
     } as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
-    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
+    const res = { status: vi.fn().mockReturnThis(), json: vi.fn() } as any;
 
     await requestHandler("GET", "/secure", {}, res);
 
@@ -225,7 +240,7 @@ describe("XTaskHttpApplication", () => {
   it("should preserve payload for non-HttpError statusCode exceptions", async () => {
     const adapter = new FakeNodeAdapter();
     const lifecycle = {
-      dispatchControllerRoute: jest.fn(async () => {
+      dispatchControllerRoute: vi.fn(async () => {
         const error = new Error("Validation failed") as Error & {
           statusCode: number;
           payload: any;
@@ -245,7 +260,7 @@ describe("XTaskHttpApplication", () => {
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
-    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
+    const res = { status: vi.fn().mockReturnThis(), json: vi.fn() } as any;
 
     await requestHandler("POST", "/email/welcome", {}, res);
 
@@ -262,14 +277,14 @@ describe("XTaskHttpApplication", () => {
 
   it("should log startup with adapter and url", async () => {
     const adapter = new FakeNodeAdapter();
-    const lifecycle = { dispatchControllerRoute: jest.fn() } as any;
-    const container = { registerLifeCycleListeners: jest.fn() };
-    const kernel = { getContainer: jest.fn(async () => container) };
+    const lifecycle = { dispatchControllerRoute: vi.fn() } as any;
+    const container = { registerLifeCycleListeners: vi.fn() };
+    const kernel = { getContainer: vi.fn(async () => container) };
     const app = new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: kernel as any });
 
     const previous = process.env.NODE_ENV;
     process.env.NODE_ENV = "development";
-    const spy = jest.spyOn(console, "log").mockImplementation();
+    const spy = vi.spyOn(console, "log").mockImplementation();
 
     await app.listen({ host: "0.0.0.0", port: 4000 });
 
@@ -289,7 +304,7 @@ describe("XTaskHttpApplication", () => {
 
   it("should expose kernel and lifecycle", () => {
     const adapter = new FakeNodeAdapter();
-    const lifecycle = { dispatchControllerRoute: jest.fn() } as any;
+    const lifecycle = { dispatchControllerRoute: vi.fn() } as any;
     const kernel = {} as any;
     const app = new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel });
 
@@ -299,7 +314,7 @@ describe("XTaskHttpApplication", () => {
 
   it("should close via adapter", async () => {
     const adapter = new FakeNodeAdapter();
-    const lifecycle = { dispatchControllerRoute: jest.fn() } as any;
+    const lifecycle = { dispatchControllerRoute: vi.fn() } as any;
     const app = new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     await app.close();
@@ -315,19 +330,19 @@ describe("XTaskHttpApplication", () => {
   it("should render a view using adapter renderView", async () => {
     const adapter = {
       type: "node-http" as const,
-      registerRequestHandler: jest.fn(),
-      renderView: jest.fn(async () => {}),
-      listen: jest.fn(async () => {}),
-      close: jest.fn(async () => {}),
+      registerRequestHandler: vi.fn(),
+      renderView: vi.fn(async () => {}),
+      listen: vi.fn(async () => {}),
+      close: vi.fn(async () => {}),
     };
     const lifecycle = {
-      dispatchControllerRoute: jest.fn(async () => view("home", { title: "Welcome" }, 201)),
+      dispatchControllerRoute: vi.fn(async () => view("home", { title: "Welcome" }, 201)),
     } as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
     const req = {};
-    const res = { end: jest.fn() };
+    const res = { end: vi.fn() };
 
     await requestHandler("GET", "/", req, res);
 
@@ -337,12 +352,12 @@ describe("XTaskHttpApplication", () => {
   it("should return 500 when adapter does not support view rendering", async () => {
     const adapter = new FakeNodeAdapter();
     const lifecycle = {
-      dispatchControllerRoute: jest.fn(async () => view("home", { title: "Welcome" })),
+      dispatchControllerRoute: vi.fn(async () => view("home", { title: "Welcome" })),
     } as any;
     new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
     const requestHandler = adapter.registerRequestHandler.mock.calls[0][0];
-    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
+    const res = { status: vi.fn().mockReturnThis(), json: vi.fn() } as any;
 
     await requestHandler("GET", "/", {}, res);
 
@@ -357,7 +372,24 @@ describe("XTaskHttpApplication", () => {
 
 describe("http application factories", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
+    setHttpIntegrationResolverOverridesForTesting({
+      socketIoInitialize: initializeSocketIoIntegration,
+      socketIoShutdown: shutdownSocketIoIntegration,
+      cqrsInitialize: initializeCqrsIntegration,
+      cqrsShutdown: shutdownCqrsIntegration,
+      mailerInitialize: initializeMailerIntegration,
+      mailerShutdown: shutdownMailerIntegration,
+      cacheInitialize: initializeCacheIntegration,
+      cacheShutdown: shutdownCacheIntegration,
+      internationalizationInitialize: initializeInternationalizationIntegration,
+      internationalizationShutdown: shutdownInternationalizationIntegration,
+      internationalizationContextRunner: runWithInternationalizationContext,
+    });
+  });
+
+  afterEach(() => {
+    clearHttpIntegrationResolverOverridesForTesting();
   });
 
   it("should create node adapter by default", () => {
@@ -368,9 +400,9 @@ describe("http application factories", () => {
   it("should return adapter when a custom object is provided", () => {
     const custom = {
       type: "node-http",
-      registerRequestHandler: jest.fn(),
-      listen: jest.fn(),
-      close: jest.fn(),
+      registerRequestHandler: vi.fn(),
+      listen: vi.fn(),
+      close: vi.fn(),
     } as any;
 
     expect(createHttpAdapter(custom)).toBe(custom);
@@ -378,8 +410,8 @@ describe("http application factories", () => {
 
   it("should create express adapter from instance", () => {
     const expressLike = {
-      use: jest.fn(),
-      listen: jest.fn(),
+      use: vi.fn(),
+      listen: vi.fn(),
     };
     const adapter = createHttpAdapter("express", expressLike);
     expect(adapter.type).toBe("express");
@@ -387,9 +419,9 @@ describe("http application factories", () => {
 
   it("should create fastify adapter from instance", () => {
     const fastifyLike = {
-      route: jest.fn(),
-      listen: jest.fn(),
-      close: jest.fn(),
+      route: vi.fn(),
+      listen: vi.fn(),
+      close: vi.fn(),
     };
     const adapter = createHttpAdapter("fastify", fastifyLike);
     expect(adapter.type).toBe("fastify");
@@ -408,9 +440,9 @@ describe("http application factories", () => {
   });
 
   it("should register container in lifecycle", async () => {
-    const registerLifeCycleListeners = jest.fn();
+    const registerLifeCycleListeners = vi.fn();
     const container = { registerLifeCycleListeners };
-    const kernel = { getContainer: jest.fn(async () => container) } as any;
+    const kernel = { getContainer: vi.fn(async () => container) } as any;
     const lifecycle = {} as any;
 
     await registerContainerInLifecycle(kernel, lifecycle);

@@ -71,7 +71,7 @@ describe("Container", () => {
     });
 
     afterEach(() => {
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     it("should register and resolve a singleton service", () => {
@@ -171,7 +171,7 @@ describe("Container", () => {
 
     it("should set logger context automatically for constructor injection", () => {
         container.register(ConstructorLoggerConsumer, { scope: "singleton" });
-        const spy = jest.spyOn(console, "log").mockImplementation();
+        const spy = vi.spyOn(console, "log").mockImplementation();
 
         container.get(ConstructorLoggerConsumer).run();
 
@@ -182,7 +182,7 @@ describe("Container", () => {
 
     it("should set logger context automatically for autowired injection", () => {
         container.register(AutoWiredLoggerConsumer, { scope: "singleton" });
-        const spy = jest.spyOn(console, "log").mockImplementation();
+        const spy = vi.spyOn(console, "log").mockImplementation();
 
         container.get(AutoWiredLoggerConsumer).run();
 
@@ -199,7 +199,7 @@ describe("Container", () => {
             },
         });
         configuredContainer.register(ConstructorLoggerConsumer, { scope: "singleton" });
-        const spy = jest.spyOn(console, "log").mockImplementation();
+        const spy = vi.spyOn(console, "log").mockImplementation();
 
         configuredContainer.get(ConstructorLoggerConsumer).run();
 

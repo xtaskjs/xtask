@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { afterEach, describe, expect, test } from "@jest/globals";
+import { afterEach, describe, expect, test } from "vitest";
 import { AutoWired, PostConstruct, PreDestroy, Qualifier, Service } from "@xtaskjs/core";
 import { Module, Test } from "../src";
 

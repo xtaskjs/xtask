@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeEach, afterEach, jest } from "@jest/globals";
+import { describe, expect, test, beforeEach, afterEach } from "vitest";
 import { Container, Service } from "@xtaskjs/core";
 import { ApplicationLifeCycle } from "@xtaskjs/core";
 import {
@@ -94,13 +94,13 @@ class AdvancedWorker {
 
 describe("scheduler integration", () => {
   beforeEach(async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     await resetSchedulerIntegration();
   });
 
   afterEach(async () => {
     await resetSchedulerIntegration();
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   test("starts and stops interval jobs with lifecycle events", async () => {
@@ -115,17 +115,17 @@ describe("scheduler integration", () => {
 
     expect(scheduler.listJobs().map((job) => job.name)).toContain("worker.tick");
 
-    await jest.advanceTimersByTimeAsync(200);
+    await vi.advanceTimersByTimeAsync(200);
     expect(worker.ticks).toBe(0);
 
     await lifecycle.emit("ready");
-    await jest.advanceTimersByTimeAsync(160);
+    await vi.advanceTimersByTimeAsync(160);
     expect(worker.ticks).toBeGreaterThanOrEqual(3);
     expect(scheduler.isStarted()).toBe(true);
 
     const snapshot = worker.ticks;
     await lifecycle.emit("stopping");
-    await jest.advanceTimersByTimeAsync(160);
+    await vi.advanceTimersByTimeAsync(160);
     expect(worker.ticks).toBe(snapshot);
     expect(scheduler.isStarted()).toBe(false);
   });
@@ -149,7 +149,7 @@ describe("scheduler integration", () => {
     expect(worker.cronRuns).toBe(1);
 
     await lifecycle.emit("ready");
-    await jest.advanceTimersByTimeAsync(30);
+    await vi.advanceTimersByTimeAsync(30);
     expect(worker.timeoutRuns).toBe(1);
   });
 
@@ -168,9 +168,9 @@ describe("scheduler integration", () => {
     expect(scheduler.listJobs("maintenance").map((job) => job.name)).toEqual(["advanced.boot"]);
 
     const retryRun = expect(scheduler.runGroup("ops")).rejects.toThrow("fatal");
-    await jest.advanceTimersByTimeAsync(10);
-    await jest.advanceTimersByTimeAsync(10);
-    await jest.advanceTimersByTimeAsync(5);
+    await vi.advanceTimersByTimeAsync(10);
+    await vi.advanceTimersByTimeAsync(10);
+    await vi.advanceTimersByTimeAsync(5);
     await retryRun;
 
     expect(worker.retryRuns).toBe(3);

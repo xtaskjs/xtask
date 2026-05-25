@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { describe, afterEach, beforeEach, expect, test } from "@jest/globals";
+import { describe, afterEach, beforeEach, expect, test } from "vitest";
 import { Container, Service } from "@xtaskjs/core";
 import { join } from "path";
 import {

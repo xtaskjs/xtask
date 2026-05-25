@@ -5,7 +5,7 @@ import { tmpdir } from "os";
 
 describe("Logger", () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("Should print formatted logs with colors", () => {
@@ -15,14 +15,12 @@ describe("Logger", () => {
       useColors: true,
     });
 
-    jest
-      .spyOn(Date, "now")
-      .mockReturnValueOnce(1_713_516_000_000)
-      .mockReturnValueOnce(1_713_516_000_005);
+    const nowSpy = vi.spyOn(Date, "now").mockReturnValue(1_713_516_000_000);
 
-    const spy = jest.spyOn(console, "log").mockImplementation();
+    const spy = vi.spyOn(console, "log").mockImplementation();
 
     logger.info("hello");
+    nowSpy.mockReturnValue(1_713_516_000_005);
     logger.info("world");
 
     expect(spy).toHaveBeenCalledTimes(2);
@@ -55,8 +53,8 @@ describe("Logger", () => {
       },
     });
 
-    jest.spyOn(Date, "now").mockReturnValue(1_713_516_000_000);
-    jest.spyOn(console, "warn").mockImplementation();
+    vi.spyOn(Date, "now").mockReturnValue(1_713_516_000_000);
+    vi.spyOn(console, "warn").mockImplementation();
 
     logger.warn("persist this");
 

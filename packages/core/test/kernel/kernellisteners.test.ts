@@ -4,14 +4,14 @@ describe("KernelListeners", () => {
   const previousNodeEnv = process.env.NODE_ENV;
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
     delete process.env.XTASKJS_SHOW_METRICS_LOGS;
     process.env.NODE_ENV = previousNodeEnv;
   });
 
   it("should log lifecycle and runner messages", async () => {
     process.env.NODE_ENV = "development";
-    const spy = jest.spyOn(console, "log").mockImplementation();
+    const spy = vi.spyOn(console, "log").mockImplementation();
     const listeners = new KernelListeners();
 
     listeners.onStarting();
@@ -27,7 +27,7 @@ describe("KernelListeners", () => {
 
   it("should hide metrics logs by default", () => {
     process.env.NODE_ENV = "development";
-    const spy = jest.spyOn(console, "log").mockImplementation();
+    const spy = vi.spyOn(console, "log").mockImplementation();
     const listeners = new KernelListeners();
 
     listeners.memory({ heapUsed: 1024 * 1024 } as any);
@@ -40,7 +40,7 @@ describe("KernelListeners", () => {
   it("should show metrics logs when enabled", () => {
     process.env.NODE_ENV = "development";
     process.env.XTASKJS_SHOW_METRICS_LOGS = "true";
-    const spy = jest.spyOn(console, "log").mockImplementation();
+    const spy = vi.spyOn(console, "log").mockImplementation();
     const listeners = new KernelListeners();
 
     listeners.memory({ heapUsed: 2 * 1024 * 1024 } as any);

@@ -336,6 +336,9 @@ function main() {
 
   if (command === "publish") {
     assertPublishAuthReady();
+    if (!extraArgs.includes("--no-git-checks")) {
+      extraArgs.push("--no-git-checks");
+    }
   }
 
   for (const pkg of packages) {

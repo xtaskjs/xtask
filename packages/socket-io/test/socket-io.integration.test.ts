@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { Container, Service, ApplicationLifeCycle } from "@xtaskjs/core";
 import {
   getSocketIoNamespaceToken,
@@ -16,7 +16,7 @@ import {
   initializeSocketIoIntegration,
 } from "../src";
 
-jest.mock("socket.io", () => {
+vi.mock("socket.io", () => {
   class MockBroadcastOperator {
     public readonly records: any[];
 
@@ -193,7 +193,7 @@ describe("socket-io integration", () => {
   test("discovers gateways, wires DI tokens, and handles connection lifecycle", async () => {
     const container = new Container();
     const lifecycle = new ApplicationLifeCycle();
-    const httpServer = { on: jest.fn(), listen: jest.fn() } as any;
+    const httpServer = { on: vi.fn(), listen: vi.fn() } as any;
     const adapter = {
       type: "node-http" as const,
       getHttpServer: () => httpServer,
@@ -206,9 +206,11 @@ describe("socket-io integration", () => {
     const gateway = container.get(ChatGateway);
     const service = container.getByName<SocketIoService>(getSocketIoServiceToken());
     const namespaceByName = container.getByName<any>(getSocketIoNamespaceToken("/chat"));
-    const socketIoMock = jest.requireMock("socket.io") as any;
-    const mockServer = socketIoMock.__mockState.lastServer;
+    const socketIoMock = (await vi.importMock("socket.io")) as any;
+    const mockServer = socketIoMock.__mockState?.lastServer;
     const socket = socketIoMock.__createSocket("socket-1");
+
+    expect(mockServer).toBeDefined();
 
     expect(gateway.sockets).toBe(service);
     expect(gateway.lifecycleManager).toBeInstanceOf(SocketIoLifecycleManager);
@@ -220,7 +222,7 @@ describe("socket-io integration", () => {
     expect(gateway.events).toEqual(["connect:socket-1"]);
     expect(socket.joinedRooms).toEqual(["lobby"]);
 
-    const acknowledgement = jest.fn();
+    const acknowledgement = vi.fn();
     await socket.dispatch("message", { text: "hello" }, acknowledgement);
     expect(gateway.events).toContain("message:socket-1:hello");
     expect(acknowledgement).toHaveBeenCalledWith({ delivered: true, text: "hello" });
@@ -232,7 +234,7 @@ describe("socket-io integration", () => {
   test("broadcasts through the helper service", async () => {
     const container = new Container();
     const lifecycle = new ApplicationLifeCycle();
-    const httpServer = { on: jest.fn(), listen: jest.fn() } as any;
+    const httpServer = { on: vi.fn(), listen: vi.fn() } as any;
 
     container.register(ChatGateway, { scope: "singleton" });
 

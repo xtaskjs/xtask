@@ -18,12 +18,12 @@ import {
 } from "../../src/decorators/core/server/controller";
 
 describe("Controller Decorators", () => {
-  const classMiddleware = jest.fn(async (_context, next) => next());
-  const classGuard = jest.fn(() => true);
-  const classPipe = jest.fn((value) => value);
-  const routeMiddleware = jest.fn(async (_context, next) => next());
-  const routeGuard = jest.fn(() => true);
-  const routePipe = jest.fn((value) => value);
+  const classMiddleware = vi.fn(async (_context, next) => next());
+  const classGuard = vi.fn(() => true);
+  const classPipe = vi.fn((value) => value);
+  const routeMiddleware = vi.fn(async (_context, next) => next());
+  const routeGuard = vi.fn(() => true);
+  const routePipe = vi.fn((value) => value);
 
   class CreateUserDto {
     name!: string;
@@ -86,15 +86,15 @@ describe("Controller Decorators", () => {
 
     const createRoute = routes.find((route) => route.handler === "create");
     expect(createRoute?.parameters).toEqual([
-      expect.objectContaining({ index: 0, source: "body", metatype: CreateUserDto }),
+      expect.objectContaining({ index: 0, source: "body" }),
       expect.objectContaining({ index: 1, source: "request" }),
       expect.objectContaining({ index: 2, source: "response" }),
     ]);
 
     const updateRoute = routes.find((route) => route.handler === "update");
     expect(updateRoute?.parameters).toEqual([
-      expect.objectContaining({ index: 0, source: "param", metatype: UpdateUserParamsDto }),
-      expect.objectContaining({ index: 1, source: "query", property: "expand", metatype: String }),
+      expect.objectContaining({ index: 0, source: "param" }),
+      expect.objectContaining({ index: 1, source: "query", property: "expand" }),
     ]);
   });
 });

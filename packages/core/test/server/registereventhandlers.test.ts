@@ -45,8 +45,8 @@ describe("registerEventHandlers", () => {
     const listener = new TestListener();
 
     const app = {
-      on: jest.fn(),
-      registerRunner: jest.fn(),
+      on: vi.fn(),
+      registerRunner: vi.fn(),
     } as any;
 
     registerEventHandlers(listener, app);
@@ -76,7 +76,7 @@ describe("registerEventHandlers", () => {
   it("should tolerate missing metadata", () => {
     class Empty {}
     const instance = new Empty();
-    const app = { on: jest.fn(), registerRunner: jest.fn() } as any;
+    const app = { on: vi.fn(), registerRunner: vi.fn() } as any;
 
     registerEventHandlers(instance, app);
 

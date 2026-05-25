@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { Controller, Get, Param } from "@xtaskjs/common";
 import { ApplicationLifeCycle, Container, Service, view } from "@xtaskjs/core";
 import {

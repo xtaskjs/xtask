@@ -12,13 +12,10 @@ export * from "./typeorm-store";
 export * from "./types";
 
 import type { EventEnvelope, IEventPublisher } from "./types";
-import type { QueueEventPublisherOptions } from "./queue-publisher";
-
-type QueuePublisherModule = typeof import("./queue-publisher");
-
-const loadQueuePublisherModule = (): QueuePublisherModule => {
-	return require("./queue-publisher") as QueuePublisherModule;
-};
+import {
+	QueueEventPublisher as QueueBackedEventPublisher,
+	type QueueEventPublisherOptions,
+} from "./queue-publisher";
 
 export type { QueueEventPublisherOptions };
 
@@ -26,7 +23,6 @@ export class QueueEventPublisher implements IEventPublisher {
 	private readonly publisher: IEventPublisher;
 
 	constructor(options: QueueEventPublisherOptions = {}) {
-		const { QueueEventPublisher: QueueBackedEventPublisher } = loadQueuePublisherModule();
 		this.publisher = new QueueBackedEventPublisher(options);
 	}
 

@@ -15,19 +15,19 @@ describe("ExpressAdapter", () => {
     const middlewareRegistry: any[] = [];
     const app = {
       use: (fn: any) => middlewareRegistry.push(fn),
-      set: jest.fn(),
-      listen: jest.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
+      set: vi.fn(),
+      listen: vi.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
         cb();
-        return { close: jest.fn() };
+        return { close: vi.fn() };
       }),
     };
 
     const adapter = new ExpressAdapter(app);
-    const handler = jest.fn(async () => {});
+    const handler = vi.fn(async () => {});
     adapter.registerRequestHandler(handler);
 
     const middleware = middlewareRegistry[middlewareRegistry.length - 1];
-    const res = { status: jest.fn().mockReturnThis(), send: jest.fn() };
+    const res = { status: vi.fn().mockReturnThis(), send: vi.fn() };
 
     await middleware({ method: "PUT", path: "/x" }, res);
 
@@ -40,15 +40,15 @@ describe("ExpressAdapter", () => {
     const middlewareRegistry: any[] = [];
     const app = {
       use: (fn: any) => middlewareRegistry.push(fn),
-      set: jest.fn(),
-      listen: jest.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
+      set: vi.fn(),
+      listen: vi.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
         cb();
-        return { close: jest.fn() };
+        return { close: vi.fn() };
       }),
     };
 
     const adapter = new ExpressAdapter(app);
-    const handler = jest.fn(async () => {});
+    const handler = vi.fn(async () => {});
     adapter.registerRequestHandler(handler);
 
     const req = { method: "GET", path: "/hello" };
@@ -67,15 +67,15 @@ describe("ExpressAdapter", () => {
     const middlewareRegistry: any[] = [];
     const app = {
       use: (fn: any) => middlewareRegistry.push(fn),
-      set: jest.fn(),
-      listen: jest.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
+      set: vi.fn(),
+      listen: vi.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
         cb();
-        return { close: jest.fn() };
+        return { close: vi.fn() };
       }),
     };
 
     const adapter = new ExpressAdapter(app);
-    const handler = jest.fn(async () => {});
+    const handler = vi.fn(async () => {});
     adapter.registerRequestHandler(handler);
 
     const req = {
@@ -102,12 +102,12 @@ describe("ExpressAdapter", () => {
   });
 
   it("should listen and close gracefully", async () => {
-    const close = jest.fn((cb?: (error?: Error) => void) => cb?.());
+    const close = vi.fn((cb?: (error?: Error) => void) => cb?.());
     const server = { close };
     const app = {
-      use: jest.fn(),
-      set: jest.fn(),
-      listen: jest.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
+      use: vi.fn(),
+      set: vi.fn(),
+      listen: vi.fn((_port: number, _host: string, cb: (error?: Error) => void) => {
         cb();
         return server;
       }),
@@ -128,10 +128,10 @@ describe("ExpressAdapter", () => {
 
   it("should configure express native template engine", () => {
     const app = {
-      use: jest.fn(),
-      listen: jest.fn(),
-      set: jest.fn(),
-      engine: jest.fn(),
+      use: vi.fn(),
+      listen: vi.fn(),
+      set: vi.fn(),
+      engine: vi.fn(),
     };
 
     new ExpressAdapter(app, {
@@ -139,7 +139,7 @@ describe("ExpressAdapter", () => {
         viewsPath: "./views",
         extension: "hbs",
         fileExtension: ".hbs",
-        engine: jest.fn(),
+        engine: vi.fn(),
         viewEngine: "hbs",
       },
       staticFiles: {
@@ -154,10 +154,10 @@ describe("ExpressAdapter", () => {
 
   it("should render view with custom html renderer", async () => {
     const app = {
-      use: jest.fn(),
-      listen: jest.fn(),
-      set: jest.fn(),
-      engine: jest.fn(),
+      use: vi.fn(),
+      listen: vi.fn(),
+      set: vi.fn(),
+      engine: vi.fn(),
     };
 
     const adapter = new ExpressAdapter(app, {
@@ -169,7 +169,7 @@ describe("ExpressAdapter", () => {
       },
     });
 
-    const res = { send: jest.fn(), status: jest.fn().mockReturnThis() } as any;
+    const res = { send: vi.fn(), status: vi.fn().mockReturnThis() } as any;
     await adapter.renderView!({}, res, view("home", { title: "XTask" }, 201));
 
     expect(res.status).toHaveBeenCalledWith(201);
@@ -178,8 +178,8 @@ describe("ExpressAdapter", () => {
 
   it("should render view through express res.render", async () => {
     const app = {
-      use: jest.fn(),
-      listen: jest.fn(),
+      use: vi.fn(),
+      listen: vi.fn(),
     };
 
     const adapter = new ExpressAdapter(app, {
@@ -190,8 +190,8 @@ describe("ExpressAdapter", () => {
         enabled: false,
       },
     });
-    const send = jest.fn();
-    const render = jest.fn((_template, _model, cb) => cb(null, "<html>ok</html>"));
+    const send = vi.fn();
+    const render = vi.fn((_template, _model, cb) => cb(null, "<html>ok</html>"));
     const res = { render, send } as any;
 
     await adapter.renderView!({}, res, view("dashboard", { ok: true }));
@@ -202,10 +202,10 @@ describe("ExpressAdapter", () => {
 
   it("should use default views/public folders", () => {
     const app = {
-      use: jest.fn(),
-      listen: jest.fn(),
-      set: jest.fn(),
-      engine: jest.fn(),
+      use: vi.fn(),
+      listen: vi.fn(),
+      set: vi.fn(),
+      engine: vi.fn(),
     };
 
     new ExpressAdapter(app);
@@ -221,9 +221,9 @@ describe("ExpressAdapter", () => {
     fs.writeFileSync(path.join(viewsPath, "home.html"), "<h1>{{title}}</h1>", "utf-8");
 
     const app = {
-      use: jest.fn(),
-      listen: jest.fn(),
-      set: jest.fn(),
+      use: vi.fn(),
+      listen: vi.fn(),
+      set: vi.fn(),
     };
 
     const adapter = new ExpressAdapter(app, {
@@ -234,7 +234,7 @@ describe("ExpressAdapter", () => {
         enabled: false,
       },
     });
-    const res = { send: jest.fn() } as any;
+    const res = { send: vi.fn() } as any;
 
     await adapter.renderView!({}, res, view("home", { title: "From File" }));
 

@@ -14,15 +14,15 @@ describe("FastifyAdapter", () => {
   it("should register wildcard route and dispatch supported methods", async () => {
     let routeConfig: any;
     const app = {
-      route: jest.fn((config) => {
+      route: vi.fn((config) => {
         routeConfig = config;
       }),
-      listen: jest.fn(async () => {}),
-      close: jest.fn(async () => {}),
+      listen: vi.fn(async () => {}),
+      close: vi.fn(async () => {}),
     };
 
     const adapter = new FastifyAdapter(app);
-    const handler = jest.fn(async () => {});
+    const handler = vi.fn(async () => {});
 
     adapter.registerRequestHandler(handler);
 
@@ -30,7 +30,7 @@ describe("FastifyAdapter", () => {
     expect(routeConfig.url).toBe("*");
 
     const request = { method: "GET", url: "/health" };
-    const reply = { code: jest.fn().mockReturnThis(), send: jest.fn() };
+    const reply = { code: vi.fn().mockReturnThis(), send: vi.fn() };
     await routeConfig.handler(request, reply);
 
     expect(handler).toHaveBeenCalledWith(
@@ -44,15 +44,15 @@ describe("FastifyAdapter", () => {
   it("should not mutate getter-backed fastify request properties", async () => {
     let routeConfig: any;
     const app = {
-      route: jest.fn((config) => {
+      route: vi.fn((config) => {
         routeConfig = config;
       }),
-      listen: jest.fn(async () => {}),
-      close: jest.fn(async () => {}),
+      listen: vi.fn(async () => {}),
+      close: vi.fn(async () => {}),
     };
 
     const adapter = new FastifyAdapter(app);
-    const handler = jest.fn(async () => {});
+    const handler = vi.fn(async () => {});
 
     adapter.registerRequestHandler(handler);
 
@@ -63,7 +63,7 @@ describe("FastifyAdapter", () => {
         return "/health";
       },
     };
-    const reply = { code: jest.fn().mockReturnThis(), send: jest.fn() };
+    const reply = { code: vi.fn().mockReturnThis(), send: vi.fn() };
 
     await expect(routeConfig.handler(request, reply)).resolves.toBeUndefined();
     expect(handler).toHaveBeenCalledWith(
@@ -77,18 +77,18 @@ describe("FastifyAdapter", () => {
   it("should return 405 for unsupported methods", async () => {
     let routeConfig: any;
     const app = {
-      route: jest.fn((config) => {
+      route: vi.fn((config) => {
         routeConfig = config;
       }),
-      listen: jest.fn(async () => {}),
-      close: jest.fn(async () => {}),
+      listen: vi.fn(async () => {}),
+      close: vi.fn(async () => {}),
     };
 
     const adapter = new FastifyAdapter(app);
-    adapter.registerRequestHandler(jest.fn(async () => {}));
+    adapter.registerRequestHandler(vi.fn(async () => {}));
 
     const request = { method: "PUT", url: "/health" };
-    const reply = { code: jest.fn().mockReturnThis(), send: jest.fn() };
+    const reply = { code: vi.fn().mockReturnThis(), send: vi.fn() };
     await routeConfig.handler(request, reply);
 
     expect(reply.code).toHaveBeenCalledWith(405);
@@ -97,9 +97,9 @@ describe("FastifyAdapter", () => {
 
   it("should listen and close", async () => {
     const app = {
-      route: jest.fn(),
-      listen: jest.fn(async () => {}),
-      close: jest.fn(async () => {}),
+      route: vi.fn(),
+      listen: vi.fn(async () => {}),
+      close: vi.fn(async () => {}),
     };
 
     const adapter = new FastifyAdapter(app);
@@ -112,9 +112,9 @@ describe("FastifyAdapter", () => {
 
   it("should render view with custom renderer", async () => {
     const app = {
-      route: jest.fn(),
-      listen: jest.fn(async () => {}),
-      close: jest.fn(async () => {}),
+      route: vi.fn(),
+      listen: vi.fn(async () => {}),
+      close: vi.fn(async () => {}),
     };
 
     const adapter = new FastifyAdapter(app, {
@@ -127,9 +127,9 @@ describe("FastifyAdapter", () => {
     });
 
     const reply = {
-      code: jest.fn().mockReturnThis(),
-      header: jest.fn().mockReturnThis(),
-      send: jest.fn(),
+      code: vi.fn().mockReturnThis(),
+      header: vi.fn().mockReturnThis(),
+      send: vi.fn(),
     } as any;
 
     await adapter.renderView!({}, reply, view("home", { title: "Fastify" }, 201));
@@ -146,9 +146,9 @@ describe("FastifyAdapter", () => {
     fs.writeFileSync(path.join(viewsPath, "home.html"), "<h1>{{title}}</h1>", "utf-8");
 
     const app = {
-      route: jest.fn(),
-      listen: jest.fn(async () => {}),
-      close: jest.fn(async () => {}),
+      route: vi.fn(),
+      listen: vi.fn(async () => {}),
+      close: vi.fn(async () => {}),
     };
 
     const adapter = new FastifyAdapter(app, {
@@ -161,8 +161,8 @@ describe("FastifyAdapter", () => {
     });
 
     const reply = {
-      header: jest.fn().mockReturnThis(),
-      send: jest.fn(),
+      header: vi.fn().mockReturnThis(),
+      send: vi.fn(),
     } as any;
 
     await adapter.renderView!({}, reply, view("home", { title: "From File" }));
@@ -179,11 +179,11 @@ describe("FastifyAdapter", () => {
 
     let routeConfig: any;
     const app = {
-      route: jest.fn((config) => {
+      route: vi.fn((config) => {
         routeConfig = config;
       }),
-      listen: jest.fn(async () => {}),
-      close: jest.fn(async () => {}),
+      listen: vi.fn(async () => {}),
+      close: vi.fn(async () => {}),
     };
 
     const adapter = new FastifyAdapter(app, {
@@ -192,14 +192,14 @@ describe("FastifyAdapter", () => {
       },
     });
 
-    const handler = jest.fn(async () => {});
+    const handler = vi.fn(async () => {});
     adapter.registerRequestHandler(handler);
 
     const request = { method: "GET", url: "/app.css" };
     const reply = {
-      header: jest.fn().mockReturnThis(),
-      send: jest.fn(),
-      code: jest.fn().mockReturnThis(),
+      header: vi.fn().mockReturnThis(),
+      send: vi.fn(),
+      code: vi.fn().mockReturnThis(),
     };
     await routeConfig.handler(request, reply);
 

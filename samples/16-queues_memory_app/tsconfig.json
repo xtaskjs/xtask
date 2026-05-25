@@ -9,6 +9,10 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
+      "@xtaskjs/*": [
+        "../../packages/*/src/index.ts",
+        "../../packages/*/src"
+      ],
       "@xtaskjs/testing": [
         "../../packages/testing/src/index.ts"
       ],

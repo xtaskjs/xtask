@@ -1,5 +1,5 @@
-jest.mock("http", () => ({
-  createServer: jest.fn(),
+vi.mock("http", () => ({
+  createServer: vi.fn(),
 }));
 
 import { createServer } from "http";
@@ -7,7 +7,7 @@ import { NodeHttpAdapter } from "../../src/http/node-http-adapter";
 
 describe("NodeHttpAdapter", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should throw if no handler was registered", async () => {
@@ -20,9 +20,9 @@ describe("NodeHttpAdapter", () => {
   it("should create server and handle unsupported methods", async () => {
     let serverCallback: any;
     const server = {
-      once: jest.fn(),
-      listen: jest.fn((_port, _host, callback) => callback()),
-      close: jest.fn((callback) => callback()),
+      once: vi.fn(),
+      listen: vi.fn((_port, _host, callback) => callback()),
+      close: vi.fn((callback) => callback()),
     };
 
     (createServer as jest.Mock).mockImplementation((callback) => {
@@ -31,12 +31,12 @@ describe("NodeHttpAdapter", () => {
     });
 
     const adapter = new NodeHttpAdapter();
-    adapter.registerRequestHandler(jest.fn(async () => {}));
+    adapter.registerRequestHandler(vi.fn(async () => {}));
 
     await adapter.listen({ host: "127.0.0.1", port: 3000 });
 
     const req = { method: "PUT", url: "/x", headers: { host: "localhost" } };
-    const res = { statusCode: 200, end: jest.fn(), setHeader: jest.fn() };
+    const res = { statusCode: 200, end: vi.fn(), setHeader: vi.fn() };
 
     await serverCallback(req, res);
 
@@ -47,9 +47,9 @@ describe("NodeHttpAdapter", () => {
   it("should dispatch valid requests to registered handler", async () => {
     let serverCallback: any;
     const server = {
-      once: jest.fn(),
-      listen: jest.fn((_port, _host, callback) => callback()),
-      close: jest.fn((callback) => callback()),
+      once: vi.fn(),
+      listen: vi.fn((_port, _host, callback) => callback()),
+      close: vi.fn((callback) => callback()),
     };
 
     (createServer as jest.Mock).mockImplementation((callback) => {
@@ -57,14 +57,14 @@ describe("NodeHttpAdapter", () => {
       return server;
     });
 
-    const handler = jest.fn(async () => {});
+    const handler = vi.fn(async () => {});
     const adapter = new NodeHttpAdapter();
     adapter.registerRequestHandler(handler);
 
     await adapter.listen({ host: "127.0.0.1", port: 3000 });
 
     const req = { method: "GET", url: "/health?x=1", headers: { host: "localhost" } };
-    const res = { statusCode: 200, end: jest.fn(), setHeader: jest.fn() };
+    const res = { statusCode: 200, end: vi.fn(), setHeader: vi.fn() };
 
     await serverCallback(req, res);
 
@@ -76,9 +76,9 @@ describe("NodeHttpAdapter", () => {
   it("should parse json bodies before dispatching", async () => {
     let serverCallback: any;
     const server = {
-      once: jest.fn(),
-      listen: jest.fn((_port, _host, callback) => callback()),
-      close: jest.fn((callback) => callback()),
+      once: vi.fn(),
+      listen: vi.fn((_port, _host, callback) => callback()),
+      close: vi.fn((callback) => callback()),
     };
 
     (createServer as jest.Mock).mockImplementation((callback) => {
@@ -86,7 +86,7 @@ describe("NodeHttpAdapter", () => {
       return server;
     });
 
-    const handler = jest.fn(async () => {});
+    const handler = vi.fn(async () => {});
     const adapter = new NodeHttpAdapter();
     adapter.registerRequestHandler(handler);
 
@@ -100,7 +100,7 @@ describe("NodeHttpAdapter", () => {
         yield Buffer.from('{"name":"Ada"}');
       },
     };
-    const res = { statusCode: 200, end: jest.fn(), setHeader: jest.fn() };
+    const res = { statusCode: 200, end: vi.fn(), setHeader: vi.fn() };
 
     await serverCallback(req, res);
 
@@ -111,9 +111,9 @@ describe("NodeHttpAdapter", () => {
   it("should return 400 for invalid json bodies", async () => {
     let serverCallback: any;
     const server = {
-      once: jest.fn(),
-      listen: jest.fn((_port, _host, callback) => callback()),
-      close: jest.fn((callback) => callback()),
+      once: vi.fn(),
+      listen: vi.fn((_port, _host, callback) => callback()),
+      close: vi.fn((callback) => callback()),
     };
 
     (createServer as jest.Mock).mockImplementation((callback) => {
@@ -122,7 +122,7 @@ describe("NodeHttpAdapter", () => {
     });
 
     const adapter = new NodeHttpAdapter();
-    adapter.registerRequestHandler(jest.fn(async () => {}));
+    adapter.registerRequestHandler(vi.fn(async () => {}));
 
     await adapter.listen({ host: "127.0.0.1", port: 3000 });
 
@@ -134,7 +134,7 @@ describe("NodeHttpAdapter", () => {
         yield Buffer.from('{"name":');
       },
     };
-    const res = { statusCode: 200, end: jest.fn(), setHeader: jest.fn() };
+    const res = { statusCode: 200, end: vi.fn(), setHeader: vi.fn() };
 
     await serverCallback(req, res);
 
@@ -147,9 +147,9 @@ describe("NodeHttpAdapter", () => {
   it("should return 500 when request handling throws", async () => {
     let serverCallback: any;
     const server = {
-      once: jest.fn(),
-      listen: jest.fn((_port, _host, callback) => callback()),
-      close: jest.fn((callback) => callback()),
+      once: vi.fn(),
+      listen: vi.fn((_port, _host, callback) => callback()),
+      close: vi.fn((callback) => callback()),
     };
 
     (createServer as jest.Mock).mockImplementation((callback) => {
@@ -157,7 +157,7 @@ describe("NodeHttpAdapter", () => {
       return server;
     });
 
-    const handler = jest.fn(async () => {
+    const handler = vi.fn(async () => {
       throw new Error("boom");
     });
 
@@ -167,7 +167,7 @@ describe("NodeHttpAdapter", () => {
     await adapter.listen({ host: "127.0.0.1", port: 3000 });
 
     const req = { method: "GET", url: "/health", headers: { host: "localhost" } };
-    const res = { statusCode: 200, end: jest.fn(), setHeader: jest.fn() };
+    const res = { statusCode: 200, end: vi.fn(), setHeader: vi.fn() };
 
     await serverCallback(req, res);
 
@@ -181,9 +181,9 @@ describe("NodeHttpAdapter", () => {
   it("should close safely with and without a server", async () => {
     let serverCallback: any;
     const server = {
-      once: jest.fn(),
-      listen: jest.fn((_port, _host, callback) => callback()),
-      close: jest.fn((callback) => callback()),
+      once: vi.fn(),
+      listen: vi.fn((_port, _host, callback) => callback()),
+      close: vi.fn((callback) => callback()),
     };
 
     (createServer as jest.Mock).mockImplementation((callback) => {
@@ -192,7 +192,7 @@ describe("NodeHttpAdapter", () => {
     });
 
     const adapter = new NodeHttpAdapter();
-    adapter.registerRequestHandler(jest.fn(async () => {}));
+    adapter.registerRequestHandler(vi.fn(async () => {}));
 
     await adapter.close();
     await adapter.listen({ host: "127.0.0.1", port: 3000 });

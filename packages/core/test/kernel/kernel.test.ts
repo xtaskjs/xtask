@@ -1,25 +1,25 @@
 import { join } from "path";
 
-jest.mock("fs", () => ({
-  existsSync: jest.fn(),
+vi.mock("fs", () => ({
+  existsSync: vi.fn(),
 }));
 
-jest.mock("../../src/di/container", () => ({
-  Container: jest.fn(),
+vi.mock("../../src/di/container", () => ({
+  Container: vi.fn(),
 }));
 
-jest.mock("../../src/kernel/manifest-cache.service", () => ({
-  ManifestCacheService: jest.fn(),
+vi.mock("../../src/kernel/manifest-cache.service", () => ({
+  ManifestCacheService: vi.fn(),
 }));
 
-const hotWatcherStart = jest.fn();
-const hotWatcherStop = jest.fn();
-const HotManifestWatcherMock = jest.fn(() => ({
+const hotWatcherStart = vi.fn();
+const hotWatcherStop = vi.fn();
+const HotManifestWatcherMock = vi.fn(() => ({
   start: hotWatcherStart,
   stop: hotWatcherStop,
 }));
 
-jest.mock("../../src/watcher", () => ({
+vi.mock("../../src/watcher", () => ({
   HotManifestWatcher: function (...args: any[]) {
     return HotManifestWatcherMock.apply(null, args as any);
   },
@@ -32,8 +32,8 @@ import { ManifestCacheService } from "../../src/kernel/manifest-cache.service";
 
 describe("Kernel", () => {
   afterEach(() => {
-    jest.restoreAllMocks();
-    jest.clearAllMocks();
+    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
   beforeEach(() => {
@@ -43,11 +43,11 @@ describe("Kernel", () => {
   });
 
   it("should autoload from manifest cache when available", async () => {
-    const autoloadFiles = jest.fn(async () => {});
-    const scanDir = jest.fn(async () => []);
-    const logger = { info: jest.fn() };
-    const get = jest.fn(async () => logger);
-    const emit = jest.fn(async () => {});
+    const autoloadFiles = vi.fn(async () => {});
+    const scanDir = vi.fn(async () => []);
+    const logger = { info: vi.fn() };
+    const get = vi.fn(async () => logger);
+    const emit = vi.fn(async () => {});
 
     const manifest = {
       version: 1,
@@ -64,11 +64,11 @@ describe("Kernel", () => {
 
     (existsSync as jest.Mock).mockImplementation(() => true);
 
-    const read = jest.fn(() => manifest);
-    const readPrebuilt = jest.fn(() => null);
-    const write = jest.fn();
-    const getManifestPath = jest.fn(() => "/project/.xtask-manifest.json");
-    const getPrebuiltManifestPath = jest.fn(() => "/project/.xtask-manifest.prebuilt.json");
+    const read = vi.fn(() => manifest);
+    const readPrebuilt = vi.fn(() => null);
+    const write = vi.fn();
+    const getManifestPath = vi.fn(() => "/project/.xtask-manifest.json");
+    const getPrebuiltManifestPath = vi.fn(() => "/project/.xtask-manifest.prebuilt.json");
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
       read,
       readPrebuilt,
@@ -94,24 +94,24 @@ describe("Kernel", () => {
   });
 
   it("should rebuild manifest on cache miss", async () => {
-    const autoloadFiles = jest.fn(async () => {});
-    const scanDir = jest.fn(async (dir: string) => [join(dir, "component.ts")]);
-    const logger = { info: jest.fn() };
-    const emit = jest.fn(async () => {});
+    const autoloadFiles = vi.fn(async () => {});
+    const scanDir = vi.fn(async (dir: string) => [join(dir, "component.ts")]);
+    const logger = { info: vi.fn() };
+    const emit = vi.fn(async () => {});
 
     (Container as unknown as jest.Mock).mockImplementation(() => ({
       autoloadFiles,
       scanDir,
-      get: jest.fn(async () => logger),
+      get: vi.fn(async () => logger),
     }));
 
     (existsSync as jest.Mock).mockImplementation(() => true);
 
-    const read = jest.fn(() => null);
-    const readPrebuilt = jest.fn(() => null);
-    const write = jest.fn();
-    const getManifestPath = jest.fn(() => "/project/.xtask-manifest.json");
-    const getPrebuiltManifestPath = jest.fn(() => "/project/.xtask-manifest.prebuilt.json");
+    const read = vi.fn(() => null);
+    const readPrebuilt = vi.fn(() => null);
+    const write = vi.fn();
+    const getManifestPath = vi.fn(() => "/project/.xtask-manifest.json");
+    const getPrebuiltManifestPath = vi.fn(() => "/project/.xtask-manifest.prebuilt.json");
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
       read,
       readPrebuilt,
@@ -136,17 +136,17 @@ describe("Kernel", () => {
   });
 
   it("should fallback to rebuild when manifest cache is stale", async () => {
-    const autoloadFiles = jest.fn()
+    const autoloadFiles = vi.fn()
       .mockRejectedValueOnce(new Error("Cannot find module"))
       .mockResolvedValue(undefined);
-    const scanDir = jest.fn(async (dir: string) => [join(dir, "fresh.ts")]);
-    const logger = { info: jest.fn() };
-    const emit = jest.fn(async () => {});
+    const scanDir = vi.fn(async (dir: string) => [join(dir, "fresh.ts")]);
+    const logger = { info: vi.fn() };
+    const emit = vi.fn(async () => {});
 
     (Container as unknown as jest.Mock).mockImplementation(() => ({
       autoloadFiles,
       scanDir,
-      get: jest.fn(async () => logger),
+      get: vi.fn(async () => logger),
     }));
 
     (existsSync as jest.Mock).mockImplementation(() => true);
@@ -157,11 +157,11 @@ describe("Kernel", () => {
       scanRoots: ["/project/src"],
       files: ["/project/src/missing.ts"],
     };
-    const read = jest.fn(() => manifest);
-    const readPrebuilt = jest.fn(() => null);
-    const write = jest.fn();
-    const getManifestPath = jest.fn(() => "/project/.xtask-manifest.json");
-    const getPrebuiltManifestPath = jest.fn(() => "/project/.xtask-manifest.prebuilt.json");
+    const read = vi.fn(() => manifest);
+    const readPrebuilt = vi.fn(() => null);
+    const write = vi.fn();
+    const getManifestPath = vi.fn(() => "/project/.xtask-manifest.json");
+    const getPrebuiltManifestPath = vi.fn(() => "/project/.xtask-manifest.prebuilt.json");
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
       read,
       readPrebuilt,
@@ -185,20 +185,20 @@ describe("Kernel", () => {
 
   it("should expose container instance", async () => {
     const container = {
-      autoloadFiles: jest.fn(async () => {}),
-      scanDir: jest.fn(async () => []),
-      get: jest.fn(async () => ({ info: jest.fn() })),
+      autoloadFiles: vi.fn(async () => {}),
+      scanDir: vi.fn(async () => []),
+      get: vi.fn(async () => ({ info: vi.fn() })),
     };
 
     (Container as unknown as jest.Mock).mockImplementation(() => container);
     (existsSync as jest.Mock).mockImplementation(() => false);
 
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
-      read: jest.fn(() => null),
-      readPrebuilt: jest.fn(() => null),
-      write: jest.fn(),
-      getManifestPath: jest.fn(() => "/project/.xtask-manifest.json"),
-      getPrebuiltManifestPath: jest.fn(() => "/project/.xtask-manifest.prebuilt.json"),
+      read: vi.fn(() => null),
+      readPrebuilt: vi.fn(() => null),
+      write: vi.fn(),
+      getManifestPath: vi.fn(() => "/project/.xtask-manifest.json"),
+      getPrebuiltManifestPath: vi.fn(() => "/project/.xtask-manifest.prebuilt.json"),
     }));
 
     const kernel = new Kernel();
@@ -208,10 +208,10 @@ describe("Kernel", () => {
   });
 
   it("should prefer prebuilt manifest over cache when enabled", async () => {
-    const autoloadFiles = jest.fn(async () => {});
-    const scanDir = jest.fn(async () => []);
-    const logger = { info: jest.fn() };
-    const emit = jest.fn(async () => {});
+    const autoloadFiles = vi.fn(async () => {});
+    const scanDir = vi.fn(async () => []);
+    const logger = { info: vi.fn() };
+    const emit = vi.fn(async () => {});
 
     const prebuiltManifest = {
       version: 1,
@@ -223,21 +223,21 @@ describe("Kernel", () => {
     (Container as unknown as jest.Mock).mockImplementation(() => ({
       autoloadFiles,
       scanDir,
-      get: jest.fn(async () => logger),
+      get: vi.fn(async () => logger),
     }));
 
     (existsSync as jest.Mock).mockImplementation(() => true);
 
-    const read = jest.fn(() => ({
+    const read = vi.fn(() => ({
       version: 1,
       generatedAt: new Date().toISOString(),
       scanRoots: ["/project/src"],
       files: ["/project/src/cache.service.ts"],
     }));
-    const readPrebuilt = jest.fn(() => prebuiltManifest);
-    const write = jest.fn();
-    const getManifestPath = jest.fn(() => "/project/.xtask-manifest.json");
-    const getPrebuiltManifestPath = jest.fn(() => "/project/.xtask-manifest.prebuilt.json");
+    const readPrebuilt = vi.fn(() => prebuiltManifest);
+    const write = vi.fn();
+    const getManifestPath = vi.fn(() => "/project/.xtask-manifest.json");
+    const getPrebuiltManifestPath = vi.fn(() => "/project/.xtask-manifest.prebuilt.json");
 
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
       read,
@@ -265,11 +265,11 @@ describe("Kernel", () => {
   });
 
   it("should emit hot manifest watcher lifecycle events", async () => {
-    const autoloadFiles = jest.fn(async () => {});
-    const scanDir = jest.fn(async () => []);
-    const logger = { info: jest.fn() };
-    const emit = jest.fn(async () => {});
-    const on = jest.fn();
+    const autoloadFiles = vi.fn(async () => {});
+    const scanDir = vi.fn(async () => []);
+    const logger = { info: vi.fn() };
+    const emit = vi.fn(async () => {});
+    const on = vi.fn();
 
     const manifest = {
       version: 1,
@@ -281,17 +281,17 @@ describe("Kernel", () => {
     (Container as unknown as jest.Mock).mockImplementation(() => ({
       autoloadFiles,
       scanDir,
-      get: jest.fn(async () => logger),
+      get: vi.fn(async () => logger),
     }));
 
     (existsSync as jest.Mock).mockImplementation(() => true);
 
     (ManifestCacheService as unknown as jest.Mock).mockImplementation(() => ({
-      read: jest.fn(() => manifest),
-      readPrebuilt: jest.fn(() => null),
-      write: jest.fn(),
-      getManifestPath: jest.fn(() => "/project/.xtask-manifest.json"),
-      getPrebuiltManifestPath: jest.fn(() => "/project/.xtask-manifest.prebuilt.json"),
+      read: vi.fn(() => manifest),
+      readPrebuilt: vi.fn(() => null),
+      write: vi.fn(),
+      getManifestPath: vi.fn(() => "/project/.xtask-manifest.json"),
+      getPrebuiltManifestPath: vi.fn(() => "/project/.xtask-manifest.prebuilt.json"),
     }));
 
     const kernel = new Kernel({

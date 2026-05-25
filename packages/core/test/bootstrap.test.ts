@@ -1,69 +1,69 @@
-const mockBoot = jest.fn(async (startFn: () => Promise<void>) => {
+const mockBoot = vi.fn(async (startFn: () => Promise<void>) => {
   await startFn();
 });
 
 const mockLifecycle = {
   boot: mockBoot,
-  useGlobalPipes: jest.fn(),
+  useGlobalPipes: vi.fn(),
 };
 
-const mockKernelBoot = jest.fn(async () => {});
-const mockKernelGetContainer = jest.fn(async () => ({ registerLifeCycleListeners: jest.fn() }));
-const KernelMock = jest.fn(() => mockKernel);
+const mockKernelBoot = vi.fn(async () => {});
+const mockKernelGetContainer = vi.fn(async () => ({ registerLifeCycleListeners: vi.fn() }));
+const KernelMock = vi.fn(() => mockKernel);
 
 const mockKernel = {
   boot: mockKernelBoot,
   getContainer: mockKernelGetContainer,
 };
 
-const mockGetKernel = jest.fn(() => mockKernel);
-const mockListen = jest.fn(async () => {});
+const mockGetKernel = vi.fn(() => mockKernel);
+const mockListen = vi.fn(async () => {});
 
 const mockApp = {
   getKernel: mockGetKernel,
   listen: mockListen,
 };
 
-const registerEventHandlers = jest.fn();
-const registerContainerInLifecycle = jest.fn(async (_kernel?: any, _lifecycle?: any) => {});
-const createHttpAdapter = jest.fn((_adapter?: any, _adapterInstance?: any) => ({
+const registerEventHandlers = vi.fn();
+const registerContainerInLifecycle = vi.fn(async (_kernel?: any, _lifecycle?: any) => {});
+const createHttpAdapter = vi.fn((_adapter?: any, _adapterInstance?: any) => ({
   type: "node-http",
-  registerRequestHandler: jest.fn(),
-  listen: jest.fn(async () => {}),
-  close: jest.fn(async () => {}),
+  registerRequestHandler: vi.fn(),
+  listen: vi.fn(async () => {}),
+  close: vi.fn(async () => {}),
 }));
 
-jest.mock("../src/server/application-lifecycle", () => ({
-  ApplicationLifeCycle: jest.fn(() => mockLifecycle),
+vi.mock("../src/server/application-lifecycle", () => ({
+  ApplicationLifeCycle: vi.fn(() => mockLifecycle),
 }));
 
-jest.mock("../src/kernel/kernel", () => ({
+vi.mock("../src/kernel/kernel", () => ({
   Kernel: function (...args: any[]) {
     return KernelMock.apply(null, args as any);
   },
 }));
 
-jest.mock("../src/kernel/kernellisteners", () => ({
-  KernelListeners: jest.fn(() => ({})),
+vi.mock("../src/kernel/kernellisteners", () => ({
+  KernelListeners: vi.fn(() => ({})),
 }));
 
-jest.mock("../src/server/registereventhandlers", () => ({
+vi.mock("../src/server/registereventhandlers", () => ({
   registerEventHandlers: (...args: any[]) => registerEventHandlers(...args),
 }));
 
-jest.mock("../src/http", () => ({
+vi.mock("../src/http", () => ({
   createHttpAdapter: (adapter: any, adapterInstance: any) =>
     createHttpAdapter(adapter, adapterInstance),
   registerContainerInLifecycle: (kernel: any, lifecycle: any) =>
     registerContainerInLifecycle(kernel, lifecycle),
-  XTaskHttpApplication: jest.fn(() => mockApp),
+  XTaskHttpApplication: vi.fn(() => mockApp),
 }));
 
 import { Bootstrap, CreateApplication } from "../src/bootstrap";
 
 describe("bootstrap", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should create application and return kernel from Bootstrap", async () => {

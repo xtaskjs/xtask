@@ -1,6 +1,7 @@
 import { GuardLike, RouteExecutionContext } from "@xtaskjs/common";
 import { HttpError } from "@xtaskjs/core";
 import { getThrottlerConfiguration } from "./configuration";
+import { getThrottlerLifecycleManager } from "./lifecycle";
 import { getThrottleMetadata } from "./metadata";
 import { ThrottleKeyContext } from "./types";
 
@@ -13,13 +14,7 @@ const buildKeyContext = (context: RouteExecutionContext): ThrottleKeyContext => 
 });
 
 const resolveService = (): any | undefined => {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const lifecycle = require("./lifecycle");
-    return lifecycle.getThrottlerLifecycleManager?.()?.getService?.();
-  } catch {
-    return undefined;
-  }
+  return getThrottlerLifecycleManager()?.getService?.();
 };
 
 export const throttlerGuard: GuardLike = {

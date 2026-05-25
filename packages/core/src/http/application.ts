@@ -158,6 +158,32 @@ type InternationalizationContextRunnerFn = <T>(
 type ThrottlerInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
 type ThrottlerShutdownFn = () => Promise<void>;
 
+type HttpIntegrationResolverOverrides = {
+  socketIoInitialize?: SocketIoInitializeFn;
+  socketIoShutdown?: SocketIoShutdownFn;
+  cqrsInitialize?: CqrsInitializeFn;
+  cqrsShutdown?: CqrsShutdownFn;
+  mailerInitialize?: MailerInitializeFn;
+  mailerShutdown?: MailerShutdownFn;
+  cacheInitialize?: CacheInitializeFn;
+  cacheShutdown?: CacheShutdownFn;
+  internationalizationInitialize?: InternationalizationInitializeFn;
+  internationalizationShutdown?: InternationalizationShutdownFn;
+  internationalizationContextRunner?: InternationalizationContextRunnerFn;
+};
+
+let httpIntegrationResolverOverrides: HttpIntegrationResolverOverrides | undefined;
+
+export const setHttpIntegrationResolverOverridesForTesting = (
+  overrides?: HttpIntegrationResolverOverrides
+): void => {
+  httpIntegrationResolverOverrides = overrides;
+};
+
+export const clearHttpIntegrationResolverOverridesForTesting = (): void => {
+  httpIntegrationResolverOverrides = undefined;
+};
+
 const resolveExpressAdapter = (): ExpressAdapterConstructor => {
   try {
     const expressHttpPackage = require("@xtaskjs/express-http") as {
@@ -307,6 +333,11 @@ const resolveSecurityShutdown = (): SecurityShutdownFn | undefined => {
 };
 
 const resolveMailerInitialize = (): MailerInitializeFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.mailerInitialize;
+  if (typeof override === "function") {
+    return override;
+  }
+
   if (!isPackageDeclaredInApplication("@xtaskjs/mailer")) {
     return undefined;
   }
@@ -333,6 +364,11 @@ const resolveMailerInitialize = (): MailerInitializeFn | undefined => {
 };
 
 const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.mailerShutdown;
+  if (typeof override === "function") {
+    return override;
+  }
+
   try {
     const mailerPackage = requireFromApplication<{
       shutdownMailerIntegration?: MailerShutdownFn;
@@ -355,6 +391,11 @@ const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
 };
 
 const resolveCacheInitialize = (): CacheInitializeFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.cacheInitialize;
+  if (typeof override === "function") {
+    return override;
+  }
+
   if (!isPackageDeclaredInApplication("@xtaskjs/cache")) {
     return undefined;
   }
@@ -381,6 +422,11 @@ const resolveCacheInitialize = (): CacheInitializeFn | undefined => {
 };
 
 const resolveCacheShutdown = (): CacheShutdownFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.cacheShutdown;
+  if (typeof override === "function") {
+    return override;
+  }
+
   try {
     const cachePackage = requireFromApplication<{
       shutdownCacheIntegration?: CacheShutdownFn;
@@ -499,6 +545,11 @@ const resolveQueueShutdown = (): QueueShutdownFn | undefined => {
 };
 
 const resolveSocketIoInitialize = (): SocketIoInitializeFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.socketIoInitialize;
+  if (typeof override === "function") {
+    return override;
+  }
+
   if (!isPackageDeclaredInApplication("@xtaskjs/socket-io")) {
     return undefined;
   }
@@ -525,6 +576,11 @@ const resolveSocketIoInitialize = (): SocketIoInitializeFn | undefined => {
 };
 
 const resolveSocketIoShutdown = (): SocketIoShutdownFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.socketIoShutdown;
+  if (typeof override === "function") {
+    return override;
+  }
+
   try {
     const socketIoPackage = requireFromApplication<{
       shutdownSocketIoIntegration?: SocketIoShutdownFn;
@@ -547,6 +603,11 @@ const resolveSocketIoShutdown = (): SocketIoShutdownFn | undefined => {
 };
 
 const resolveCqrsInitialize = (): CqrsInitializeFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.cqrsInitialize;
+  if (typeof override === "function") {
+    return override;
+  }
+
   if (!isPackageDeclaredInApplication("@xtaskjs/cqrs")) {
     return undefined;
   }
@@ -573,6 +634,11 @@ const resolveCqrsInitialize = (): CqrsInitializeFn | undefined => {
 };
 
 const resolveCqrsShutdown = (): CqrsShutdownFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.cqrsShutdown;
+  if (typeof override === "function") {
+    return override;
+  }
+
   try {
     const cqrsPackage = requireFromApplication<{
       shutdownCqrsIntegration?: CqrsShutdownFn;
@@ -643,6 +709,11 @@ const resolveEventSourceShutdown = (): EventSourceShutdownFn | undefined => {
 };
 
 const resolveInternationalizationInitialize = (): InternationalizationInitializeFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.internationalizationInitialize;
+  if (typeof override === "function") {
+    return override;
+  }
+
   if (!isPackageDeclaredInApplication("@xtaskjs/internationalization")) {
     return undefined;
   }
@@ -669,6 +740,11 @@ const resolveInternationalizationInitialize = (): InternationalizationInitialize
 };
 
 const resolveInternationalizationShutdown = (): InternationalizationShutdownFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.internationalizationShutdown;
+  if (typeof override === "function") {
+    return override;
+  }
+
   try {
     const internationalizationPackage = requireFromApplication<{
       shutdownInternationalizationIntegration?: InternationalizationShutdownFn;
@@ -691,6 +767,11 @@ const resolveInternationalizationShutdown = (): InternationalizationShutdownFn |
 };
 
 const resolveInternationalizationContextRunner = (): InternationalizationContextRunnerFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.internationalizationContextRunner;
+  if (typeof override === "function") {
+    return override;
+  }
+
   if (!isPackageDeclaredInApplication("@xtaskjs/internationalization")) {
     return undefined;
   }

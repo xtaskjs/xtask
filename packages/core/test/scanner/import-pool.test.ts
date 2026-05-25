@@ -26,7 +26,7 @@ describe("importFilesWithConcurrency", () => {
 
     it("normalizes invalid concurrency values to at least one", async () => {
         const files = ["a", "b", "c"];
-        const importer = jest.fn(async (file: string) => ({ value: file }));
+        const importer = vi.fn(async (file: string) => ({ value: file }));
 
         const loaded = await importFilesWithConcurrency(files, 0, importer);
 

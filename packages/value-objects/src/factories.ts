@@ -1,5 +1,7 @@
 import "reflect-metadata";
 
+import { Service } from "@xtaskjs/core";
+
 import { looksLikeJsonString, parseJsonValue, toPlainValue } from "./converters";
 import {
     ValueObjectFactory,
@@ -8,16 +10,6 @@ import {
 } from "./types";
 
 const FACTORY_TARGET_KEY = Symbol("xtaskjs:value-object-factory:target");
-
-const loadCoreModule = (): typeof import("@xtaskjs/core") => {
-    try {
-        return require("@xtaskjs/core") as typeof import("@xtaskjs/core");
-    } catch {
-        throw new Error(
-            "Value object factory decorators require @xtaskjs/core. Install it with: npm install @xtaskjs/core"
-        );
-    }
-};
 
 const instantiateValueObject = <TValueObject>(
     type: ValueObjectStaticFactory<TValueObject>,
@@ -160,8 +152,6 @@ export function ValueObjectFactoryFor<TValueObject>(
 ): ClassDecorator {
     return (target: any) => {
         Reflect.defineMetadata(FACTORY_TARGET_KEY, type, target);
-
-        const { Service } = loadCoreModule();
         Service({
             scope: options.scope || "singleton",
             name: options.name,
