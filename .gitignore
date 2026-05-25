@@ -93,3 +93,6 @@ packages/throttler/dist/
 packages/bots/dist/
 #Packages
 packages/*/*.tgz
+
+# Coverage
+packages/testing/coverage/*
