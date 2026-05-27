@@ -8,7 +8,7 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "test:packages": "turbo run test --filter='./packages/*'",
-    "test:samples": "turbo run test --filter='./samples/*'",
+    "test:samples": "node ./scripts/run-sample-tests.js",
     "test:watch": "turbo run test --filter='./packages/*' --concurrency=1 -- --watch",
     "test:coverage": "turbo run test:coverage",
     "coverage:open:core": "pnpm -C packages/core coverage:open",

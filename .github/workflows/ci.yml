@@ -32,5 +32,8 @@ jobs:
       - name: Test
         run: pnpm run test
 
+      - name: Test samples
+        run: pnpm run test:samples
+
       - name: Build
         run: pnpm run build
