@@ -1,13 +1,12 @@
-name: Publish Packages
+name: CI
 
 on:
-  push:
-    tags:
-      - "v*"
-  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  release:
+  verify:
     runs-on: ubuntu-latest
     env:
       BROWSER: none
@@ -20,7 +19,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: 'https://registry.npmjs.org/'
 
       - name: Use pnpm
         uses: pnpm/action-setup@v4
@@ -28,10 +26,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build all packages
-        run: pnpm run build
+      - name: Lint
+        run: pnpm run lint
 
-      - name: Publish packages
-        run: pnpm run publish:packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Test
+        run: pnpm run test
+
+      - name: Build
+        run: pnpm run build
