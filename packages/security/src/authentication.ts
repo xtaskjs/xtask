@@ -1,7 +1,8 @@
-import { RouteExecutionContext } from "@xtaskjs/common";
+import { type RouteExecutionContext } from "@xtaskjs/common";
 import { UnauthorizedError } from "@xtaskjs/core";
 import { getSecurityLifecycleManager } from "./lifecycle";
-import { SecurityAuthenticationResult } from "./types";
+import { type SecurityAuthenticationResult } from "./types";
+
 
 export class SecurityAuthenticationService {
   async authenticate(
