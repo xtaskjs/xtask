@@ -1,15 +1,15 @@
 import "reflect-metadata";
-import { ValidationPipe } from "@xtaskjs/common";
 import { ApplicationLifeCycle } from "./server/application-lifecycle";
 import { Kernel } from "./kernel/kernel";
 import { KernelListeners } from "./kernel/kernellisteners";
 import { registerEventHandlers } from "./server/registereventhandlers";
 import {
+    createGlobalValidationPipe,
     createHttpAdapter,
-    CreateApplicationOptions,
     registerContainerInLifecycle,
     XTaskHttpApplication,
 } from "./http";
+import type { CreateApplicationOptions } from "./http";
 
 export async function Bootstrap(): Promise<Kernel> {
     const app = await CreateApplication();
@@ -20,7 +20,7 @@ export async function CreateApplication(
     options: CreateApplicationOptions = {}
 ): Promise<XTaskHttpApplication> {
     const lifecycle = new ApplicationLifeCycle();
-    lifecycle.useGlobalPipes(new ValidationPipe());
+    lifecycle.useGlobalPipes(createGlobalValidationPipe());
     const containerOptions = options.logger
         ? {
             ...(options.container || {}),

@@ -57,6 +57,7 @@
 /src/packages/throttler/coverage
 /src/packages/bots/coverage
 /src/packages/test/coverage
+/src/packages/validation/coverage
 /packages/core/coverage
 /packages/common/coverage
 /packages/express-http/coverage
@@ -75,6 +76,7 @@
 /packages/throttler/coverage
 /packages/bots/coverage
 /packages/testing/coverage
+/packages/validation/coverage
 #Dist
 packages/common/dist/
 packages/core/dist/
@@ -94,6 +96,7 @@ packages/socket-io/dist/
 packages/throttler/dist/
 packages/bots/dist/
 packages/testing/dist/
+packages/validation/dist/
 #Packages
 packages/*/*.tgz
 

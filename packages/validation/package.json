@@ -1,0 +1,73 @@
+{
+  "name": "@xtaskjs/validation",
+  "version": "1.0.0",
+  "description": "Modern schema-based validation for xtaskjs with Zod or Valibot.",
+  "author": "Javier Rodríguez Soler",
+  "homepage": "https://xtaskjs.io",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/cjs/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc --outDir dist/cjs && node ../../scripts/postbuild-dual.mjs packages/validation",
+    "prepack": "pnpm build",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "coverage:open": "xdg-open coverage/lcov-report/index.html"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/xtaskjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtaskjs/xtask.git",
+    "directory": "packages/validation"
+  },
+  "bugs": {
+    "url": "https://github.com/xtaskjs/xtask/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@xtaskjs/common": "workspace:^",
+    "@xtaskjs/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.1.12 || ^0.2.0",
+    "valibot": "^1.1.0",
+    "zod": "^3.25.76"
+  },
+  "peerDependenciesMeta": {
+    "valibot": {
+      "optional": true
+    },
+    "zod": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^2.1.8",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2",
+    "valibot": "^1.1.0",
+    "vitest": "^2.1.8",
+    "zod": "^3.25.76"
+  },
+  "module": "dist/esm/index.js"
+}

@@ -50,6 +50,8 @@ export default defineConfig({
       { find: /@xtaskjs\/mailer\/(.*)/, replacement: fileURLToPath(new URL("../mailer/src/$1", import.meta.url)) },
       { find: "@xtaskjs/internationalization", replacement: fileURLToPath(new URL("../internationalization/src/index.ts", import.meta.url)) },
       { find: /@xtaskjs\/internationalization\/(.*)/, replacement: fileURLToPath(new URL("../internationalization/src/$1", import.meta.url)) },
+      { find: "@xtaskjs/validation", replacement: fileURLToPath(new URL("../validation/src/index.ts", import.meta.url)) },
+      { find: /@xtaskjs\/validation\/(.*)/, replacement: fileURLToPath(new URL("../validation/src/$1", import.meta.url)) },
     ],
   },
 });

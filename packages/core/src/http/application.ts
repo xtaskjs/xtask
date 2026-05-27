@@ -1,13 +1,15 @@
-import { HttpMethod } from "@xtaskjs/common";
+import { ValidationPipe } from "@xtaskjs/common";
+import type { HttpMethod } from "@xtaskjs/common";
 import type { LoggerOptions } from "@xtaskjs/common";
 import { createRequire } from "module";
 import { join } from "path";
-import { clearCurrentContainer, Container, ContainerOptions, setCurrentContainer } from "../di";
-import { Kernel } from "../kernel";
-import { ApplicationLifeCycle } from "../server";
+import { clearCurrentContainer, setCurrentContainer } from "../di";
+import type { Container, ContainerOptions } from "../di";
+import type { Kernel } from "../kernel";
+import type { ApplicationLifeCycle } from "../server";
 import { HttpError } from "./errors";
 import { NodeHttpAdapter } from "./node-http-adapter";
-import {
+import type {
   HttpAdapter,
   HttpAdapterType,
   HttpRequestLike,
@@ -157,6 +159,9 @@ type InternationalizationContextRunnerFn = <T>(
 ) => Promise<T>;
 type ThrottlerInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
 type ThrottlerShutdownFn = () => Promise<void>;
+type ValidationInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
+type ValidationShutdownFn = () => Promise<void>;
+type CreateDefaultValidationPipeFn = () => { transform: (value: unknown, context: unknown) => unknown | Promise<unknown> };
 
 type HttpIntegrationResolverOverrides = {
   socketIoInitialize?: SocketIoInitializeFn;
@@ -170,6 +175,9 @@ type HttpIntegrationResolverOverrides = {
   internationalizationInitialize?: InternationalizationInitializeFn;
   internationalizationShutdown?: InternationalizationShutdownFn;
   internationalizationContextRunner?: InternationalizationContextRunnerFn;
+  validationInitialize?: ValidationInitializeFn;
+  validationShutdown?: ValidationShutdownFn;
+  validationCreateGlobalPipe?: CreateDefaultValidationPipeFn;
 };
 
 let httpIntegrationResolverOverrides: HttpIntegrationResolverOverrides | undefined;
@@ -845,6 +853,105 @@ const resolveThrottlerShutdown = (): ThrottlerShutdownFn | undefined => {
   return undefined;
 };
 
+const resolveValidationInitialize = (): ValidationInitializeFn | undefined => {
+  if (httpIntegrationResolverOverrides?.validationInitialize) {
+    return httpIntegrationResolverOverrides.validationInitialize;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/validation")) {
+    return undefined;
+  }
+
+  try {
+    const validationPackage = requireFromApplication<{
+      initializeValidationIntegration?: ValidationInitializeFn;
+    }>("@xtaskjs/validation");
+
+    if (typeof validationPackage.initializeValidationIntegration === "function") {
+      return validationPackage.initializeValidationIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/validation");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveValidationShutdown = (): ValidationShutdownFn | undefined => {
+  if (httpIntegrationResolverOverrides?.validationShutdown) {
+    return httpIntegrationResolverOverrides.validationShutdown;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/validation")) {
+    return undefined;
+  }
+
+  try {
+    const validationPackage = requireFromApplication<{
+      shutdownValidationIntegration?: ValidationShutdownFn;
+    }>("@xtaskjs/validation");
+
+    if (typeof validationPackage.shutdownValidationIntegration === "function") {
+      return validationPackage.shutdownValidationIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/validation");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveDefaultValidationPipeFactory = (): CreateDefaultValidationPipeFn | undefined => {
+  if (httpIntegrationResolverOverrides?.validationCreateGlobalPipe) {
+    return httpIntegrationResolverOverrides.validationCreateGlobalPipe;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/validation")) {
+    return undefined;
+  }
+
+  try {
+    const validationPackage = requireFromApplication<{
+      createDefaultValidationPipe?: CreateDefaultValidationPipeFn;
+    }>("@xtaskjs/validation");
+
+    if (typeof validationPackage.createDefaultValidationPipe === "function") {
+      return validationPackage.createDefaultValidationPipe;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/validation");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+export const createGlobalValidationPipe = (): { transform: (value: unknown, context: unknown) => unknown | Promise<unknown> } => {
+  const createDefaultValidationPipe = resolveDefaultValidationPipeFactory();
+  if (createDefaultValidationPipe) {
+    return createDefaultValidationPipe();
+  }
+
+  return new ValidationPipe();
+};
+
 export class XTaskHttpApplication {
   private readonly adapter: HttpAdapter;
   private readonly lifecycle: ApplicationLifeCycle;
@@ -1051,6 +1158,11 @@ export class XTaskHttpApplication {
       await shutdownThrottlerIntegration();
     }
 
+    const shutdownValidationIntegration = resolveValidationShutdown();
+    if (shutdownValidationIntegration) {
+      await shutdownValidationIntegration();
+    }
+
     if (this.kernel && typeof (this.kernel as any).getContainer === "function") {
       const container = await (this.kernel as any).getContainer();
       if (container && typeof container.destroy === "function") {
@@ -1165,6 +1277,11 @@ export async function registerContainerInLifecycle(
   const initializeThrottlerIntegration = resolveThrottlerInitialize();
   if (initializeThrottlerIntegration) {
     await initializeThrottlerIntegration(container, lifecycle);
+  }
+
+  const initializeValidationIntegration = resolveValidationInitialize();
+  if (initializeValidationIntegration) {
+    await initializeValidationIntegration(container, lifecycle);
   }
 
   container.registerLifeCycleListeners(lifecycle);
