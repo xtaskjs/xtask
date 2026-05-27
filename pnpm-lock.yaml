@@ -694,11 +694,11 @@ importers:
   samples/01-new_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       express:
         specifier: ^5.1.0
         version: 5.2.1
@@ -725,8 +725,8 @@ importers:
         specifier: ^30.0.0
         version: 30.0.0
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       babel-jest:
         specifier: ^30.1.2
         version: 30.4.1(@babel/core@7.29.0)
@@ -752,14 +752,14 @@ importers:
   samples/02-express_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/express-http':
-        specifier: file:../../packages/express-http
-        version: file:packages/express-http(class-transformer@0.5.1)(class-validator@0.14.4)(express@5.2.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/express-http
       express:
         specifier: ^5.1.0
         version: 5.2.1
@@ -771,8 +771,8 @@ importers:
         specifier: ^5.0.3
         version: 5.0.6
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -786,14 +786,14 @@ importers:
   samples/03-fastify_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/fastify-http':
-        specifier: file:../../packages/fastify-http
-        version: file:packages/fastify-http(class-transformer@0.5.1)(class-validator@0.14.4)(fastify@5.8.5)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/fastify-http
       fastify:
         specifier: ^5.2.1
         version: 5.8.5
@@ -805,8 +805,8 @@ importers:
         specifier: ^30.0.0
         version: 30.0.0
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -820,17 +820,17 @@ importers:
   samples/04-typeorm_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/fastify-http':
-        specifier: file:../../packages/fastify-http
-        version: file:packages/fastify-http(class-transformer@0.5.1)(class-validator@0.14.4)(fastify@5.8.5)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/fastify-http
       '@xtaskjs/typeorm':
-        specifier: file:../../packages/typeorm
-        version: file:packages/typeorm(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/typeorm
       fastify:
         specifier: ^5.2.1
         version: 5.8.5
@@ -848,8 +848,8 @@ importers:
         specifier: ^30.0.0
         version: 30.0.0
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -863,14 +863,14 @@ importers:
   samples/06-security_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/security':
-        specifier: file:../../packages/security
-        version: file:packages/security(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/security
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.3
@@ -879,8 +879,8 @@ importers:
         version: 0.2.2
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -894,20 +894,20 @@ importers:
   samples/07-security_express_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/express-http':
-        specifier: file:../../packages/express-http
-        version: file:packages/express-http(class-transformer@0.5.1)(class-validator@0.14.4)(express@5.2.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/express-http
       '@xtaskjs/mailer':
-        specifier: file:../../packages/mailer
-        version: file:packages/mailer(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/mailer
       '@xtaskjs/security':
-        specifier: file:../../packages/security
-        version: file:packages/security(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/security
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -928,8 +928,8 @@ importers:
         specifier: ^5.0.3
         version: 5.0.6
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -943,17 +943,17 @@ importers:
   samples/08-email_express_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/express-http':
-        specifier: file:../../packages/express-http
-        version: file:packages/express-http(class-transformer@0.5.1)(class-validator@0.14.4)(express@5.2.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/express-http
       '@xtaskjs/mailer':
-        specifier: file:../../packages/mailer
-        version: file:packages/mailer(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/mailer
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -974,8 +974,8 @@ importers:
         specifier: ^5.0.3
         version: 5.0.6
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -989,21 +989,21 @@ importers:
   samples/09-internationalization_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/internationalization':
-        specifier: file:../../packages/internationalization
-        version: file:packages/internationalization(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/internationalization
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1017,17 +1017,17 @@ importers:
   samples/10-internationalization_express_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/express-http':
-        specifier: file:../../packages/express-http
-        version: file:packages/express-http(class-transformer@0.5.1)(class-validator@0.14.4)(express@5.2.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/express-http
       '@xtaskjs/internationalization':
-        specifier: file:../../packages/internationalization
-        version: file:packages/internationalization(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/internationalization
       express:
         specifier: ^5.1.0
         version: 5.2.1
@@ -1039,8 +1039,8 @@ importers:
         specifier: ^5.0.3
         version: 5.0.6
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1054,14 +1054,14 @@ importers:
   samples/11-scheduler_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/scheduler':
-        specifier: file:../../packages/scheduler
-        version: file:packages/scheduler(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/scheduler
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -1070,8 +1070,8 @@ importers:
         version: 27.0.2
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1085,14 +1085,14 @@ importers:
   samples/12-cache_app:
     dependencies:
       '@xtaskjs/cache':
-        specifier: file:../../packages/cache
-        version: file:packages/cache(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/cache
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -1101,8 +1101,8 @@ importers:
         version: 27.0.2
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1116,14 +1116,14 @@ importers:
   samples/13-cache_redis_app:
     dependencies:
       '@xtaskjs/cache':
-        specifier: file:../../packages/cache
-        version: file:packages/cache(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/cache
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       redis:
         specifier: ^4.7.0
         version: 4.7.1
@@ -1135,8 +1135,8 @@ importers:
         version: 27.0.2
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1150,17 +1150,17 @@ importers:
   samples/14-http_cache_web_app:
     dependencies:
       '@xtaskjs/cache':
-        specifier: file:../../packages/cache
-        version: file:packages/cache(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/cache
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/express-http':
-        specifier: file:../../packages/express-http
-        version: file:packages/express-http(class-transformer@0.5.1)(class-validator@0.14.4)(express@5.2.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/express-http
       express:
         specifier: ^5.1.0
         version: 5.2.1
@@ -1172,8 +1172,8 @@ importers:
         specifier: ^5.0.3
         version: 5.0.6
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1187,17 +1187,17 @@ importers:
   samples/15-fastify_http_cache_web_app:
     dependencies:
       '@xtaskjs/cache':
-        specifier: file:../../packages/cache
-        version: file:packages/cache(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/cache
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/fastify-http':
-        specifier: file:../../packages/fastify-http
-        version: file:packages/fastify-http(class-transformer@0.5.1)(class-validator@0.14.4)(fastify@5.8.5)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/fastify-http
       fastify:
         specifier: ^5.2.1
         version: 5.8.5
@@ -1206,8 +1206,8 @@ importers:
         version: 0.2.2
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1252,14 +1252,14 @@ importers:
   samples/17-queues_rabbitmq_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/queues':
-        specifier: file:../../packages/queues
-        version: file:packages/queues(amqplib@0.10.9)(mqtt@5.15.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/queues
       amqplib:
         specifier: ^0.10.9
         version: 0.10.9
@@ -1271,8 +1271,8 @@ importers:
         version: 27.0.2
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1286,14 +1286,14 @@ importers:
   samples/18-value_objects_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/value-objects':
-        specifier: file:../../packages/value-objects
-        version: file:packages/value-objects(class-transformer@0.5.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/value-objects
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -1308,8 +1308,8 @@ importers:
         version: 27.0.2
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1323,17 +1323,17 @@ importers:
   samples/19-cqrs_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/cqrs':
-        specifier: file:../../packages/cqrs
-        version: file:packages/cqrs(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/cqrs
       '@xtaskjs/typeorm':
-        specifier: file:../../packages/typeorm
-        version: file:packages/typeorm(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/typeorm
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -1351,8 +1351,8 @@ importers:
         version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1366,17 +1366,17 @@ importers:
   samples/20-cqrs_postgres_replication_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/cqrs':
-        specifier: file:../../packages/cqrs
-        version: file:packages/cqrs(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/cqrs
       '@xtaskjs/typeorm':
-        specifier: file:../../packages/typeorm
-        version: file:packages/typeorm(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/typeorm
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -1394,8 +1394,8 @@ importers:
         version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1409,20 +1409,20 @@ importers:
   samples/21-event_source_rabbitmq_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/event-source':
-        specifier: file:../../packages/event-source
-        version: file:packages/event-source(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/event-source
       '@xtaskjs/queues':
-        specifier: file:../../packages/queues
-        version: file:packages/queues(amqplib@0.10.9)(mqtt@5.15.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/queues
       '@xtaskjs/typeorm':
-        specifier: file:../../packages/typeorm
-        version: file:packages/typeorm(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/typeorm
       amqplib:
         specifier: ^0.10.9
         version: 0.10.9
@@ -1446,8 +1446,8 @@ importers:
         version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1461,20 +1461,20 @@ importers:
   samples/22-event_source_cqrs_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/cqrs':
-        specifier: file:../../packages/cqrs
-        version: file:packages/cqrs(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/cqrs
       '@xtaskjs/event-source':
-        specifier: file:../../packages/event-source
-        version: file:packages/event-source(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/event-source
       '@xtaskjs/typeorm':
-        specifier: file:../../packages/typeorm
-        version: file:packages/typeorm(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))
+        specifier: workspace:*
+        version: link:../../packages/typeorm
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -1495,8 +1495,8 @@ importers:
         version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1510,17 +1510,17 @@ importers:
   samples/23-socket_io_express_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/express-http':
-        specifier: file:../../packages/express-http
-        version: file:packages/express-http(class-transformer@0.5.1)(class-validator@0.14.4)(express@5.2.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/express-http
       '@xtaskjs/socket-io':
-        specifier: file:../../packages/socket-io
-        version: file:packages/socket-io(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/socket-io
       express:
         specifier: ^5.1.0
         version: 5.2.1
@@ -1532,8 +1532,8 @@ importers:
         specifier: ^5.0.3
         version: 5.0.6
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1547,21 +1547,21 @@ importers:
   samples/24-throttler_app:
     dependencies:
       '@xtaskjs/common':
-        specifier: file:../../packages/common
+        specifier: workspace:*
         version: link:../../packages/common
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/throttler':
-        specifier: file:../../packages/throttler
-        version: file:packages/throttler(redis@4.7.1)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/throttler
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
     devDependencies:
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -1575,11 +1575,11 @@ importers:
   samples/25-testing_app:
     dependencies:
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@xtaskjs/testing':
-        specifier: file:../../packages/testing
-        version: file:packages/testing(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/testing
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -1600,11 +1600,11 @@ importers:
   samples/26-bots_app:
     dependencies:
       '@xtaskjs/bots':
-        specifier: file:../../packages/bots
-        version: file:packages/bots(@slack/bolt@4.7.2(@types/express@5.0.6))(@whiskeysockets/baileys@6.7.23(sharp@0.34.5))(reflect-metadata@0.2.2)(telegraf@4.16.3(encoding@0.1.13))
+        specifier: workspace:*
+        version: link:../../packages/bots
       '@xtaskjs/core':
-        specifier: file:../../packages/core
-        version: file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../packages/core
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -3497,142 +3497,6 @@ packages:
       jimp:
         optional: true
       link-preview-js:
-        optional: true
-
-  '@xtaskjs/bots@file:packages/bots':
-    resolution: {directory: packages/bots, type: directory}
-    peerDependencies:
-      '@slack/bolt': ^4.4.0
-      '@whiskeysockets/baileys': ^6.7.9
-      reflect-metadata: ^0.1.12 || ^0.2.0
-      telegraf: ^4.16.3
-    peerDependenciesMeta:
-      '@slack/bolt':
-        optional: true
-      '@whiskeysockets/baileys':
-        optional: true
-      telegraf:
-        optional: true
-
-  '@xtaskjs/cache@file:packages/cache':
-    resolution: {directory: packages/cache, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-
-  '@xtaskjs/core@file:packages/core':
-    resolution: {directory: packages/core, type: directory}
-    peerDependencies:
-      class-transformer: '*'
-      class-validator: '*'
-      reflect-metadata: ^0.1.12 || ^0.2.0
-    peerDependenciesMeta:
-      class-transformer:
-        optional: true
-      class-validator:
-        optional: true
-
-  '@xtaskjs/cqrs@file:packages/cqrs':
-    resolution: {directory: packages/cqrs, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-      typeorm: ^0.3.0
-
-  '@xtaskjs/event-source@file:packages/event-source':
-    resolution: {directory: packages/event-source, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-      typeorm: ^0.3.0
-
-  '@xtaskjs/express-http@file:packages/express-http':
-    resolution: {directory: packages/express-http, type: directory}
-    peerDependencies:
-      class-transformer: '*'
-      class-validator: '*'
-      express: ^4.18.0 || ^5.0.0
-      reflect-metadata: ^0.1.12 || ^0.2.0
-    peerDependenciesMeta:
-      class-transformer:
-        optional: true
-      class-validator:
-        optional: true
-
-  '@xtaskjs/fastify-http@file:packages/fastify-http':
-    resolution: {directory: packages/fastify-http, type: directory}
-    peerDependencies:
-      class-transformer: '*'
-      class-validator: '*'
-      fastify: ^4.0.0 || ^5.0.0
-      reflect-metadata: ^0.1.12 || ^0.2.0
-    peerDependenciesMeta:
-      class-transformer:
-        optional: true
-      class-validator:
-        optional: true
-
-  '@xtaskjs/internationalization@file:packages/internationalization':
-    resolution: {directory: packages/internationalization, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-
-  '@xtaskjs/mailer@file:packages/mailer':
-    resolution: {directory: packages/mailer, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-
-  '@xtaskjs/queues@file:packages/queues':
-    resolution: {directory: packages/queues, type: directory}
-    peerDependencies:
-      amqplib: ^0.10.8
-      mqtt: ^5.14.1
-      reflect-metadata: ^0.1.12 || ^0.2.0
-    peerDependenciesMeta:
-      amqplib:
-        optional: true
-      mqtt:
-        optional: true
-
-  '@xtaskjs/scheduler@file:packages/scheduler':
-    resolution: {directory: packages/scheduler, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-
-  '@xtaskjs/security@file:packages/security':
-    resolution: {directory: packages/security, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-
-  '@xtaskjs/socket-io@file:packages/socket-io':
-    resolution: {directory: packages/socket-io, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-
-  '@xtaskjs/testing@file:packages/testing':
-    resolution: {directory: packages/testing, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-
-  '@xtaskjs/throttler@file:packages/throttler':
-    resolution: {directory: packages/throttler, type: directory}
-    peerDependencies:
-      redis: '*'
-      reflect-metadata: ^0.1.12 || ^0.2.0
-    peerDependenciesMeta:
-      redis:
-        optional: true
-
-  '@xtaskjs/typeorm@file:packages/typeorm':
-    resolution: {directory: packages/typeorm, type: directory}
-    peerDependencies:
-      reflect-metadata: ^0.1.12 || ^0.2.0
-      typeorm: ^0.3.0
-
-  '@xtaskjs/value-objects@file:packages/value-objects':
-    resolution: {directory: packages/value-objects, type: directory}
-    peerDependencies:
-      class-transformer: ^0.5.1
-      reflect-metadata: ^0.1.12 || ^0.2.0
-    peerDependenciesMeta:
-      class-transformer:
         optional: true
 
   abbrev@1.1.1:
@@ -8502,136 +8366,6 @@ snapshots:
       - debug
       - supports-color
       - utf-8-validate
-
-  '@xtaskjs/bots@file:packages/bots(@slack/bolt@4.7.2(@types/express@5.0.6))(@whiskeysockets/baileys@6.7.23(sharp@0.34.5))(reflect-metadata@0.2.2)(telegraf@4.16.3(encoding@0.1.13))':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      reflect-metadata: 0.2.2
-    optionalDependencies:
-      '@slack/bolt': 4.7.2(@types/express@5.0.6)
-      '@whiskeysockets/baileys': 6.7.23(sharp@0.34.5)
-      telegraf: 4.16.3(encoding@0.1.13)
-
-  '@xtaskjs/cache@file:packages/cache(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/common': link:packages/common
-      '@xtaskjs/core': link:packages/core
-      redis: 4.7.1
-      reflect-metadata: 0.2.2
-
-  '@xtaskjs/core@file:packages/core(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/common': link:packages/common
-      reflect-metadata: 0.2.2
-    optionalDependencies:
-      class-transformer: 0.5.1
-      class-validator: 0.14.4
-
-  '@xtaskjs/cqrs@file:packages/cqrs(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      '@xtaskjs/typeorm': link:packages/typeorm
-      reflect-metadata: 0.2.2
-      typeorm: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
-
-  '@xtaskjs/event-source@file:packages/event-source(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      '@xtaskjs/queues': link:packages/queues
-      '@xtaskjs/typeorm': link:packages/typeorm
-      reflect-metadata: 0.2.2
-      typeorm: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
-
-  '@xtaskjs/express-http@file:packages/express-http(class-transformer@0.5.1)(class-validator@0.14.4)(express@5.2.1)(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/common': link:packages/common
-      express: 5.2.1
-      reflect-metadata: 0.2.2
-    optionalDependencies:
-      class-transformer: 0.5.1
-      class-validator: 0.14.4
-
-  '@xtaskjs/fastify-http@file:packages/fastify-http(class-transformer@0.5.1)(class-validator@0.14.4)(fastify@5.8.5)(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/common': link:packages/common
-      fastify: 5.8.5
-      reflect-metadata: 0.2.2
-    optionalDependencies:
-      class-transformer: 0.5.1
-      class-validator: 0.14.4
-
-  '@xtaskjs/internationalization@file:packages/internationalization(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      reflect-metadata: 0.2.2
-
-  '@xtaskjs/mailer@file:packages/mailer(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      ejs: 3.1.10
-      handlebars: 4.7.9
-      nodemailer: 6.10.1
-      reflect-metadata: 0.2.2
-
-  '@xtaskjs/queues@file:packages/queues(amqplib@0.10.9)(mqtt@5.15.1)(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      reflect-metadata: 0.2.2
-    optionalDependencies:
-      amqplib: 0.10.9
-      mqtt: 5.15.1
-
-  '@xtaskjs/scheduler@file:packages/scheduler(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      node-cron: 4.2.1
-      reflect-metadata: 0.2.2
-
-  '@xtaskjs/security@file:packages/security(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/common': link:packages/common
-      '@xtaskjs/core': link:packages/core
-      passport: 0.7.0
-      passport-jwt: 4.0.1
-      passport-strategy: 1.0.0
-      reflect-metadata: 0.2.2
-
-  '@xtaskjs/socket-io@file:packages/socket-io(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      reflect-metadata: 0.2.2
-      socket.io: 4.8.3
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
-  '@xtaskjs/testing@file:packages/testing(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      reflect-metadata: 0.2.2
-
-  '@xtaskjs/throttler@file:packages/throttler(redis@4.7.1)(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/common': link:packages/common
-      '@xtaskjs/core': link:packages/core
-      reflect-metadata: 0.2.2
-    optionalDependencies:
-      redis: 4.7.1
-
-  '@xtaskjs/typeorm@file:packages/typeorm(reflect-metadata@0.2.2)(typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)))':
-    dependencies:
-      '@xtaskjs/common': link:packages/common
-      '@xtaskjs/core': link:packages/core
-      reflect-metadata: 0.2.2
-      typeorm: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
-
-  '@xtaskjs/value-objects@file:packages/value-objects(class-transformer@0.5.1)(reflect-metadata@0.2.2)':
-    dependencies:
-      '@xtaskjs/core': link:packages/core
-      reflect-metadata: 0.2.2
-    optionalDependencies:
-      class-transformer: 0.5.1
 
   abbrev@1.1.1:
     optional: true

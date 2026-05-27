@@ -2,7 +2,9 @@ import "reflect-metadata";
 import { createCipheriv, randomBytes } from "crypto";
 import { describe, beforeEach, afterEach, expect, test } from "vitest";
 import { Controller, Get } from "@xtaskjs/common";
-import { ApplicationLifeCycle, Container, registerControllerRoutes } from "@xtaskjs/core";
+import { Container } from "@xtaskjs/core";
+import { ApplicationLifeCycle } from "../../core/src/server/application-lifecycle.ts";
+import { registerControllerRoutes } from "../../core/src/server/registercontrollers.ts";
 import {
   AllowAnonymous,
   Authenticated,
@@ -49,6 +51,57 @@ const createDirA256GcmJwe = (payload: Record<string, any>, key: Uint8Array): str
     encodeBase64Url(tag),
   ].join(".");
 };
+
+@Controller("secure")
+class SecureController {
+  @Get("/profile")
+  @Authenticated()
+  @Roles("admin")
+  profile(req: any) {
+    return {
+      sub: req.user.sub,
+      roles: req.auth.roles,
+    };
+  }
+
+  @Get("/health")
+  @AllowAnonymous()
+  health() {
+    return { ok: true };
+  }
+}
+
+@Controller("docs")
+class DocsController {
+  @Get("/me")
+  @Authenticated("lookup")
+  @Roles("editor")
+  me(req: any) {
+    return {
+      user: req.user.sub,
+      tenant: req.user.claims.tenant,
+    };
+  }
+}
+
+@Controller("reports")
+class ReportsController {
+  @Get("/admin")
+  @Auth("encrypted")
+  @Roles({ roles: ["admin"], mode: "all" })
+  admin(req: any) {
+    return { user: req.user.sub };
+  }
+}
+
+@Controller("users")
+class UsersController {
+  @Get("/me")
+  @Authenticated()
+  me() {
+    return { ok: true };
+  }
+}
 
 describe("@xtaskjs/security integration", () => {
   beforeEach(async () => {
@@ -122,25 +175,6 @@ describe("@xtaskjs/security integration", () => {
     expect(injected.authentication).toBeInstanceOf(SecurityAuthenticationService);
     expect(byName).toBeInstanceOf(SecurityAuthenticationService);
 
-    @Controller("secure")
-    class SecureController {
-      @Get("/profile")
-      @Authenticated()
-      @Roles("admin")
-      profile(req: any) {
-        return {
-          sub: req.user.sub,
-          roles: req.auth.roles,
-        };
-      }
-
-      @Get("/health")
-      @AllowAnonymous()
-      health() {
-        return { ok: true };
-      }
-    }
-
     const token = jsonwebtoken.sign(
       { sub: "alice", tenant: "xtaskjs", roles: ["admin"] },
       Buffer.from(jwtSecret),
@@ -209,19 +243,6 @@ describe("@xtaskjs/security integration", () => {
     container.register(AccountService, { scope: "singleton" });
     await initializeSecurityIntegration(container);
 
-    @Controller("docs")
-    class DocsController {
-      @Get("/me")
-      @Authenticated("lookup")
-      @Roles("editor")
-      me(req: any) {
-        return {
-          user: req.user.sub,
-          tenant: req.user.claims.tenant,
-        };
-      }
-    }
-
     const validToken = jsonwebtoken.sign(
       { sub: "sarah", tenant: "docs" },
       Buffer.from(jwtSecret),
@@ -264,16 +285,6 @@ describe("@xtaskjs/security integration", () => {
 
     await initializeSecurityIntegration();
 
-    @Controller("reports")
-    class ReportsController {
-      @Get("/admin")
-      @Auth("encrypted")
-      @Roles({ roles: ["admin"], mode: "all" })
-      admin(req: any) {
-        return { user: req.user.sub };
-      }
-    }
-
     const token = createDirA256GcmJwe(
       {
         sub: "bob",
@@ -305,15 +316,6 @@ describe("@xtaskjs/security integration", () => {
     });
 
     await initializeSecurityIntegration();
-
-    @Controller("users")
-    class UsersController {
-      @Get("/me")
-      @Authenticated()
-      me() {
-        return { ok: true };
-      }
-    }
 
     const lifecycle = new ApplicationLifeCycle();
     registerControllerRoutes(new UsersController(), lifecycle);

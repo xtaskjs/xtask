@@ -6,7 +6,6 @@
   "scripts": {
     "prestart": "npm run build --prefix ../../packages/queues",
     "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
-    "prebuild": "npm run build --prefix ../../packages/queues",
     "build": "npm run clean; tsc",
     "clean": "rm -rf dist",
     "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts",

@@ -17,6 +17,8 @@ type CustomerPreferencesValue = {
 };
 
 export class EmailAddress extends StringValueObject {
+  private readonly normalizedValue: string;
+
   constructor(value: string) {
     const normalized = value.trim().toLowerCase();
 
@@ -25,10 +27,29 @@ export class EmailAddress extends StringValueObject {
     }
 
     super(normalized);
+    this.normalizedValue = normalized;
+  }
+
+  static fromString(value: string) {
+    return new EmailAddress(value);
+  }
+
+  toString() {
+    return this.normalizedValue;
+  }
+
+  toJSON() {
+    return this.normalizedValue;
+  }
+
+  equals(other: EmailAddress) {
+    return this.toString() === other.toString();
   }
 }
 
 export class DisplayName extends StringValueObject {
+  private readonly normalizedValue: string;
+
   constructor(value: string) {
     const normalized = value.trim().replace(/\s+/g, " ");
 
@@ -37,20 +58,48 @@ export class DisplayName extends StringValueObject {
     }
 
     super(normalized);
+    this.normalizedValue = normalized;
+  }
+
+  toString() {
+    return this.normalizedValue;
+  }
+
+  toJSON() {
+    return this.normalizedValue;
   }
 }
 
 export class BudgetAmount extends NumberValueObject {
+  private readonly amount: number;
+
   constructor(value: number) {
     if (!Number.isFinite(value) || value < 0) {
       throw new Error("BudgetAmount must be a finite positive number");
     }
 
-    super(Number(value.toFixed(2)));
+    const normalized = Number(value.toFixed(2));
+
+    super(normalized);
+    this.amount = normalized;
+  }
+
+  static fromString(value: string) {
+    return new BudgetAmount(Number(value));
+  }
+
+  toNumber() {
+    return this.amount;
+  }
+
+  toJSON() {
+    return this.amount;
   }
 }
 
 export class CustomerPreferences extends JsonValueObject<CustomerPreferencesValue> {
+  private readonly normalizedValue: CustomerPreferencesValue;
+
   constructor(value: CustomerPreferencesValue) {
     const locale = typeof value?.locale === "string" ? value.locale.trim().toLowerCase() : "";
 
@@ -58,19 +107,80 @@ export class CustomerPreferences extends JsonValueObject<CustomerPreferencesValu
       throw new Error("CustomerPreferences.locale is required");
     }
 
-    super({
+    const normalized = {
       locale,
       marketing: Boolean(value?.marketing),
-    });
+    };
+
+    super(normalized);
+    this.normalizedValue = normalized;
+  }
+
+  static fromJSON(value: string) {
+    return new CustomerPreferences(JSON.parse(value) as CustomerPreferencesValue);
+  }
+
+  toPlain() {
+    return this.normalizedValue;
+  }
+
+  toJSON() {
+    return this.normalizedValue;
   }
 }
 
-export class CustomerId extends BigIntValueObject {}
+export class CustomerId extends BigIntValueObject {
+  private readonly currentId: bigint;
 
-export class SignupDate extends DateValueObject {}
+  constructor(value: bigint) {
+    super(value);
+    this.currentId = value;
+  }
+
+  toJSON() {
+    return this.currentId.toString();
+  }
+
+  toString() {
+    return this.toJSON();
+  }
+}
+
+export class SignupDate extends DateValueObject {
+  private readonly currentDate: Date;
+
+  constructor(value: Date) {
+    super(value);
+    this.currentDate = new Date(value.getTime());
+  }
+
+  static fromString(value: string) {
+    return new SignupDate(new Date(value));
+  }
+
+  static fromDate(value: Date) {
+    return new SignupDate(value);
+  }
+
+  toJSON() {
+    return this.currentDate.toISOString();
+  }
+
+  toString() {
+    return this.toJSON();
+  }
+
+  toNumber() {
+    return this.currentDate.getTime();
+  }
+}
 
 @ValueObjectFactoryFor(CustomerId)
-export class CustomerIdFactory extends InjectableValueObjectFactory<CustomerId> {}
+export class CustomerIdFactory extends InjectableValueObjectFactory<CustomerId> {
+  fromBigInt(value: bigint) {
+    return new CustomerId(value);
+  }
+}
 
 export interface CreateCustomerInput {
   email: EmailAddress;

@@ -9,15 +9,32 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
-      "@xtaskjs/common": ["../common/dist"],
-      "@xtaskjs/common/*": ["../common/dist/*"],
-      "@xtaskjs/core": ["../core/dist"],
-      "@xtaskjs/core/*": ["../core/dist/*"],
-      "@xtaskjs/typeorm": ["../typeorm/dist"],
-      "@xtaskjs/typeorm/*": ["../typeorm/dist/*"]
+      "@xtaskjs/common": [
+        "../common/dist/cjs"
+      ],
+      "@xtaskjs/common/*": [
+        "../common/dist/cjs/*"
+      ],
+      "@xtaskjs/core": [
+        "../core/dist/cjs"
+      ],
+      "@xtaskjs/core/*": [
+        "../core/dist/cjs/*"
+      ],
+      "@xtaskjs/typeorm": [
+        "../typeorm/dist/cjs"
+      ],
+      "@xtaskjs/typeorm/*": [
+        "../typeorm/dist/cjs/*"
+      ]
     },
     "declaration": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/core": "file:../../packages/core",
-    "@xtaskjs/testing": "file:../../packages/testing",
+    "@xtaskjs/core": "workspace:*",
+    "@xtaskjs/testing": "workspace:*",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

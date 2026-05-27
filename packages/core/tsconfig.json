@@ -8,16 +8,33 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
-    "paths":{
-      "@xtaskjs/common": ["../common/dist"],
-      "@xtaskjs/common/*": ["../common/dist/*"],
-      "@xtaskjs/express-http": ["../express-http/src"],
-      "@xtaskjs/express-http/*": ["../express-http/src/*"],
-      "@xtaskjs/fastify-http": ["../fastify-http/src"],
-      "@xtaskjs/fastify-http/*": ["../fastify-http/src/*"]
+    "paths": {
+      "@xtaskjs/common": [
+        "../common/dist/cjs"
+      ],
+      "@xtaskjs/common/*": [
+        "../common/dist/cjs/*"
+      ],
+      "@xtaskjs/express-http": [
+        "../express-http/src"
+      ],
+      "@xtaskjs/express-http/*": [
+        "../express-http/src/*"
+      ],
+      "@xtaskjs/fastify-http": [
+        "../fastify-http/src"
+      ],
+      "@xtaskjs/fastify-http/*": [
+        "../fastify-http/src/*"
+      ]
     },
     "declaration": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

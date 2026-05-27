@@ -6,7 +6,6 @@
   "scripts": {
     "prestart": "npm run build --prefix ../../packages/core && npm run build --prefix ../../packages/bots",
     "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
-    "prebuild": "npm run build --prefix ../../packages/core && npm run build --prefix ../../packages/bots",
     "build": "npm run clean; tsc",
     "clean": "rm -rf dist",
     "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts",
@@ -15,8 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/bots": "file:../../packages/bots",
-    "@xtaskjs/core": "file:../../packages/core",
+    "@xtaskjs/bots": "workspace:*",
+    "@xtaskjs/core": "workspace:*",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

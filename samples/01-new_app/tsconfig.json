@@ -9,10 +9,19 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@xtaskjs/testing": ["../../packages/testing/src/index.ts"],
-      "@xtaskjs/testing/*": ["../../packages/testing/src/*"]
+      "@xtaskjs/testing": [
+        "../../packages/testing/dist/cjs/index.js"
+      ],
+      "@xtaskjs/testing/*": [
+        "../../packages/testing/dist/cjs/*"
+      ]
     }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

@@ -366,6 +366,15 @@ export class InternationalizationLifecycleManager {
       anyContainer.registerNamedInstance(getInternationalizationLifecycleToken(), this);
     }
 
+    // Fallback for environments that lose constructor qualifier metadata.
+    // Bind the singleton lifecycle manager by type as well.
+    if (anyContainer.providers instanceof Map) {
+      anyContainer.providers.set(InternationalizationLifecycleManager, () => this);
+    }
+    if (anyContainer.singletons instanceof Map) {
+      anyContainer.singletons.set(InternationalizationLifecycleManager, this);
+    }
+
     if (typeof anyContainer.registerWithName === "function") {
       anyContainer.registerWithName(
         InternationalizationService,

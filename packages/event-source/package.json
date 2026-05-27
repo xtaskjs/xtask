@@ -4,13 +4,14 @@
   "description": "Event sourcing integration for xtaskjs with aggregate repositories, lifecycle wiring, and optional TypeORM and queue adapters.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/cjs/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
     }
   },
   "files": [
@@ -19,7 +20,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc --outDir dist/cjs && node ../../scripts/postbuild-dual.mjs packages/event-source",
     "prepack": "pnpm build",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage",
@@ -59,5 +60,6 @@
     "typescript": "^5.9.2",
     "vitest": "^2.1.8",
     "@vitest/coverage-v8": "^2.1.8"
-  }
+  },
+  "module": "dist/esm/index.js"
 }

@@ -13,11 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/common": "file:../../packages/common",
-    "@xtaskjs/core": "file:../../packages/core",
-    "@xtaskjs/express-http": "file:../../packages/express-http",
-    "@xtaskjs/mailer": "file:../../packages/mailer",
-    "@xtaskjs/security": "file:../../packages/security",
+    "@xtaskjs/common": "workspace:*",
+    "@xtaskjs/core": "workspace:*",
+    "@xtaskjs/express-http": "workspace:*",
+    "@xtaskjs/mailer": "workspace:*",
+    "@xtaskjs/security": "workspace:*",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "express": "^5.1.0",
@@ -29,6 +29,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
-    "@xtaskjs/testing": "file:../../packages/testing"
+    "@xtaskjs/testing": "workspace:*"
   }
 }

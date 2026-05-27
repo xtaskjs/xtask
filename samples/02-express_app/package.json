@@ -13,9 +13,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/common": "file:../../packages/common",
-    "@xtaskjs/core": "file:../../packages/core",
-    "@xtaskjs/express-http": "file:../../packages/express-http",
+    "@xtaskjs/common": "workspace:*",
+    "@xtaskjs/core": "workspace:*",
+    "@xtaskjs/express-http": "workspace:*",
     "express": "^5.1.0",
     "reflect-metadata": "^0.2.2"
   },
@@ -24,6 +24,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
-    "@xtaskjs/testing": "file:../../packages/testing"
+    "@xtaskjs/testing": "workspace:*"
   }
 }

@@ -10,22 +10,22 @@
     "baseUrl": "./",
     "paths": {
       "@xtaskjs/common": [
-        "../../packages/common/src/index.ts"
+        "../../packages/common/dist/cjs/index.js"
       ],
       "@xtaskjs/core": [
-        "../../packages/core/src/index.ts"
+        "../../packages/core/dist/cjs/index.js"
       ],
       "@xtaskjs/fastify-http": [
-        "../../packages/fastify-http/src/index.ts"
+        "../../packages/fastify-http/dist/cjs/index.js"
       ],
       "@xtaskjs/typeorm": [
-        "../../packages/typeorm/src/index.ts"
+        "../../packages/typeorm/dist/cjs/index.js"
       ],
       "@xtaskjs/testing": [
-        "../../packages/testing/src/index.ts"
+        "../../packages/testing/dist/cjs/index.js"
       ],
       "@xtaskjs/testing/*": [
-        "../../packages/testing/src/*"
+        "../../packages/testing/dist/cjs/*"
       ]
     }
   },

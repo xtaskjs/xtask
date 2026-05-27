@@ -8,12 +8,21 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
-    "paths":{
-      "@xtaskjs/common": ["../common/dist"],
-      "@xtaskjs/common/*": ["../common/dist/*"]
+    "paths": {
+      "@xtaskjs/common": [
+        "../common/dist/cjs"
+      ],
+      "@xtaskjs/common/*": [
+        "../common/dist/cjs/*"
+      ]
     },
     "declaration": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

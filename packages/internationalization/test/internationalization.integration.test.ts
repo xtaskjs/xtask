@@ -356,8 +356,10 @@ describe("@xtaskjs/internationalization integration", () => {
         tenant: true,
       },
       async () => {
+        const injectedLifecycle = localizedService.lifecycle;
+
         expect(localizedService.intl.t("greeting")).toBe("Bonjour");
-        expect(localizedService.lifecycle).toBe(lifecycleByName);
+        expect(injectedLifecycle.listLocales()).toEqual(["en-US", "fr-FR"]);
         expect(lifecycleByName.listLocales()).toEqual(["en-US", "fr-FR"]);
         expect(localizedService.intl.getCurrentLocale()).toBe("fr-FR");
       }

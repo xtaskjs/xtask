@@ -13,15 +13,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/common": "file:../../packages/common",
-    "@xtaskjs/core": "file:../../packages/core",
-    "@xtaskjs/internationalization": "file:../../packages/internationalization",
+    "@xtaskjs/common": "workspace:*",
+    "@xtaskjs/core": "workspace:*",
+    "@xtaskjs/internationalization": "workspace:*",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
-    "@xtaskjs/testing": "file:../../packages/testing"
+    "@xtaskjs/testing": "workspace:*"
   }
 }

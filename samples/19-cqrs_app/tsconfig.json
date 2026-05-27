@@ -10,34 +10,34 @@
     "baseUrl": "./",
     "paths": {
       "@xtaskjs/common": [
-        "../../packages/common/src/index.ts"
+        "../../packages/common/dist/cjs/index.js"
       ],
       "@xtaskjs/common/*": [
-        "../../packages/common/src/*"
+        "../../packages/common/dist/cjs/*"
       ],
       "@xtaskjs/core": [
-        "../../packages/core/src/index.ts"
+        "../../packages/core/dist/cjs/index.js"
       ],
       "@xtaskjs/core/*": [
-        "../../packages/core/src/*"
+        "../../packages/core/dist/cjs/*"
       ],
       "@xtaskjs/cqrs": [
-        "../../packages/cqrs/src/index.ts"
+        "../../packages/cqrs/dist/cjs/index.js"
       ],
       "@xtaskjs/cqrs/*": [
-        "../../packages/cqrs/src/*"
+        "../../packages/cqrs/dist/cjs/*"
       ],
       "@xtaskjs/typeorm": [
-        "../../packages/typeorm/src/index.ts"
+        "../../packages/typeorm/dist/cjs/index.js"
       ],
       "@xtaskjs/typeorm/*": [
-        "../../packages/typeorm/src/*"
+        "../../packages/typeorm/dist/cjs/*"
       ],
       "@xtaskjs/testing": [
-        "../../packages/testing/src/index.ts"
+        "../../packages/testing/dist/cjs/index.js"
       ],
       "@xtaskjs/testing/*": [
-        "../../packages/testing/src/*"
+        "../../packages/testing/dist/cjs/*"
       ]
     }
   },

@@ -10,7 +10,7 @@
     "baseUrl": "./",
     "paths": {
       "@xtaskjs/*": [
-        "../../packages/*/src/index.ts",
+        "../../packages/*/dist/cjs/index.js",
         "../../packages/*/src"
       ]
     }

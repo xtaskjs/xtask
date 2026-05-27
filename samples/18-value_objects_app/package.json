@@ -6,7 +6,6 @@
   "scripts": {
     "prestart": "npm run build --prefix ../../packages/value-objects",
     "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
-    "prebuild": "npm run build --prefix ../../packages/value-objects",
     "build": "npm run clean; tsc",
     "clean": "rm -rf dist",
     "start:parallel": "XTASK_SCAN_WORKERS=auto ts-node -r tsconfig-paths/register ./src/app.ts",
@@ -15,9 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/common": "file:../../packages/common",
-    "@xtaskjs/core": "file:../../packages/core",
-    "@xtaskjs/value-objects": "file:../../packages/value-objects",
+    "@xtaskjs/common": "workspace:*",
+    "@xtaskjs/core": "workspace:*",
+    "@xtaskjs/value-objects": "workspace:*",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "reflect-metadata": "^0.2.2",
@@ -27,6 +26,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
-    "@xtaskjs/testing": "file:../../packages/testing"
+    "@xtaskjs/testing": "workspace:*"
   }
 }

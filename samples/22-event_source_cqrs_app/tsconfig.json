@@ -10,40 +10,40 @@
     "baseUrl": "./",
     "paths": {
       "@xtaskjs/common": [
-        "../../packages/common/src/index.ts"
+        "../../packages/common/dist/cjs/index"
       ],
       "@xtaskjs/common/*": [
-        "../../packages/common/src/*"
+        "../../packages/common/dist/cjs/*"
       ],
       "@xtaskjs/core": [
-        "../../packages/core/src/index.ts"
+        "../../packages/core/dist/cjs/index"
       ],
       "@xtaskjs/core/*": [
-        "../../packages/core/src/*"
+        "../../packages/core/dist/cjs/*"
       ],
       "@xtaskjs/cqrs": [
-        "../../packages/cqrs/src/index.ts"
+        "../../packages/cqrs/dist/cjs/index"
       ],
       "@xtaskjs/cqrs/*": [
-        "../../packages/cqrs/src/*"
+        "../../packages/cqrs/dist/cjs/*"
       ],
       "@xtaskjs/event-source": [
-        "../../packages/event-source/src/index.ts"
+        "../../packages/event-source/dist/cjs/index"
       ],
       "@xtaskjs/event-source/*": [
-        "../../packages/event-source/src/*"
+        "../../packages/event-source/dist/cjs/*"
       ],
       "@xtaskjs/typeorm": [
-        "../../packages/typeorm/src/index.ts"
+        "../../packages/typeorm/dist/cjs/index"
       ],
       "@xtaskjs/typeorm/*": [
-        "../../packages/typeorm/src/*"
+        "../../packages/typeorm/dist/cjs/*"
       ],
       "@xtaskjs/testing": [
-        "../../packages/testing/src/index.ts"
+        "../../packages/testing/dist/cjs/index"
       ],
       "@xtaskjs/testing/*": [
-        "../../packages/testing/src/*"
+        "../../packages/testing/dist/cjs/*"
       ]
     }
   },

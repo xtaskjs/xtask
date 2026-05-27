@@ -32,6 +32,7 @@ export default defineConfig({
     },
   },
   resolve: {
+    extensions: [".ts", ".tsx", ".mts", ".js", ".jsx", ".mjs", ".json"],
     alias: [
       { find: "@xtaskjs/common", replacement: fileURLToPath(new URL("../common/src/index.ts", import.meta.url)) },
       { find: /@xtaskjs\/common\/(.*)/, replacement: fileURLToPath(new URL("../common/src/$1", import.meta.url)) },

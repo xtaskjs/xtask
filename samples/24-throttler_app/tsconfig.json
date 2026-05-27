@@ -10,36 +10,33 @@
     "baseUrl": "./",
     "paths": {
       "@xtaskjs/common": [
-        "../../packages/common/src/index.ts"
+        "../../packages/common/dist/cjs/index.js"
       ],
       "@xtaskjs/common/*": [
-        "../../packages/common/src/*"
+        "../../packages/common/dist/cjs/*"
       ],
       "@xtaskjs/core": [
-        "../../packages/core/src/index.ts"
+        "../../packages/core/dist/cjs/index.js"
       ],
       "@xtaskjs/core/*": [
-        "../../packages/core/src/*"
+        "../../packages/core/dist/cjs/*"
       ],
       "@xtaskjs/throttler": [
-        "../../packages/throttler/src/index.ts"
+        "../../packages/throttler/dist/cjs/index.js"
       ],
       "@xtaskjs/throttler/*": [
-        "../../packages/throttler/src/*"
+        "../../packages/throttler/dist/cjs/*"
       ],
       "@xtaskjs/testing": [
-        "../../packages/testing/src/index.ts"
+        "../../packages/testing/dist/cjs/index.js"
       ],
       "@xtaskjs/testing/*": [
-        "../../packages/testing/src/*"
+        "../../packages/testing/dist/cjs/*"
       ]
     }
   },
   "include": [
-    "src",
-    "../../packages/common/src/**/*",
-    "../../packages/core/src/**/*",
-    "../../packages/throttler/src/**/*"
+    "src"
   ],
   "exclude": [
     "node_modules",

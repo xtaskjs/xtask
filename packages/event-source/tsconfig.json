@@ -9,15 +9,32 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
-      "@xtaskjs/core": ["../core/dist"],
-      "@xtaskjs/core/*": ["../core/dist/*"],
-      "@xtaskjs/typeorm": ["../typeorm/dist"],
-      "@xtaskjs/typeorm/*": ["../typeorm/dist/*"],
-      "@xtaskjs/queues": ["../queues/dist"],
-      "@xtaskjs/queues/*": ["../queues/dist/*"]
+      "@xtaskjs/core": [
+        "../core/dist/cjs"
+      ],
+      "@xtaskjs/core/*": [
+        "../core/dist/cjs/*"
+      ],
+      "@xtaskjs/typeorm": [
+        "../typeorm/dist/cjs"
+      ],
+      "@xtaskjs/typeorm/*": [
+        "../typeorm/dist/cjs/*"
+      ],
+      "@xtaskjs/queues": [
+        "../queues/dist/cjs"
+      ],
+      "@xtaskjs/queues/*": [
+        "../queues/dist/cjs/*"
+      ]
     },
     "declaration": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

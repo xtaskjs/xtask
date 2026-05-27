@@ -13,10 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/cache": "file:../../packages/cache",
-    "@xtaskjs/common": "file:../../packages/common",
-    "@xtaskjs/core": "file:../../packages/core",
-    "@xtaskjs/fastify-http": "file:../../packages/fastify-http",
+    "@xtaskjs/cache": "workspace:*",
+    "@xtaskjs/common": "workspace:*",
+    "@xtaskjs/core": "workspace:*",
+    "@xtaskjs/fastify-http": "workspace:*",
     "fastify": "^5.2.1",
     "reflect-metadata": "^0.2.2"
   },
@@ -24,6 +24,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
-    "@xtaskjs/testing": "file:../../packages/testing"
+    "@xtaskjs/testing": "workspace:*"
   }
 }

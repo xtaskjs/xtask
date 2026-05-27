@@ -13,14 +13,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@xtaskjs/common": "file:../../packages/common",
-    "@xtaskjs/core": "file:../../packages/core",
+    "@xtaskjs/common": "workspace:*",
+    "@xtaskjs/core": "workspace:*",
     "express": "^5.1.0",
     "reflect-metadata": "^0.2.2",
     "ts-morph": "^27.0.0"
   },
   "devDependencies": {
-    "@xtaskjs/testing": "file:../../packages/testing",
+    "@xtaskjs/testing": "workspace:*",
     "@babel/core": "^7.28.4",
     "@babel/preset-env": "^7.28.3",
     "@jest/globals": "^30.1.2",

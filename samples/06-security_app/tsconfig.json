@@ -10,28 +10,28 @@
     "baseUrl": "./",
     "paths": {
       "@xtaskjs/common": [
-        "../../packages/common/src/index.ts"
+        "../../packages/common/dist/cjs/index.js"
       ],
       "@xtaskjs/common/*": [
-        "../../packages/common/src/*"
+        "../../packages/common/dist/cjs/*"
       ],
       "@xtaskjs/core": [
-        "../../packages/core/src/index.ts"
+        "../../packages/core/dist/cjs/index.js"
       ],
       "@xtaskjs/core/*": [
-        "../../packages/core/src/*"
+        "../../packages/core/dist/cjs/*"
       ],
       "@xtaskjs/security": [
-        "../../packages/security/src/index.ts"
+        "../../packages/security/dist/cjs/index.js"
       ],
       "@xtaskjs/security/*": [
-        "../../packages/security/src/*"
+        "../../packages/security/dist/cjs/*"
       ],
       "@xtaskjs/testing": [
-        "../../packages/testing/src/index.ts"
+        "../../packages/testing/dist/cjs/index.js"
       ],
       "@xtaskjs/testing/*": [
-        "../../packages/testing/src/*"
+        "../../packages/testing/dist/cjs/*"
       ]
     }
   },

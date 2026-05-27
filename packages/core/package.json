@@ -4,13 +4,14 @@
   "description": "Core application runtime and DI container for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/cjs/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
     }
   },
   "files": [
@@ -19,8 +20,8 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "prebuild:manifest": "TS_NODE_PROJECT=./tsconfig.json node -r ts-node/register/transpile-only ./src/cli-build/prebuild.ts",
-    "build": "pnpm prebuild:manifest && rm -rf dist && tsc",
+    "prebuild:manifest": "rm -rf .prebuild-cjs && pnpm exec tsc --outDir .prebuild-cjs --module commonjs && node -e \"require('fs').writeFileSync('.prebuild-cjs/package.json', JSON.stringify({ type: 'commonjs' }, null, 2))\" && node ./.prebuild-cjs/cli-build/prebuild.js && rm -rf .prebuild-cjs",
+    "build": "rm -rf dist && tsc --outDir dist/cjs && node ../../scripts/postbuild-dual.mjs packages/core",
     "prepack": "pnpm build",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage",
@@ -67,5 +68,6 @@
     "typescript": "^5.9.2",
     "vitest": "^2.1.8",
     "@vitest/coverage-v8": "^2.1.8"
-  }
+  },
+  "module": "dist/esm/index.js"
 }

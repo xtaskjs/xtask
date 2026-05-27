@@ -9,11 +9,21 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@xtaskjs/core": ["../../packages/core/src/index.ts"],
-      "@xtaskjs/core/*": ["../../packages/core/src/*"],
-      "@xtaskjs/testing": ["../../packages/testing/src/index.ts"],
-      "@xtaskjs/testing/*": ["../../packages/testing/src/*"]
+      "@xtaskjs/core": [
+        "../../packages/core/dist/cjs/index.js"
+      ],
+      "@xtaskjs/core/*": [
+        "../../packages/core/dist/cjs/*"
+      ],
+      "@xtaskjs/testing": [
+        "../../packages/testing/dist/cjs/index.js"
+      ],
+      "@xtaskjs/testing/*": [
+        "../../packages/testing/dist/cjs/*"
+      ]
     }
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }
