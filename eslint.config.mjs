@@ -4,13 +4,8 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  // Base JS recommended rules
   js.configs.recommended,
 
-  // TypeScript rules for all TS source files
-  ...tseslint.configs.recommended,
-
-  // Global config
   {
     languageOptions: {
       ecmaVersion: 2022,
@@ -20,42 +15,85 @@ export default tseslint.config(
     },
   },
 
-  // Override rules for the whole monorepo
   {
     files: ["packages/*/src/**/*.ts", "packages/*/test/**/*.ts"],
+    extends: [
+      ...tseslint.configs.recommendedTypeChecked,
+    ],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     rules: {
-      // Allow any in framework/decorator code
+      "@typescript-eslint/consistent-type-imports": [
+        "warn",
+        { prefer: "type-imports", fixStyle: "inline-type-imports" },
+      ],
+      "@typescript-eslint/await-thenable": "warn",
+      "@typescript-eslint/no-floating-promises": "warn",
+      "@typescript-eslint/no-for-in-array": "error",
+      "@typescript-eslint/no-implied-eval": "error",
+      "@typescript-eslint/no-misused-promises": [
+        "warn",
+        { checksVoidReturn: { attributes: false } },
+      ],
+      "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+      "@typescript-eslint/no-unnecessary-type-conversion": "warn",
+      "@typescript-eslint/require-await": "warn",
+      "@typescript-eslint/restrict-plus-operands": [
+        "error",
+        { allowAny: false, skipCompoundAssignments: true },
+      ],
       "@typescript-eslint/no-explicit-any": "warn",
-      // Unused vars: ignore underscore-prefixed params
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
-      // Decorators emit metadata — empty constructors are valid
-      "@typescript-eslint/no-empty-function": "warn",
-      // Allow require() for dynamic/conditional imports in CommonJS packages
-      "@typescript-eslint/no-require-imports": "warn",
-      // Legacy code often rethrows wrapped errors without `cause`
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/no-require-imports": "off",
       "preserve-caught-error": "off",
-      // Keep generic marker interfaces/types allowed in public API
       "@typescript-eslint/no-empty-object-type": "off",
-      // Allow `Function` in extension points while the API is being typed
       "@typescript-eslint/no-unsafe-function-type": "off",
-      // ANSI escape codes in logger regex are intentional
+      "@typescript-eslint/no-unnecessary-boolean-literal-compare": "off",
+      "@typescript-eslint/no-unnecessary-condition": "off",
+      "@typescript-eslint/no-useless-default-assignment": "off",
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
+      "@typescript-eslint/prefer-regexp-exec": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-deprecated": "off",
+      "@typescript-eslint/array-type": "off",
+      "@typescript-eslint/consistent-type-definitions": "off",
+      "@typescript-eslint/no-base-to-string": "off",
+      "@typescript-eslint/no-redundant-type-constituents": "off",
+      "@typescript-eslint/no-unnecessary-type-parameters": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-useless-constructor": "off",
+      "@typescript-eslint/prefer-reduce-type-parameter": "off",
+      "@typescript-eslint/prefer-promise-reject-errors": "warn",
       "no-control-regex": "off",
     },
   },
 
-  // Relax rules further in test files
   {
     files: ["**/*.test.ts", "**/*.spec.ts", "**/test/**/*.ts"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/unbound-method": "off",
     },
   },
 
-  // Ignore compiled output, samples, and config files
   {
     ignores: [
       "**/dist/**",
