@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import assert from "assert";
+import { describe, expect, test } from "vitest";
 import { Logger } from "@xtaskjs/common";
 import { Module, Test } from "@xtaskjs/testing";
 import { HealthController } from "./health.controller";
@@ -18,21 +18,16 @@ const mockLogger = {
 })
 class AppModule {}
 
-async function main() {
-  const moduleRef = await Test.createTestingModule(AppModule).compile();
+describe("01-new_app", () => {
+  test("health check returns expected shape", async () => {
+    const moduleRef = await Test.createTestingModule(AppModule).compile();
 
-  const health = moduleRef.get(HealthController);
+    const health = moduleRef.get(HealthController);
 
-  // Test: health check returns expected shape
-  const result = health.check();
-  assert.strictEqual(result.status, "ok");
-  assert.ok(typeof result.timestamp === "string");
+    const result = health.check();
+    expect(result.status).toBe("ok");
+    expect(typeof result.timestamp).toBe("string");
 
-  await moduleRef.close();
-  console.log("All tests passed!");
-}
-
-main().catch((err) => {
-  console.error("Test failed:", err);
-  process.exit(1);
+    await moduleRef.close();
+  });
 });
