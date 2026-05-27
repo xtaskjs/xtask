@@ -58,10 +58,28 @@ class FakeNodeAdapter {
   getHttpServer = vi.fn(() => ({ close: vi.fn() }));
 }
 
+class FakeExpressAdapter {
+  type = "express" as const;
+  constructor(private readonly _app: any) {}
+  registerRequestHandler = vi.fn();
+  listen = vi.fn(async () => {});
+  close = vi.fn(async () => {});
+}
+
+class FakeFastifyAdapter {
+  type = "fastify" as const;
+  constructor(private readonly _app: any) {}
+  registerRequestHandler = vi.fn();
+  listen = vi.fn(async () => {});
+  close = vi.fn(async () => {});
+}
+
 describe("XTaskHttpApplication", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setHttpIntegrationResolverOverridesForTesting({
+      expressAdapter: FakeExpressAdapter as any,
+      fastifyAdapter: FakeFastifyAdapter as any,
       socketIoInitialize: initializeSocketIoIntegration,
       socketIoShutdown: shutdownSocketIoIntegration,
       cqrsInitialize: initializeCqrsIntegration,
@@ -374,6 +392,8 @@ describe("http application factories", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setHttpIntegrationResolverOverridesForTesting({
+      expressAdapter: FakeExpressAdapter as any,
+      fastifyAdapter: FakeFastifyAdapter as any,
       socketIoInitialize: initializeSocketIoIntegration,
       socketIoShutdown: shutdownSocketIoIntegration,
       cqrsInitialize: initializeCqrsIntegration,

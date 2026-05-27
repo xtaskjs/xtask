@@ -164,6 +164,8 @@ type ValidationShutdownFn = () => Promise<void>;
 type CreateDefaultValidationPipeFn = () => { transform: (value: unknown, context: unknown) => unknown | Promise<unknown> };
 
 type HttpIntegrationResolverOverrides = {
+  expressAdapter?: ExpressAdapterConstructor;
+  fastifyAdapter?: FastifyAdapterConstructor;
   socketIoInitialize?: SocketIoInitializeFn;
   socketIoShutdown?: SocketIoShutdownFn;
   cqrsInitialize?: CqrsInitializeFn;
@@ -193,6 +195,10 @@ export const clearHttpIntegrationResolverOverridesForTesting = (): void => {
 };
 
 const resolveExpressAdapter = (): ExpressAdapterConstructor => {
+  if (httpIntegrationResolverOverrides?.expressAdapter) {
+    return httpIntegrationResolverOverrides.expressAdapter;
+  }
+
   try {
     const expressHttpPackage = require("@xtaskjs/express-http") as {
       ExpressAdapter?: ExpressAdapterConstructor;
@@ -219,6 +225,10 @@ const resolveExpressAdapter = (): ExpressAdapterConstructor => {
 };
 
 const resolveFastifyAdapter = (): FastifyAdapterConstructor => {
+  if (httpIntegrationResolverOverrides?.fastifyAdapter) {
+    return httpIntegrationResolverOverrides.fastifyAdapter;
+  }
+
   try {
     const fastifyHttpPackage = require("@xtaskjs/fastify-http") as {
       FastifyAdapter?: FastifyAdapterConstructor;

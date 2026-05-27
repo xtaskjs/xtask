@@ -3,7 +3,12 @@ import {
   createGlobalValidationPipe,
   setHttpIntegrationResolverOverridesForTesting,
 } from "../../src/http/application";
-import { SchemaValidationPipe } from "@xtaskjs/validation";
+
+class TestValidationPipe {
+  transform(value: unknown): unknown {
+    return value;
+  }
+}
 
 describe("createGlobalValidationPipe", () => {
   afterEach(() => {
@@ -12,11 +17,11 @@ describe("createGlobalValidationPipe", () => {
 
   test("prefers @xtaskjs/validation when it is available", () => {
     setHttpIntegrationResolverOverridesForTesting({
-      validationCreateGlobalPipe: () => new SchemaValidationPipe(),
+      validationCreateGlobalPipe: () => new TestValidationPipe(),
     });
 
     const pipe = createGlobalValidationPipe();
 
-    expect(pipe).toBeInstanceOf(SchemaValidationPipe);
+    expect(pipe).toBeInstanceOf(TestValidationPipe);
   });
 });
