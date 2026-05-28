@@ -39,6 +39,18 @@
       "@xtaskjs/security/*": [
         "../../packages/security/dist/cjs/*"
       ],
+      "@xtaskjs/validation": [
+        "../../packages/validation/dist/cjs/index.js"
+      ],
+      "@xtaskjs/validation/*": [
+        "../../packages/validation/dist/cjs/*"
+      ],
+      "zod": [
+        "../../packages/validation/node_modules/zod"
+      ],
+      "zod/*": [
+        "../../packages/validation/node_modules/zod/*"
+      ],
       "@xtaskjs/testing": [
         "../../packages/testing/dist/cjs/index.js"
       ],

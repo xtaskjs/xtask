@@ -1,15 +1,15 @@
 import { Auth, Authenticated, Roles } from "@xtaskjs/security";
 import { Body, Controller, Get, Logger, Post, Req } from "@xtaskjs/common";
-import { Transform } from "class-transformer";
-import { IsEmail } from "class-validator";
+import { SchemaDto } from "@xtaskjs/validation";
+import { z } from "zod";
 import { ProfileMailerService } from "./profile-mailer.service";
 
-const trimString = ({ value }: { value: unknown }) =>
-  typeof value === "string" ? value.trim() : value;
-
+@SchemaDto(
+  z.object({
+    to: z.string().trim().email(),
+  })
+)
 class SendProfileEmailDto {
-  @Transform(trimString)
-  @IsEmail()
   to!: string;
 }
 
