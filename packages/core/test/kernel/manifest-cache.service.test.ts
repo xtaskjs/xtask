@@ -13,7 +13,7 @@ describe("ManifestCacheService", () => {
   });
 
   it("should return null when manifest file does not exist", () => {
-    (existsSync as jest.Mock).mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     const service = new ManifestCacheService("/project");
 
     const manifest = service.read(["/project/src"]);
@@ -22,7 +22,7 @@ describe("ManifestCacheService", () => {
   });
 
   it("should write manifest with normalized roots and files", () => {
-    (existsSync as jest.Mock).mockReturnValue(true);
+    vi.mocked(existsSync).mockReturnValue(true);
     const service = new ManifestCacheService("/project");
 
     const manifest = service.write([
@@ -41,7 +41,7 @@ describe("ManifestCacheService", () => {
   });
 
   it("should write prebuilt manifest to dedicated file", () => {
-    (existsSync as jest.Mock).mockReturnValue(true);
+    vi.mocked(existsSync).mockReturnValue(true);
     const service = new ManifestCacheService("/project");
 
     const manifest = service.writePrebuilt(["/project/src"], ["/project/src/a.ts"]);
@@ -55,8 +55,8 @@ describe("ManifestCacheService", () => {
   });
 
   it("should read prebuilt manifest when valid", () => {
-    (existsSync as jest.Mock).mockReturnValue(true);
-    (readFileSync as jest.Mock).mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         version: 1,
         generatedAt: new Date().toISOString(),
@@ -75,8 +75,8 @@ describe("ManifestCacheService", () => {
   });
 
   it("should return null when scan roots do not match", () => {
-    (existsSync as jest.Mock).mockReturnValue(true);
-    (readFileSync as jest.Mock).mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         version: 1,
         generatedAt: new Date().toISOString(),

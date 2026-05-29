@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from "@xtaskjs/common";
-import { IsEmail, IsOptional, IsString, MinLength } from "class-validator";
+import { SchemaDto } from "@xtaskjs/validation";
+import { z } from "zod";
 import {
   CommandBus,
   InjectCommandBus,
@@ -9,26 +10,30 @@ import {
 } from "@xtaskjs/cqrs";
 import { CreateUserCommand, InspectReplicationStateQuery, ListUsersQuery, RenameUserCommand } from "./messages";
 
+@SchemaDto(
+  z.object({
+    displayName: z.string().trim().min(2),
+    email: z.string().trim().email(),
+    requestId: z.string().trim().min(1).optional(),
+  })
+)
 class CreateUserRequest {
-  @IsString()
-  @MinLength(2)
   displayName!: string;
 
-  @IsEmail()
   email!: string;
 
-  @IsOptional()
-  @IsString()
   requestId?: string;
 }
 
+@SchemaDto(
+  z.object({
+    displayName: z.string().trim().min(2),
+    requestId: z.string().trim().min(1).optional(),
+  })
+)
 class RenameUserRequest {
-  @IsString()
-  @MinLength(2)
   displayName!: string;
 
-  @IsOptional()
-  @IsString()
   requestId?: string;
 }
 

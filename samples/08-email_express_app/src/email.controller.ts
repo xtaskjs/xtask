@@ -1,45 +1,38 @@
 import { Body, Controller, Get, Logger, Post } from "@xtaskjs/common";
-import { Transform } from "class-transformer";
-import { IsEmail, IsOptional, IsString, IsUrl, MinLength } from "class-validator";
+import { SchemaDto } from "@xtaskjs/validation";
+import { z } from "zod";
 import { EmailService } from "./email.service";
 
-const trimString = ({ value }: { value: unknown }) =>
-  typeof value === "string" ? value.trim() : value;
-
+@SchemaDto(
+  z.object({
+    to: z.string().trim().email(),
+    name: z.string().trim().min(1),
+    product: z.string().trim().min(1).optional(),
+  })
+)
 class SendWelcomeEmailDto {
-  @Transform(trimString)
-  @IsEmail()
   to!: string;
 
-  @Transform(trimString)
-  @IsString()
-  @MinLength(1)
   name!: string;
 
-  @Transform(trimString)
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   product?: string;
 }
 
+@SchemaDto(
+  z.object({
+    to: z.string().trim().email(),
+    name: z.string().trim().min(1),
+    campaign: z.string().trim().min(1),
+    ctaUrl: z.string().trim().url(),
+  })
+)
 class SendCampaignEmailDto {
-  @Transform(trimString)
-  @IsEmail()
   to!: string;
 
-  @Transform(trimString)
-  @IsString()
-  @MinLength(1)
   name!: string;
 
-  @Transform(trimString)
-  @IsString()
-  @MinLength(1)
   campaign!: string;
 
-  @Transform(trimString)
-  @IsUrl({ require_tld: false })
   ctaUrl!: string;
 }
 

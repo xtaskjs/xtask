@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post } from "@xtaskjs/common";
-import { IsDefined } from "class-validator";
+import { SchemaDto } from "@xtaskjs/validation";
 import { TransformValueObject } from "@xtaskjs/value-objects";
+import { z } from "zod";
 import {
   BudgetAmount,
   CreateCustomerInput,
@@ -10,20 +11,24 @@ import {
   ValueObjectsDemoService,
 } from "./value-objects-demo.service";
 
+@SchemaDto(
+  z.object({
+    email: z.unknown(),
+    displayName: z.unknown(),
+    budget: z.unknown(),
+    preferences: z.unknown(),
+  })
+)
 class CreateCustomerRequest implements CreateCustomerInput {
-  @IsDefined()
   @TransformValueObject(EmailAddress)
   email!: EmailAddress;
 
-  @IsDefined()
   @TransformValueObject(DisplayName)
   displayName!: DisplayName;
 
-  @IsDefined()
   @TransformValueObject(BudgetAmount)
   budget!: BudgetAmount;
 
-  @IsDefined()
   @TransformValueObject(CustomerPreferences, { source: "json" })
   preferences!: CustomerPreferences;
 }

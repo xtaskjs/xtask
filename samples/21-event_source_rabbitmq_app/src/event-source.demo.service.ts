@@ -9,7 +9,8 @@ import {
 } from "@xtaskjs/event-source";
 import { InjectQueueService, QueueService } from "@xtaskjs/queues";
 import { InjectRepository, Repository } from "@xtaskjs/typeorm";
-import { IsEmail, IsString, MinLength } from "class-validator";
+import { SchemaDto } from "@xtaskjs/validation";
+import { z } from "zod";
 import { RabbitMqAuditService } from "./rabbitmq-audit.service";
 import { UserAggregate } from "./user.aggregate";
 import { UserProjectionEntity } from "./user-projection.entity";
@@ -29,12 +30,15 @@ const serializeEvent = (event: EventEnvelope<any>) => ({
   payload: event.payload,
 });
 
+@SchemaDto(
+  z.object({
+    displayName: z.string().trim().min(2),
+    email: z.string().trim().email(),
+  })
+)
 export class RegisterUserRequest {
-  @IsString()
-  @MinLength(2)
   displayName!: string;
 
-  @IsEmail()
   email!: string;
 }
 

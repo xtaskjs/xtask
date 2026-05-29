@@ -195,7 +195,7 @@ Watcher lifecycle events:
 To avoid runtime scans in production cold starts, you can pre-generate a manifest during build:
 
 ```bash
-npm run prebuild:manifest --prefix packages/core
+pnpm -C packages/core prebuild:manifest
 ```
 
 Programmatic usage:
@@ -243,13 +243,13 @@ Tip:
 - Avoid very high values in constrained environments (CI, small containers) because excessive parallel imports can increase filesystem pressure and reduce overall startup stability.
 
 ## Startup Benchmark
-- Run `npm run benchmark:startup --prefix packages/core` from the workspace root.
+- Run `pnpm -C packages/core benchmark:startup` from the workspace root.
 - Optional env vars:
 	- `XTASKJS_BENCH_WARMUP` (default: `3`)
 	- `XTASKJS_BENCH_ITERATIONS` (default: `10`)
 	- `XTASKJS_BENCH_NODE_ENV` (default: `test`)
 - Example:
-	- `XTASKJS_BENCH_WARMUP=5 XTASKJS_BENCH_ITERATIONS=20 XTASKJS_BENCH_NODE_ENV=production npm run benchmark:startup --prefix packages/core`
+	- `XTASKJS_BENCH_WARMUP=5 XTASKJS_BENCH_ITERATIONS=20 XTASKJS_BENCH_NODE_ENV=production pnpm -C packages/core benchmark:startup`
 
 ## Resources
 - Project site and documentation: [xtaskjs.io](https://xtaskjs.io)

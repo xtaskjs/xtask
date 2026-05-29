@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm run build --prefix ../../packages/core && npm run build --prefix ../../packages/express-http && npm run build --prefix ../../packages/security && npm run build --prefix ../../packages/bots",
+    "prestart": "pnpm -C ../../packages/core build && pnpm -C ../../packages/express-http build && pnpm -C ../../packages/security build && pnpm -C ../../packages/bots build",
     "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
     "build": "npm run clean; tsc",
     "clean": "rm -rf dist",

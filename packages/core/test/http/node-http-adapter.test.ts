@@ -25,7 +25,7 @@ describe("NodeHttpAdapter", () => {
       close: vi.fn((callback) => callback()),
     };
 
-    (createServer as jest.Mock).mockImplementation((callback) => {
+    vi.mocked(createServer).mockImplementation((callback) => {
       serverCallback = callback;
       return server;
     });
@@ -52,7 +52,7 @@ describe("NodeHttpAdapter", () => {
       close: vi.fn((callback) => callback()),
     };
 
-    (createServer as jest.Mock).mockImplementation((callback) => {
+    vi.mocked(createServer).mockImplementation((callback) => {
       serverCallback = callback;
       return server;
     });
@@ -81,7 +81,7 @@ describe("NodeHttpAdapter", () => {
       close: vi.fn((callback) => callback()),
     };
 
-    (createServer as jest.Mock).mockImplementation((callback) => {
+    vi.mocked(createServer).mockImplementation((callback) => {
       serverCallback = callback;
       return server;
     });
@@ -116,7 +116,7 @@ describe("NodeHttpAdapter", () => {
       close: vi.fn((callback) => callback()),
     };
 
-    (createServer as jest.Mock).mockImplementation((callback) => {
+    vi.mocked(createServer).mockImplementation((callback) => {
       serverCallback = callback;
       return server;
     });
@@ -152,7 +152,7 @@ describe("NodeHttpAdapter", () => {
       close: vi.fn((callback) => callback()),
     };
 
-    (createServer as jest.Mock).mockImplementation((callback) => {
+    vi.mocked(createServer).mockImplementation((callback) => {
       serverCallback = callback;
       return server;
     });
@@ -186,7 +186,7 @@ describe("NodeHttpAdapter", () => {
       close: vi.fn((callback) => callback()),
     };
 
-    (createServer as jest.Mock).mockImplementation((callback) => {
+    vi.mocked(createServer).mockImplementation((callback) => {
       serverCallback = callback;
       return server;
     });

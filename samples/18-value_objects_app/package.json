@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm run build --prefix ../../packages/value-objects",
+    "prestart": "pnpm -C ../../packages/value-objects build",
     "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
     "build": "npm run clean; tsc",
     "clean": "rm -rf dist",
@@ -16,11 +16,12 @@
   "dependencies": {
     "@xtaskjs/common": "workspace:*",
     "@xtaskjs/core": "workspace:*",
+    "@xtaskjs/validation": "workspace:*",
     "@xtaskjs/value-objects": "workspace:*",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.2",
     "reflect-metadata": "^0.2.2",
-    "ts-morph": "^27.0.0"
+    "ts-morph": "^27.0.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",

@@ -4,7 +4,7 @@
   "description": "xTaskJS sample where event-source feeds CQRS projections and queries.",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm run build --prefix ../../packages/event-source && npm run build --prefix ../../packages/cqrs",
+    "prestart": "pnpm -C ../../packages/event-source build && pnpm -C ../../packages/cqrs build",
     "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
     "build": "npm run clean; tsc",
     "clean": "rm -rf dist",
@@ -19,12 +19,12 @@
     "@xtaskjs/cqrs": "workspace:*",
     "@xtaskjs/event-source": "workspace:*",
     "@xtaskjs/typeorm": "workspace:*",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.2",
+    "@xtaskjs/validation": "workspace:*",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "ts-morph": "^27.0.0",
-    "typeorm": "^0.3.28"
+    "typeorm": "^0.3.28",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",

@@ -6,7 +6,8 @@ import {
   InjectEventSourceRepository,
   InjectEventStore,
 } from "@xtaskjs/event-source";
-import { IsEmail, IsString, MinLength } from "class-validator";
+import { SchemaDto } from "@xtaskjs/validation";
+import { z } from "zod";
 import { UserAggregate } from "./user.aggregate";
 
 const createUserId = (): string => {
@@ -24,12 +25,15 @@ const serializeEvent = (event: EventEnvelope<any>) => ({
   payload: event.payload,
 });
 
+@SchemaDto(
+  z.object({
+    displayName: z.string().trim().min(2),
+    email: z.string().trim().email(),
+  })
+)
 export class RegisterUserRequest {
-  @IsString()
-  @MinLength(2)
   displayName!: string;
 
-  @IsEmail()
   email!: string;
 }
 

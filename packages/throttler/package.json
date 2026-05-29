@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/throttler",
-  "version": "1.0.16",
+  "version": "1.0.18",
   "description": "Rate limiting (throttler) integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",

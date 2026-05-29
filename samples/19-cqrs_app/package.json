@@ -4,7 +4,7 @@
   "description": "xTaskJS CQRS sample with separate read and write SQLite databases.",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm run build --prefix ../../packages/cqrs",
+    "prestart": "pnpm -C ../../packages/cqrs build",
     "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
     "build": "npm run clean; tsc",
     "clean": "rm -rf dist",
@@ -18,11 +18,11 @@
     "@xtaskjs/core": "workspace:*",
     "@xtaskjs/cqrs": "workspace:*",
     "@xtaskjs/typeorm": "workspace:*",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.2",
+    "@xtaskjs/validation": "workspace:*",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
-    "typeorm": "^0.3.28"
+    "typeorm": "^0.3.28",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",

@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/event-source",
-  "version": "1.0.18",
+  "version": "1.0.20",
   "description": "Event sourcing integration for xtaskjs with aggregate repositories, lifecycle wiring, and optional TypeORM and queue adapters.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",

@@ -17,11 +17,11 @@
     "@xtaskjs/core": "workspace:*",
     "@xtaskjs/express-http": "workspace:*",
     "@xtaskjs/mailer": "workspace:*",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.2",
+    "@xtaskjs/validation": "workspace:*",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

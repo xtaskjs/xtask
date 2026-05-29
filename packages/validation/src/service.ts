@@ -15,10 +15,10 @@ export class ValidationService implements ValidationServiceLike {
       ? await schema.validate(value)
       : await this.resolveAdapter().validate(schema, value);
 
-    if (result.success) {
-      return result.data;
+    if ("issues" in result) {
+      throw configuration.createError(result.issues, context);
     }
 
-    throw configuration.createError(result.issues, context);
+    return result.data;
   }
 }
