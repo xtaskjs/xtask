@@ -159,6 +159,8 @@ type InternationalizationContextRunnerFn = <T>(
 ) => Promise<T>;
 type ThrottlerInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
 type ThrottlerShutdownFn = () => Promise<void>;
+type ConfigInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
+type ConfigShutdownFn = () => Promise<void>;
 type ValidationInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
 type ValidationShutdownFn = () => Promise<void>;
 type CreateDefaultValidationPipeFn = () => { transform: (value: unknown, context: unknown) => unknown | Promise<unknown> };
@@ -177,6 +179,8 @@ type HttpIntegrationResolverOverrides = {
   internationalizationInitialize?: InternationalizationInitializeFn;
   internationalizationShutdown?: InternationalizationShutdownFn;
   internationalizationContextRunner?: InternationalizationContextRunnerFn;
+  configInitialize?: ConfigInitializeFn;
+  configShutdown?: ConfigShutdownFn;
   validationInitialize?: ValidationInitializeFn;
   validationShutdown?: ValidationShutdownFn;
   validationCreateGlobalPipe?: CreateDefaultValidationPipeFn;
@@ -893,6 +897,68 @@ const resolveValidationInitialize = (): ValidationInitializeFn | undefined => {
   return undefined;
 };
 
+const resolveConfigInitialize = (): ConfigInitializeFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.configInitialize;
+  if (typeof override === "function") {
+    return override;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/config")) {
+    return undefined;
+  }
+
+  try {
+    const configPackage = requireFromApplication<{
+      initializeConfigIntegration?: ConfigInitializeFn;
+    }>("@xtaskjs/config");
+
+    if (typeof configPackage.initializeConfigIntegration === "function") {
+      return configPackage.initializeConfigIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/config");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveConfigShutdown = (): ConfigShutdownFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.configShutdown;
+  if (typeof override === "function") {
+    return override;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/config")) {
+    return undefined;
+  }
+
+  try {
+    const configPackage = requireFromApplication<{
+      shutdownConfigIntegration?: ConfigShutdownFn;
+    }>("@xtaskjs/config");
+
+    if (typeof configPackage.shutdownConfigIntegration === "function") {
+      return configPackage.shutdownConfigIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/config");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
 const resolveValidationShutdown = (): ValidationShutdownFn | undefined => {
   if (httpIntegrationResolverOverrides?.validationShutdown) {
     return httpIntegrationResolverOverrides.validationShutdown;
@@ -1173,6 +1239,11 @@ export class XTaskHttpApplication {
       await shutdownValidationIntegration();
     }
 
+    const shutdownConfigIntegration = resolveConfigShutdown();
+    if (shutdownConfigIntegration) {
+      await shutdownConfigIntegration();
+    }
+
     if (this.kernel && typeof (this.kernel as any).getContainer === "function") {
       const container = await (this.kernel as any).getContainer();
       if (container && typeof container.destroy === "function") {
@@ -1230,6 +1301,11 @@ export async function registerContainerInLifecycle(
 ): Promise<void> {
   const container: Container = await kernel.getContainer();
   setCurrentContainer(container);
+
+  const initializeConfigIntegration = resolveConfigInitialize();
+  if (initializeConfigIntegration) {
+    await initializeConfigIntegration(container, lifecycle);
+  }
 
   const initializeSocketIoIntegration = resolveSocketIoInitialize();
   if (initializeSocketIoIntegration) {

@@ -28,7 +28,9 @@
         "../fastify-http/src/*"
       ]
     },
-    "declaration": true
+    "declaration": true,
+    "incremental": true,
+    "composite": true
   },
   "include": [
     "src/**/*"

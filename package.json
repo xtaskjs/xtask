@@ -15,6 +15,7 @@
     "coverage:open:common": "node ./scripts/run-package-script.js packages/common coverage:open",
     "coverage:open:value-objects": "node ./scripts/run-package-script.js packages/value-objects coverage:open",
     "coverage:open:validation": "node ./scripts/run-package-script.js packages/validation coverage:open",
+    "coverage:open:config": "node ./scripts/run-package-script.js packages/config coverage:open",
     "coverage:open:express-http": "node ./scripts/run-package-script.js packages/express-http coverage:open",
     "coverage:open:fastify-http": "node ./scripts/run-package-script.js packages/fastify-http coverage:open",
     "coverage:open:typeorm": "node ./scripts/run-package-script.js packages/typeorm coverage:open",
@@ -48,12 +49,6 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^5.1.0",
-    "reflect-metadata": "^0.2.2",
-    "ts-morph": "^27.0.0",
-    "typeorm": "^0.3.28"
-  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@swc/core": "^1.15.40",

@@ -7,7 +7,20 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@xtaskjs/config": [
+        "../../packages/config/dist/cjs/index.js",
+        "../../packages/config/src/index.ts"
+      ],
+      "@xtaskjs/config/*": [
+        "../../packages/config/dist/cjs/*",
+        "../../packages/config/src/*"
+      ],
+      "zod": [
+        "../../packages/config/node_modules/zod"
+      ]
+    }
   },
   "include": [
     "src"

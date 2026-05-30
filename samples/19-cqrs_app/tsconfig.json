@@ -50,6 +50,14 @@
       ],
       "@xtaskjs/testing/*": [
         "../../packages/testing/dist/cjs/*"
+      ],
+      "@xtaskjs/config": [
+        "../../packages/config/dist/cjs/index.js",
+        "../../packages/config/src/index.ts"
+      ],
+      "@xtaskjs/config/*": [
+        "../../packages/config/dist/cjs/*",
+        "../../packages/config/src/*"
       ]
     }
   },

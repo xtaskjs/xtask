@@ -22,7 +22,9 @@
     "@xtaskjs/security": "workspace:*",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "@xtaskjs/config": "workspace:*",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

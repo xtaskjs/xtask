@@ -1,6 +1,21 @@
 import "reflect-metadata";
 import { CreateApplication } from "@xtaskjs/core";
 import { configureQueues, createRabbitMqTransport, registerQueueTransport } from "@xtaskjs/queues";
+import { ConfigModule } from "@xtaskjs/config";
+import { z } from "zod";
+
+const SampleConfigSchema = z.object({
+  NODE_ENV: z.string().default("development"),
+  PORT: z.coerce.number().int().positive().default(3000),
+  XTASK_DI_STRATEGY: z.enum(["lazy", "eager"]).default("lazy"),
+  XTASK_DI_METRICS: z.enum(["true", "false"]).default("true"),
+  XTASK_HOT_DEBOUNCE_MS: z.coerce.number().int().nonnegative().default(60),
+});
+
+ConfigModule.register({
+  schema: SampleConfigSchema,
+  envFiles: [".env", ".env.local"],
+});
 
 const amqpUrl = process.env.AMQP_URL || "amqp://guest:guest@127.0.0.1:5672";
 const exchange = process.env.AMQP_EXCHANGE || "xtask.samples.orders";

@@ -28,7 +28,9 @@
         "../queues/dist/cjs/*"
       ]
     },
-    "declaration": true
+    "declaration": true,
+    "incremental": true,
+    "composite": true
   },
   "include": [
     "src/**/*"

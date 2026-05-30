@@ -1,5 +1,9 @@
 name: CI
 
+permissions:
+  contents: read
+  security-events: write
+
 on:
   workflow_dispatch:
   push:
@@ -35,6 +39,38 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Security audit report (each package)
+        id: security_audit
+        run: |
+          mkdir -p security-reports
+          audit_failed=0
+
+          for package_dir in packages/*; do
+            if [[ -d "$package_dir" && -f "$package_dir/package.json" ]]; then
+              package_name="$(basename "$package_dir")"
+
+              echo "Running security audit for $package_name"
+              pnpm --dir "$package_dir" audit --audit-level=high --json > "security-reports/${package_name}-audit.json" || audit_failed=1
+
+              npx -y npm-audit-sarif "security-reports/${package_name}-audit.json" --output "security-reports/${package_name}.sarif"
+            fi
+          done
+
+          echo "audit_failed=$audit_failed" >> "$GITHUB_OUTPUT"
+
+      - name: Upload security report (SARIF)
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: security-reports
+          category: pnpm-audit
+
+      - name: Fail if high vulnerabilities were found
+        if: steps.security_audit.outputs.audit_failed == '1'
+        run: |
+          echo "High or critical vulnerabilities were detected in at least one package."
+          exit 1
 
       - name: Lint
         run: pnpm run lint

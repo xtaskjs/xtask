@@ -5,6 +5,21 @@ import { ExpressAdapter } from "@xtaskjs/express-http";
 import { BotsModule, SlackAdapter, TelegramAdapter } from "@xtaskjs/bots";
 import { registerJwtStrategy, SecurityValidationContext } from "@xtaskjs/security";
 import { SAMPLE_JWT_SECRET, SAMPLE_TENANT } from "./security.config";
+import { ConfigModule } from "@xtaskjs/config";
+import { z } from "zod";
+
+const SampleConfigSchema = z.object({
+  NODE_ENV: z.string().default("development"),
+  PORT: z.coerce.number().int().positive().default(3000),
+  XTASK_DI_STRATEGY: z.enum(["lazy", "eager"]).default("lazy"),
+  XTASK_DI_METRICS: z.enum(["true", "false"]).default("true"),
+  XTASK_HOT_DEBOUNCE_MS: z.coerce.number().int().nonnegative().default(60),
+});
+
+ConfigModule.register({
+  schema: SampleConfigSchema,
+  envFiles: [".env", ".env.local"],
+});
 
 const validateJwtClaims = async (
   payload: Record<string, any>,

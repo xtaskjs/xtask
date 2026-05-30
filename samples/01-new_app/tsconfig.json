@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "CommonJS",
+    "moduleResolution": "node",
     "rootDir": "./",
     "outDir": "dist",
     "esModuleInterop": true,
@@ -14,6 +15,21 @@
       ],
       "@xtaskjs/testing/*": [
         "../../packages/testing/dist/cjs/*"
+      ],
+      "@xtaskjs/*": [
+        "../../packages/*/dist/cjs/index.js",
+        "../../packages/*/src"
+      ],
+      "@xtaskjs/config": [
+        "../../packages/config/dist/cjs/index.js",
+        "../../packages/config/src/index.ts"
+      ],
+      "@xtaskjs/config/*": [
+        "../../packages/config/dist/cjs/*",
+        "../../packages/config/src/*"
+      ],
+      "zod": [
+        "../../packages/config/node_modules/zod"
       ]
     }
   },

@@ -21,7 +21,8 @@
     "class-transformer": "^0.5.1",
     "reflect-metadata": "^0.2.2",
     "ts-morph": "^27.0.0",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "@xtaskjs/config": "workspace:*"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
