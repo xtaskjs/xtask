@@ -7,36 +7,7 @@
     "outDir": "dist",
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "baseUrl": "./",
-    "paths": {
-      "@xtaskjs/common": [
-        "../../packages/common/dist/cjs/index.js"
-      ],
-      "@xtaskjs/core": [
-        "../../packages/core/dist/cjs/index.js"
-      ],
-      "@xtaskjs/express-http": [
-        "../../packages/express-http/dist/cjs/index.js"
-      ],
-      "@xtaskjs/testing": [
-        "../../packages/testing/dist/cjs/index.js"
-      ],
-      "@xtaskjs/testing/*": [
-        "../../packages/testing/dist/cjs/*"
-      ],
-      "@xtaskjs/config": [
-        "../../packages/config/dist/cjs/index.js",
-        "../../packages/config/src/index.ts"
-      ],
-      "@xtaskjs/config/*": [
-        "../../packages/config/dist/cjs/*",
-        "../../packages/config/src/*"
-      ],
-      "zod": [
-        "../../packages/config/node_modules/zod"
-      ]
-    }
+    "emitDecoratorMetadata": true
   },
   "include": [
     "src"

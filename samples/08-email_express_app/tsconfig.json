@@ -6,60 +6,7 @@
     "outDir": "dist",
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "baseUrl": "./",
-    "paths": {
-      "@xtaskjs/common": [
-        "../../packages/common/dist/cjs/index.js"
-      ],
-      "@xtaskjs/common/*": [
-        "../../packages/common/dist/cjs/*"
-      ],
-      "@xtaskjs/core": [
-        "../../packages/core/dist/cjs/index.js"
-      ],
-      "@xtaskjs/core/*": [
-        "../../packages/core/dist/cjs/*"
-      ],
-      "@xtaskjs/express-http": [
-        "../../packages/express-http/dist/cjs/index.js"
-      ],
-      "@xtaskjs/express-http/*": [
-        "../../packages/express-http/dist/cjs/*"
-      ],
-      "@xtaskjs/mailer": [
-        "../../packages/mailer/dist/cjs/index.js"
-      ],
-      "@xtaskjs/mailer/*": [
-        "../../packages/mailer/dist/cjs/*"
-      ],
-      "@xtaskjs/validation": [
-        "../../packages/validation/dist/cjs/index.js"
-      ],
-      "@xtaskjs/validation/*": [
-        "../../packages/validation/dist/cjs/*"
-      ],
-      "zod": [
-        "../../packages/validation/node_modules/zod"
-      ],
-      "zod/*": [
-        "../../packages/validation/node_modules/zod/*"
-      ],
-      "@xtaskjs/testing": [
-        "../../packages/testing/dist/cjs/index.js"
-      ],
-      "@xtaskjs/testing/*": [
-        "../../packages/testing/dist/cjs/*"
-      ],
-      "@xtaskjs/config": [
-        "../../packages/config/dist/cjs/index.js",
-        "../../packages/config/src/index.ts"
-      ],
-      "@xtaskjs/config/*": [
-        "../../packages/config/dist/cjs/*",
-        "../../packages/config/src/*"
-      ]
-    }
+    "emitDecoratorMetadata": true
   },
   "include": [
     "src"

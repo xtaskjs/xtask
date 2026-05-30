@@ -6,66 +6,7 @@
     "outDir": "dist",
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "baseUrl": "./",
-    "paths": {
-      "@xtaskjs/common": [
-        "../../packages/common/dist/cjs/index"
-      ],
-      "@xtaskjs/common/*": [
-        "../../packages/common/dist/cjs/*"
-      ],
-      "@xtaskjs/core": [
-        "../../packages/core/dist/cjs/index"
-      ],
-      "@xtaskjs/core/*": [
-        "../../packages/core/dist/cjs/*"
-      ],
-      "@xtaskjs/event-source": [
-        "../../packages/event-source/dist/cjs/index"
-      ],
-      "@xtaskjs/event-source/*": [
-        "../../packages/event-source/dist/cjs/*"
-      ],
-      "@xtaskjs/queues": [
-        "../../packages/queues/dist/cjs/index"
-      ],
-      "@xtaskjs/queues/*": [
-        "../../packages/queues/dist/cjs/*"
-      ],
-      "@xtaskjs/typeorm": [
-        "../../packages/typeorm/dist/cjs/index"
-      ],
-      "@xtaskjs/typeorm/*": [
-        "../../packages/typeorm/dist/cjs/*"
-      ],
-      "@xtaskjs/validation": [
-        "../../packages/validation/dist/cjs/index"
-      ],
-      "@xtaskjs/validation/*": [
-        "../../packages/validation/dist/cjs/*"
-      ],
-      "zod": [
-        "../../packages/validation/node_modules/zod"
-      ],
-      "zod/*": [
-        "../../packages/validation/node_modules/zod/*"
-      ],
-      "@xtaskjs/testing": [
-        "../../packages/testing/dist/cjs/index"
-      ],
-      "@xtaskjs/testing/*": [
-        "../../packages/testing/dist/cjs/*"
-      ],
-      "@xtaskjs/config": [
-        "../../packages/config/dist/cjs/index.js",
-        "../../packages/config/src/index.ts"
-      ],
-      "@xtaskjs/config/*": [
-        "../../packages/config/dist/cjs/*",
-        "../../packages/config/src/*"
-      ]
-    }
+    "emitDecoratorMetadata": true
   },
   "include": [
     "src"

@@ -15,6 +15,7 @@
 /packages/*/node_modules
 /samples/*/node_modules
 /pnpm-lock.yaml
+/src/pnpm-lock.yaml
 
 # Environment variables
 /src/.env
@@ -98,6 +99,7 @@ packages/throttler/dist/
 packages/bots/dist/
 packages/testing/dist/
 packages/validation/dist/
+packages/config/dist/
 #Packages
 packages/*/*.tgz
 

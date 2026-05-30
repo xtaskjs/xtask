@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/typeorm",
-  "version": "1.0.32",
+  "version": "1.0.34",
   "description": "TypeORM integration for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",

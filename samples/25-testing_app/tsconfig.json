@@ -6,22 +6,7 @@
     "outDir": "dist",
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "baseUrl": "./",
-    "paths": {
-      "@xtaskjs/core": [
-        "../../packages/core/dist/cjs/index.js"
-      ],
-      "@xtaskjs/core/*": [
-        "../../packages/core/dist/cjs/*"
-      ],
-      "@xtaskjs/testing": [
-        "../../packages/testing/dist/cjs/index.js"
-      ],
-      "@xtaskjs/testing/*": [
-        "../../packages/testing/dist/cjs/*"
-      ]
-    }
+    "emitDecoratorMetadata": true
   },
   "include": [
     "src/**/*"

@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/config",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Typed, fail-fast environment configuration for xtaskjs powered by Zod.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
