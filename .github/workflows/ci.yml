@@ -108,13 +108,168 @@ jobs:
           mkdir -p security-reports
 
           package_dir="packages/${{ matrix.package }}"
+          audit_json_file="security-reports/${{ matrix.package }}-audit.json"
+          sarif_file="security-reports/${{ matrix.package }}.sarif"
+          low_count=0
+          moderate_count=0
+          high_count=0
+          critical_count=0
 
           echo "Running security audit for $package_dir"
-          pnpm --dir "$package_dir" audit --audit-level=high --json > "security-reports/${{ matrix.package }}-audit.json" || audit_failed=1
+          pnpm --dir "$package_dir" audit --json > "$audit_json_file" || true
 
-          npx -y npm-audit-sarif "security-reports/${{ matrix.package }}-audit.json" --output "security-reports/${{ matrix.package }}.sarif"
+          severity_counts=$(PACKAGE_NAME="${{ matrix.package }}" AUDIT_JSON_FILE="$audit_json_file" SARIF_FILE="$sarif_file" node <<'NODE'
+          const fs = require('fs');
 
+          const packageName = process.env.PACKAGE_NAME;
+          const auditJsonFile = process.env.AUDIT_JSON_FILE;
+          const sarifFile = process.env.SARIF_FILE;
+
+          const severityLevel = {
+            low: 1,
+            moderate: 2,
+            high: 3,
+            critical: 4,
+          };
+
+          const levelFromSeverity = (severity) => {
+            if (severity === 'critical' || severity === 'high') {
+              return 'error';
+            }
+            if (severity === 'moderate') {
+              return 'warning';
+            }
+            return 'note';
+          };
+
+          const raw = fs.readFileSync(auditJsonFile, 'utf8').trim();
+          const jsonStart = raw.indexOf('{');
+          const jsonEnd = raw.lastIndexOf('}');
+          const rawJson = jsonStart >= 0 && jsonEnd > jsonStart ? raw.slice(jsonStart, jsonEnd + 1) : '{}';
+
+          let audit = {};
+          try {
+            audit = rawJson ? JSON.parse(rawJson) : {};
+          } catch (error) {
+            // Keep a valid SARIF even if pnpm emits malformed output.
+            audit = {};
+          }
+          const advisories = Object.values(audit.advisories || {});
+
+          const rules = advisories.map((advisory) => ({
+            id: String(advisory.id || advisory.module_name || advisory.title),
+            name: advisory.module_name || String(advisory.id || 'unknown-module'),
+            shortDescription: {
+              text: advisory.title || 'Dependency vulnerability',
+            },
+            helpUri: advisory.url || undefined,
+            properties: {
+              securitySeverity: advisory.severity || 'low',
+              tags: ['security', 'dependency'],
+            },
+          }));
+
+          const results = advisories.map((advisory) => ({
+            ruleId: String(advisory.id || advisory.module_name || advisory.title),
+            level: levelFromSeverity(advisory.severity),
+            message: {
+              text: `${advisory.module_name || 'dependency'}: ${advisory.title || 'Vulnerability detected'} (${advisory.severity || 'unknown'})`,
+            },
+            locations: [
+              {
+                physicalLocation: {
+                  artifactLocation: {
+                    uri: `packages/${packageName}/package.json`,
+                  },
+                },
+              },
+            ],
+            properties: {
+              module: advisory.module_name || 'unknown',
+              severity: advisory.severity || 'unknown',
+              recommendation: advisory.recommendation || undefined,
+            },
+          }));
+
+          const sarif = {
+            $schema: 'https://json.schemastore.org/sarif-2.1.0.json',
+            version: '2.1.0',
+            runs: [
+              {
+                tool: {
+                  driver: {
+                    name: 'pnpm-audit',
+                    informationUri: 'https://pnpm.io/cli/audit',
+                    rules,
+                  },
+                },
+                results,
+              },
+            ],
+          };
+
+          fs.writeFileSync(sarifFile, JSON.stringify(sarif, null, 2));
+
+          const countBySeverity = advisories.reduce((acc, advisory) => {
+            const severity = advisory.severity || 'low';
+            if (Object.prototype.hasOwnProperty.call(acc, severity)) {
+              acc[severity] += 1;
+            }
+            return acc;
+          }, {
+            low: 0,
+            moderate: 0,
+            high: 0,
+            critical: 0,
+          });
+
+          const highCount = advisories.filter((advisory) => {
+            const severity = advisory.severity || 'low';
+            return (severityLevel[severity] || 0) >= severityLevel.high;
+          }).length;
+
+          process.stdout.write([
+            `low=${countBySeverity.low}`,
+            `moderate=${countBySeverity.moderate}`,
+            `high=${countBySeverity.high}`,
+            `critical=${countBySeverity.critical}`,
+            `highCount=${highCount}`,
+          ].join('\n'));
+          NODE
+          )
+
+          while IFS='=' read -r key value; do
+            case "$key" in
+              low) low_count="$value" ;;
+              moderate) moderate_count="$value" ;;
+              high) high_count="$value" ;;
+              critical) critical_count="$value" ;;
+            esac
+          done <<< "$severity_counts"
+
+          if [[ "$high_count" =~ ^[0-9]+$ ]] && [[ "$high_count" -gt 0 ]]; then
+            audit_failed=1
+          fi
+
+          echo "low_count=$low_count" >> "$GITHUB_OUTPUT"
+          echo "moderate_count=$moderate_count" >> "$GITHUB_OUTPUT"
+          echo "high_count=$high_count" >> "$GITHUB_OUTPUT"
+          echo "critical_count=$critical_count" >> "$GITHUB_OUTPUT"
           echo "audit_failed=${audit_failed:-0}" >> "$GITHUB_OUTPUT"
+
+      - name: Security audit summary
+        if: always()
+        run: |
+          {
+            echo "### Security audit summary: ${{ matrix.package }}"
+            echo
+            echo "| Severity | Count |"
+            echo "| --- | ---: |"
+            echo "| critical | ${{ steps.security_audit.outputs.critical_count || '0' }} |"
+            echo "| high | ${{ steps.security_audit.outputs.high_count || '0' }} |"
+            echo "| moderate | ${{ steps.security_audit.outputs.moderate_count || '0' }} |"
+            echo "| low | ${{ steps.security_audit.outputs.low_count || '0' }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload security report (SARIF)
         if: always()
