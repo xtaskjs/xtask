@@ -6,14 +6,25 @@ import type {
 } from "../../interfaces/IBotAdapter";
 import type { IBotContext } from "../../interfaces/IBotContext";
 
+type SlackEvent = {
+  text?: string;
+  channel?: string;
+  user?: string;
+};
+
+type SlackEventPayload = {
+  event?: SlackEvent;
+  say?: (message: string, options?: Record<string, unknown>) => Promise<unknown> | unknown;
+};
+
 type SlackBoltLike = {
-  event: (name: string, handler: (payload: any) => any) => any;
-  command?: (name: string, handler: (payload: any) => any) => any;
-  start?: () => Promise<any> | any;
-  stop?: () => Promise<any> | any;
+  event: (name: string, handler: (payload: SlackEventPayload) => Promise<void> | void) => void;
+  command?: (name: string, handler: (payload: SlackEventPayload) => Promise<void> | void) => void;
+  start?: () => Promise<unknown> | unknown;
+  stop?: () => Promise<unknown> | unknown;
   client?: {
     chat?: {
-      postMessage?: (options: any) => Promise<any> | any;
+      postMessage?: (options: Record<string, unknown>) => Promise<unknown> | unknown;
     };
   };
 };
@@ -47,7 +58,7 @@ export class SlackBoltAdapter implements IBotAdapter {
   }
 
   initialize(_options: BotAdapterInitializeOptions): void {
-    this.app.event("message", async ({ event, say }: any) => {
+    this.app.event("message", async ({ event, say }: SlackEventPayload) => {
       if (!this.handler) {
         return;
       }
@@ -55,13 +66,13 @@ export class SlackBoltAdapter implements IBotAdapter {
       const text = event?.text;
       const payload: IBotContext = {
         platform: this.platform,
-        chatId: String(event?.channel || ""),
-        userId: String(event?.user || ""),
+        chatId: event?.channel || "",
+        userId: event?.user || "",
         text,
         command: extractCommand(text),
         raw: event,
-        reply: async (message, sendOptions) => {
-          return say?.(message, sendOptions);
+        reply: (message, sendOptions) => {
+          return Promise.resolve(say?.(message, sendOptions));
         },
       };
 
@@ -77,7 +88,7 @@ export class SlackBoltAdapter implements IBotAdapter {
     await Promise.resolve(this.app.stop?.());
   }
 
-  async sendMessage(message: BotOutgoingMessage): Promise<any> {
+  async sendMessage(message: BotOutgoingMessage): Promise<unknown> {
     return Promise.resolve(
       this.app.client?.chat?.postMessage?.({
         channel: message.chatId,

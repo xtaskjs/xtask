@@ -3,6 +3,11 @@ import express from "express";
 import { CreateApplication } from "@xtaskjs/core";
 import { ExpressAdapter } from "@xtaskjs/express-http";
 import {
+  configureInternationalization,
+  registerInternationalizationFormatter,
+  registerInternationalizationLocale,
+  registerInternationalizationNamespaceLoader,
+} from "@xtaskjs/internationalization";
 import { ConfigModule } from "@xtaskjs/config";
 import { z } from "zod";
 const SampleConfigSchema = z.object({
@@ -17,12 +22,6 @@ ConfigModule.register({
   schema: SampleConfigSchema,
   envFiles: [".env", ".env.local"],
 });
-
-  configureInternationalization,
-  registerInternationalizationFormatter,
-  registerInternationalizationLocale,
-  registerInternationalizationNamespaceLoader,
-} from "@xtaskjs/internationalization";
 
 configureInternationalization({
   defaultLocale: "en-US",

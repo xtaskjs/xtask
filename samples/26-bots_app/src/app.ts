@@ -1,6 +1,17 @@
 import "reflect-metadata";
 import { ApplicationLifeCycle, Container, Service } from "@xtaskjs/core";
 import {
+  BotGateway,
+  BotsModule,
+  BotsService,
+  OnCallbackQuery,
+  OnCommand,
+  OnMessage,
+  SlackAdapter,
+  TelegramAdapter,
+  WhatsappAdapter,
+  getBotsServiceToken,
+} from "@xtaskjs/bots";
 import { ConfigModule } from "@xtaskjs/config";
 import { z } from "zod";
 const SampleConfigSchema = z.object({
@@ -15,18 +26,6 @@ ConfigModule.register({
   schema: SampleConfigSchema,
   envFiles: [".env", ".env.local"],
 });
-
-  BotGateway,
-  BotsModule,
-  BotsService,
-  OnCallbackQuery,
-  OnCommand,
-  OnMessage,
-  SlackAdapter,
-  TelegramAdapter,
-  WhatsappAdapter,
-  getBotsServiceToken,
-} from "@xtaskjs/bots";
 
 @Service()
 @BotGateway(["telegram", "slack", "whatsapp"], { group: ["support", "demo"] })

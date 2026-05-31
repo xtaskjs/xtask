@@ -5,6 +5,11 @@ import { join } from "path";
 import { CreateApplication } from "@xtaskjs/core";
 import { ExpressAdapter } from "@xtaskjs/express-http";
 import {
+  createMailtrapTransportOptions,
+  registerEjsTemplateRenderer,
+  registerMailerTemplate,
+  registerMailerTransport,
+} from "@xtaskjs/mailer";
 import { ConfigModule } from "@xtaskjs/config";
 import { z } from "zod";
 const SampleConfigSchema = z.object({
@@ -19,12 +24,6 @@ ConfigModule.register({
   schema: SampleConfigSchema,
   envFiles: [".env", ".env.local"],
 });
-
-  createMailtrapTransportOptions,
-  registerEjsTemplateRenderer,
-  registerMailerTemplate,
-  registerMailerTransport,
-} from "@xtaskjs/mailer";
 
 registerMailerTransport({
   name: "default",

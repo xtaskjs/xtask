@@ -8,7 +8,7 @@ import type { IBotContext } from "../../interfaces/IBotContext";
 
 export interface SlackAdapterOptions {
   name?: string;
-  sender?: (message: BotOutgoingMessage) => Promise<any> | any;
+  sender?: (message: BotOutgoingMessage) => Promise<unknown> | unknown;
   onInitialize?: (options: BotAdapterInitializeOptions) => Promise<void> | void;
   onStart?: () => Promise<void> | void;
   onStop?: () => Promise<void> | void;
@@ -47,7 +47,7 @@ export class SlackAdapter implements IBotAdapter {
     }
   }
 
-  async sendMessage(message: BotOutgoingMessage): Promise<any> {
+  async sendMessage(message: BotOutgoingMessage): Promise<unknown> {
     if (!this.options.sender) {
       return undefined;
     }

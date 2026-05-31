@@ -4,6 +4,16 @@ import { join } from "path";
 import { CreateApplication } from "@xtaskjs/core";
 import { ExpressAdapter } from "@xtaskjs/express-http";
 import {
+  createMailtrapTransportOptions,
+  registerEjsTemplateRenderer,
+  registerMailerTemplate,
+  registerMailerTransport,
+} from "@xtaskjs/mailer";
+import {
+  SecurityValidationContext,
+  registerJweStrategy,
+  registerJwtStrategy,
+} from "@xtaskjs/security";
 import { ConfigModule } from "@xtaskjs/config";
 import { z } from "zod";
 const SampleConfigSchema = z.object({
@@ -18,17 +28,6 @@ ConfigModule.register({
   schema: SampleConfigSchema,
   envFiles: [".env", ".env.local"],
 });
-
-  createMailtrapTransportOptions,
-  registerEjsTemplateRenderer,
-  registerMailerTemplate,
-  registerMailerTransport,
-} from "@xtaskjs/mailer";
-import {
-  SecurityValidationContext,
-  registerJweStrategy,
-  registerJwtStrategy,
-} from "@xtaskjs/security";
 import { SAMPLE_JWE_SECRET, SAMPLE_JWT_SECRET, SAMPLE_TENANT } from "./security.config";
 import { UserDirectoryService } from "./user-directory.service";
 
