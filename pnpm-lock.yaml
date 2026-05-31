@@ -274,7 +274,7 @@ importers:
         version: 4.2.0
       typeorm:
         specifier: ^0.3.27
-        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
+        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sql.js@1.14.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
@@ -314,7 +314,7 @@ importers:
         version: 4.2.0
       typeorm:
         specifier: ^0.3.27
-        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
+        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sql.js@1.14.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
@@ -671,9 +671,9 @@ importers:
       nodemon:
         specifier: ^3.1.10
         version: 3.1.14
-      sqlite3:
-        specifier: ^5.1.7
-        version: 5.1.7
+      sql.js:
+        specifier: ^1.13.0
+        version: 1.14.1
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
@@ -682,7 +682,7 @@ importers:
         version: 4.2.0
       typeorm:
         specifier: ^0.3.27
-        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
+        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sql.js@1.14.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
@@ -912,7 +912,7 @@ importers:
         version: 5.1.7
       typeorm:
         specifier: ^0.3.28
-        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
+        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sql.js@1.14.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -1490,7 +1490,7 @@ importers:
         version: 5.1.7
       typeorm:
         specifier: ^0.3.28
-        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
+        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sql.js@1.14.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -1536,7 +1536,7 @@ importers:
         version: 0.2.2
       typeorm:
         specifier: ^0.3.28
-        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
+        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sql.js@1.14.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -1591,7 +1591,7 @@ importers:
         version: 27.0.2
       typeorm:
         specifier: ^0.3.28
-        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
+        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sql.js@1.14.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -1643,7 +1643,7 @@ importers:
         version: 27.0.2
       typeorm:
         specifier: ^0.3.28
-        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
+        version: 0.3.30(pg@8.21.0)(redis@4.7.1)(sql.js@1.14.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3))
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -4842,6 +4842,9 @@ packages:
   sql-highlight@6.1.0:
     resolution: {integrity: sha512-ed7OK4e9ywpE7pgRMkMQmZDPKSVdm0oX5IEtZiKnFucSF0zu6c80GZBe38UqHuVhTWJ9xsKgSMjCG2bml86KvA==}
     engines: {node: '>=14'}
+
+  sql.js@1.14.1:
+    resolution: {integrity: sha512-gcj8zBWU5cFsi9WUP+4bFNXAyF1iRpA3LLyS/DP5xlrNzGmPIizUeBggKa8DbDwdqaKwUcTEnChtd2grWo/x/A==}
 
   sqlite3@5.1.7:
     resolution: {integrity: sha512-GGIyOiFaG+TUra3JIfkI/zGP8yZYLPQ0pl1bH+ODjiX57sPhrLU5sQJn1y9bDKZUFYkX1crlrPfSYt0BKKdkog==}
@@ -8506,6 +8509,8 @@ snapshots:
 
   sql-highlight@6.1.0: {}
 
+  sql.js@1.14.1: {}
+
   sqlite3@5.1.7:
     dependencies:
       bindings: 1.5.0
@@ -8732,7 +8737,7 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)):
+  typeorm@0.3.30(pg@8.21.0)(redis@4.7.1)(sql.js@1.14.1)(sqlite3@5.1.7)(ts-node@10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)):
     dependencies:
       '@sqltools/formatter': 1.2.5
       ansis: 4.3.0
@@ -8752,6 +8757,7 @@ snapshots:
     optionalDependencies:
       pg: 8.21.0
       redis: 4.7.1
+      sql.js: 1.14.1
       sqlite3: 5.1.7
       ts-node: 10.9.2(@swc/core@1.15.40)(@types/node@25.9.1)(typescript@5.9.3)
     transitivePeerDependencies:

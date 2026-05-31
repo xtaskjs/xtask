@@ -25,7 +25,7 @@ class UserEntity {
   name!: string;
 }
 
-describe("@xtaskjs/typeorm sqlite integration", () => {
+describe("@xtaskjs/typeorm sqljs integration", () => {
   beforeEach(async () => {
     await shutdownTypeOrmIntegration();
     clearRegisteredTypeOrmDataSources();
@@ -40,11 +40,10 @@ describe("@xtaskjs/typeorm sqlite integration", () => {
     clearRegisteredTypeOrmSeeders();
   });
 
-  test("initializes datasource and persists with sqlite memory", async () => {
+  test("initializes datasource and persists with sqljs memory", async () => {
     registerTypeOrmDataSource({
       name: "default",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
@@ -66,8 +65,7 @@ describe("@xtaskjs/typeorm sqlite integration", () => {
 
     registerTypeOrmDataSource({
       name: "default",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
@@ -109,8 +107,7 @@ describe("@xtaskjs/typeorm sqlite integration", () => {
 
     registerTypeOrmDataSource({
       name: "default",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
       runMigrationsOnServerStart: true,
