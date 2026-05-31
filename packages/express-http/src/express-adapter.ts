@@ -1,12 +1,12 @@
-import { HttpMethod } from "@xtaskjs/common";
+import { type HttpMethod } from "@xtaskjs/common";
 import {
-  ExpressAdapterOptions,
-  HttpAdapter,
-  HttpRequestHandler,
-  HttpRequestLike,
-  HttpResponseLike,
-  HttpServerOptions,
-  HttpViewResult,
+  type ExpressAdapterOptions,
+  type HttpAdapter,
+  type HttpRequestHandler,
+  type HttpRequestLike,
+  type HttpResponseLike,
+  type HttpServerOptions,
+  type HttpViewResult,
 } from "./types";
 import { readFile } from "fs/promises";
 import path from "path";
@@ -101,6 +101,18 @@ const interpolateTemplate = (template: string, model: Record<string, any>): stri
 
 const withLeadingDot = (value: string): string => (value.startsWith(".") ? value : `.${value}`);
 
+const isExpressNativeApp = (app: any): boolean => {
+  return typeof app === "function" && typeof app.handle === "function";
+};
+
+let cachedExpressModule: any;
+const getExpressModule = (): any => {
+  if (!cachedExpressModule) {
+    cachedExpressModule = require("express");
+  }
+  return cachedExpressModule;
+};
+
 export class ExpressAdapter implements HttpAdapter {
   public readonly type = "express" as const;
   private readonly app: any;
@@ -120,14 +132,18 @@ export class ExpressAdapter implements HttpAdapter {
     }
 
     const templateEngine = options?.templateEngine;
-    const expressModule = require("express");
+    const expressNativeApp = isExpressNativeApp(app);
 
-    if (typeof expressModule.json === "function") {
-      app.use(expressModule.json());
-    }
+    if (expressNativeApp) {
+      const expressModule = getExpressModule();
 
-    if (typeof expressModule.urlencoded === "function") {
-      app.use(expressModule.urlencoded({ extended: true }));
+      if (typeof expressModule.json === "function") {
+        app.use(expressModule.json());
+      }
+
+      if (typeof expressModule.urlencoded === "function") {
+        app.use(expressModule.urlencoded({ extended: true }));
+      }
     }
 
     this.viewsPath = templateEngine?.viewsPath || path.join(process.cwd(), DEFAULT_VIEWS_FOLDER);
@@ -148,7 +164,11 @@ export class ExpressAdapter implements HttpAdapter {
     if (staticFiles?.enabled !== false) {
       const publicPath = staticFiles?.publicPath || path.join(process.cwd(), DEFAULT_PUBLIC_FOLDER);
       const urlPrefix = staticFiles?.urlPrefix || "/";
-      const staticMiddleware = expressModule.static(publicPath);
+
+      const staticMiddleware = expressNativeApp
+        ? getExpressModule().static(publicPath)
+        : ((_req: any, _res: any, next?: () => void) => next?.());
+
       if (urlPrefix === "/") {
         app.use(staticMiddleware);
       } else {
@@ -222,7 +242,7 @@ export class ExpressAdapter implements HttpAdapter {
 
     if (this.hasNativeViewEngine && typeof res.render === "function") {
       await new Promise<void>((resolve, reject) => {
-        res.render!(payload.template, payload.model || {}, (error, html) => {
+        res.render(payload.template, payload.model || {}, (error, html) => {
           if (error) {
             reject(error);
             return;
@@ -257,7 +277,7 @@ export class ExpressAdapter implements HttpAdapter {
       return;
     }
     await new Promise<void>((resolve, reject) => {
-      this.closeServer!.close((error?: Error) => {
+      this.closeServer.close((error?: Error) => {
         if (error) {
           reject(error);
           return;

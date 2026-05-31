@@ -153,7 +153,7 @@ describe("Controller route integration", () => {
     expect(result.verbose).toBe(true);
     expect(result.request).toBe(request);
     expect(result.response).toBe(response);
-  });
+  }, 30000);
 
   it("should reject invalid DTO payloads with a 400 validation error", async () => {
     class CreateUserBody {

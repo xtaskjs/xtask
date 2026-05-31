@@ -35,7 +35,9 @@ const createHttpAdapter = vi.fn((_adapter?: any, _adapterInstance?: any) => ({
 const createGlobalValidationPipe = vi.fn(() => ({ transform: vi.fn() }));
 
 vi.mock("../src/server/application-lifecycle", () => ({
-  ApplicationLifeCycle: vi.fn(() => mockLifecycle),
+  ApplicationLifeCycle: vi.fn(function () {
+    return mockLifecycle;
+  }),
 }));
 
 vi.mock("../src/kernel/kernel", () => ({
@@ -45,7 +47,9 @@ vi.mock("../src/kernel/kernel", () => ({
 }));
 
 vi.mock("../src/kernel/kernellisteners", () => ({
-  KernelListeners: vi.fn(() => ({})),
+  KernelListeners: vi.fn(function () {
+    return {};
+  }),
 }));
 
 vi.mock("../src/server/registereventhandlers", () => ({
@@ -58,7 +62,9 @@ vi.mock("../src/http", () => ({
   createGlobalValidationPipe: () => createGlobalValidationPipe(),
   registerContainerInLifecycle: (kernel: any, lifecycle: any) =>
     registerContainerInLifecycle(kernel, lifecycle),
-  XTaskHttpApplication: vi.fn(() => mockApp),
+  XTaskHttpApplication: vi.fn(function () {
+    return mockApp;
+  }),
 }));
 
 import { Bootstrap, CreateApplication } from "../src/bootstrap";

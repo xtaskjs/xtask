@@ -30,10 +30,6 @@ export class EmailAddress extends StringValueObject {
     this.normalizedValue = normalized;
   }
 
-  static fromString(value: string) {
-    return new EmailAddress(value);
-  }
-
   toString() {
     return this.normalizedValue;
   }
@@ -84,10 +80,6 @@ export class BudgetAmount extends NumberValueObject {
     this.amount = normalized;
   }
 
-  static fromString(value: string) {
-    return new BudgetAmount(Number(value));
-  }
-
   toNumber() {
     return this.amount;
   }
@@ -114,10 +106,6 @@ export class CustomerPreferences extends JsonValueObject<CustomerPreferencesValu
 
     super(normalized);
     this.normalizedValue = normalized;
-  }
-
-  static fromJSON(value: string) {
-    return new CustomerPreferences(JSON.parse(value) as CustomerPreferencesValue);
   }
 
   toPlain() {
@@ -152,14 +140,6 @@ export class SignupDate extends DateValueObject {
   constructor(value: Date) {
     super(value);
     this.currentDate = new Date(value.getTime());
-  }
-
-  static fromString(value: string) {
-    return new SignupDate(new Date(value));
-  }
-
-  static fromDate(value: Date) {
-    return new SignupDate(value);
   }
 
   toJSON() {

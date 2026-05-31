@@ -56,11 +56,13 @@ describe("Kernel", () => {
       files: ["/project/src/app.service.ts"],
     };
 
-    vi.mocked(Container).mockImplementation(() => ({
-      autoloadFiles,
-      scanDir,
-      get,
-    }));
+    vi.mocked(Container).mockImplementation(function () {
+      return {
+        autoloadFiles,
+        scanDir,
+        get,
+      };
+    });
 
     vi.mocked(existsSync).mockImplementation(() => true);
 
@@ -69,13 +71,15 @@ describe("Kernel", () => {
     const write = vi.fn();
     const getManifestPath = vi.fn(() => "/project/.xtask-manifest.json");
     const getPrebuiltManifestPath = vi.fn(() => "/project/.xtask-manifest.prebuilt.json");
-    vi.mocked(ManifestCacheService).mockImplementation(() => ({
-      read,
-      readPrebuilt,
-      write,
-      getManifestPath,
-      getPrebuiltManifestPath,
-    }));
+    vi.mocked(ManifestCacheService).mockImplementation(function () {
+      return {
+        read,
+        readPrebuilt,
+        write,
+        getManifestPath,
+        getPrebuiltManifestPath,
+      };
+    });
 
     const kernel = new Kernel();
     await kernel.boot({ emit } as any);
@@ -99,11 +103,13 @@ describe("Kernel", () => {
     const logger = { info: vi.fn() };
     const emit = vi.fn(async () => {});
 
-    vi.mocked(Container).mockImplementation(() => ({
-      autoloadFiles,
-      scanDir,
-      get: vi.fn(async () => logger),
-    }));
+    vi.mocked(Container).mockImplementation(function () {
+      return {
+        autoloadFiles,
+        scanDir,
+        get: vi.fn(async () => logger),
+      };
+    });
 
     vi.mocked(existsSync).mockImplementation(() => true);
 
@@ -112,13 +118,15 @@ describe("Kernel", () => {
     const write = vi.fn();
     const getManifestPath = vi.fn(() => "/project/.xtask-manifest.json");
     const getPrebuiltManifestPath = vi.fn(() => "/project/.xtask-manifest.prebuilt.json");
-    vi.mocked(ManifestCacheService).mockImplementation(() => ({
-      read,
-      readPrebuilt,
-      write,
-      getManifestPath,
-      getPrebuiltManifestPath,
-    }));
+    vi.mocked(ManifestCacheService).mockImplementation(function () {
+      return {
+        read,
+        readPrebuilt,
+        write,
+        getManifestPath,
+        getPrebuiltManifestPath,
+      };
+    });
 
     const kernel = new Kernel();
     await kernel.boot({ emit } as any);
@@ -143,11 +151,13 @@ describe("Kernel", () => {
     const logger = { info: vi.fn() };
     const emit = vi.fn(async () => {});
 
-    vi.mocked(Container).mockImplementation(() => ({
-      autoloadFiles,
-      scanDir,
-      get: vi.fn(async () => logger),
-    }));
+    vi.mocked(Container).mockImplementation(function () {
+      return {
+        autoloadFiles,
+        scanDir,
+        get: vi.fn(async () => logger),
+      };
+    });
 
     vi.mocked(existsSync).mockImplementation(() => true);
 
@@ -162,13 +172,15 @@ describe("Kernel", () => {
     const write = vi.fn();
     const getManifestPath = vi.fn(() => "/project/.xtask-manifest.json");
     const getPrebuiltManifestPath = vi.fn(() => "/project/.xtask-manifest.prebuilt.json");
-    vi.mocked(ManifestCacheService).mockImplementation(() => ({
-      read,
-      readPrebuilt,
-      write,
-      getManifestPath,
-      getPrebuiltManifestPath,
-    }));
+    vi.mocked(ManifestCacheService).mockImplementation(function () {
+      return {
+        read,
+        readPrebuilt,
+        write,
+        getManifestPath,
+        getPrebuiltManifestPath,
+      };
+    });
 
     const kernel = new Kernel();
     await kernel.boot({ emit } as any);
@@ -190,16 +202,20 @@ describe("Kernel", () => {
       get: vi.fn(async () => ({ info: vi.fn() })),
     };
 
-    vi.mocked(Container).mockImplementation(() => container);
+    vi.mocked(Container).mockImplementation(function () {
+      return container;
+    });
     vi.mocked(existsSync).mockImplementation(() => false);
 
-    vi.mocked(ManifestCacheService).mockImplementation(() => ({
-      read: vi.fn(() => null),
-      readPrebuilt: vi.fn(() => null),
-      write: vi.fn(),
-      getManifestPath: vi.fn(() => "/project/.xtask-manifest.json"),
-      getPrebuiltManifestPath: vi.fn(() => "/project/.xtask-manifest.prebuilt.json"),
-    }));
+    vi.mocked(ManifestCacheService).mockImplementation(function () {
+      return {
+        read: vi.fn(() => null),
+        readPrebuilt: vi.fn(() => null),
+        write: vi.fn(),
+        getManifestPath: vi.fn(() => "/project/.xtask-manifest.json"),
+        getPrebuiltManifestPath: vi.fn(() => "/project/.xtask-manifest.prebuilt.json"),
+      };
+    });
 
     const kernel = new Kernel();
     await kernel.boot();
@@ -220,11 +236,13 @@ describe("Kernel", () => {
       files: ["/project/src/prebuilt.service.ts"],
     };
 
-    vi.mocked(Container).mockImplementation(() => ({
-      autoloadFiles,
-      scanDir,
-      get: vi.fn(async () => logger),
-    }));
+    vi.mocked(Container).mockImplementation(function () {
+      return {
+        autoloadFiles,
+        scanDir,
+        get: vi.fn(async () => logger),
+      };
+    });
 
     vi.mocked(existsSync).mockImplementation(() => true);
 
@@ -239,13 +257,15 @@ describe("Kernel", () => {
     const getManifestPath = vi.fn(() => "/project/.xtask-manifest.json");
     const getPrebuiltManifestPath = vi.fn(() => "/project/.xtask-manifest.prebuilt.json");
 
-    vi.mocked(ManifestCacheService).mockImplementation(() => ({
-      read,
-      readPrebuilt,
-      write,
-      getManifestPath,
-      getPrebuiltManifestPath,
-    }));
+    vi.mocked(ManifestCacheService).mockImplementation(function () {
+      return {
+        read,
+        readPrebuilt,
+        write,
+        getManifestPath,
+        getPrebuiltManifestPath,
+      };
+    });
 
     const kernel = new Kernel({
       prebuiltManifest: { enabled: true },
@@ -278,21 +298,25 @@ describe("Kernel", () => {
       files: ["/project/src/app.service.ts"],
     };
 
-    vi.mocked(Container).mockImplementation(() => ({
-      autoloadFiles,
-      scanDir,
-      get: vi.fn(async () => logger),
-    }));
+    vi.mocked(Container).mockImplementation(function () {
+      return {
+        autoloadFiles,
+        scanDir,
+        get: vi.fn(async () => logger),
+      };
+    });
 
     vi.mocked(existsSync).mockImplementation(() => true);
 
-    vi.mocked(ManifestCacheService).mockImplementation(() => ({
-      read: vi.fn(() => manifest),
-      readPrebuilt: vi.fn(() => null),
-      write: vi.fn(),
-      getManifestPath: vi.fn(() => "/project/.xtask-manifest.json"),
-      getPrebuiltManifestPath: vi.fn(() => "/project/.xtask-manifest.prebuilt.json"),
-    }));
+    vi.mocked(ManifestCacheService).mockImplementation(function () {
+      return {
+        read: vi.fn(() => manifest),
+        readPrebuilt: vi.fn(() => null),
+        write: vi.fn(),
+        getManifestPath: vi.fn(() => "/project/.xtask-manifest.json"),
+        getPrebuiltManifestPath: vi.fn(() => "/project/.xtask-manifest.prebuilt.json"),
+      };
+    });
 
     const kernel = new Kernel({
       hotManifestWatcher: { enabled: true, debounceMs: 80 },

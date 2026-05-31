@@ -20,6 +20,8 @@ import {
   shutdownSecurityIntegration,
 } from "../src";
 
+const jsonwebtoken = require("jsonwebtoken");
+
 const jwtSecret = new TextEncoder().encode("jwt-secret-for-tests-1234567890");
 const jweSecret = new TextEncoder().encode("0123456789abcdef0123456789abcdef");
 
@@ -115,8 +117,6 @@ describe("@xtaskjs/security integration", () => {
   });
 
   test("authenticates JWT requests and registers services in the container", async () => {
-    const jsonwebtoken = require("jsonwebtoken");
-
     class UserDirectory {
       private readonly users = new Map<string, { id: string; roles: string[]; active: boolean }>([
         ["alice", { id: "alice", roles: ["admin"], active: true }],
@@ -204,8 +204,6 @@ describe("@xtaskjs/security integration", () => {
   });
 
   test("uses validate callbacks for DI-backed user lookup and claim validation", async () => {
-    const jsonwebtoken = require("jsonwebtoken");
-
     class AccountService {
       private readonly accounts = new Map<string, { id: string; roles: string[]; active: boolean }>([
         ["sarah", { id: "sarah", roles: ["editor"], active: true }],

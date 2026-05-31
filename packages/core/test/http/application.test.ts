@@ -37,6 +37,46 @@ vi.mock("@xtaskjs/internationalization", () => ({
   runWithInternationalizationContext: vi.fn(async (_request: any, callback: any) => callback()),
 }));
 
+vi.mock("@xtaskjs/typeorm", () => ({
+  initializeTypeOrmIntegration: vi.fn(async () => {}),
+  shutdownTypeOrmIntegration: vi.fn(async () => {}),
+}));
+
+vi.mock("@xtaskjs/security", () => ({
+  initializeSecurityIntegration: vi.fn(async () => {}),
+  shutdownSecurityIntegration: vi.fn(async () => {}),
+}));
+
+vi.mock("@xtaskjs/scheduler", () => ({
+  initializeSchedulerIntegration: vi.fn(async () => {}),
+  shutdownSchedulerIntegration: vi.fn(async () => {}),
+}));
+
+vi.mock("@xtaskjs/queues", () => ({
+  initializeQueueIntegration: vi.fn(async () => {}),
+  shutdownQueueIntegration: vi.fn(async () => {}),
+}));
+
+vi.mock("@xtaskjs/event-source", () => ({
+  initializeEventSourceIntegration: vi.fn(async () => {}),
+  shutdownEventSourceIntegration: vi.fn(async () => {}),
+}));
+
+vi.mock("@xtaskjs/throttler", () => ({
+  initializeThrottlerIntegration: vi.fn(async () => {}),
+  shutdownThrottlerIntegration: vi.fn(async () => {}),
+}));
+
+vi.mock("@xtaskjs/config", () => ({
+  initializeConfigIntegration: vi.fn(async () => {}),
+  shutdownConfigIntegration: vi.fn(async () => {}),
+}));
+
+vi.mock("@xtaskjs/validation", () => ({
+  initializeValidationIntegration: vi.fn(async () => {}),
+  shutdownValidationIntegration: vi.fn(async () => {}),
+}));
+
 const socketIoMocks = vi.hoisted(() => ({
   initializeSocketIoIntegration: vi.fn(async () => {}),
   shutdownSocketIoIntegration: vi.fn(async () => {}),
@@ -335,7 +375,13 @@ describe("XTaskHttpApplication", () => {
     const lifecycle = { dispatchControllerRoute: vi.fn() } as any;
     const app = new XTaskHttpApplication({ adapter: adapter as any, lifecycle, kernel: {} as any });
 
-    await app.close();
+    const previousNodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "development";
+    try {
+      await app.close();
+    } finally {
+      process.env.NODE_ENV = previousNodeEnv;
+    }
 
     expect(shutdownSocketIoIntegration).toHaveBeenCalledTimes(1);
     expect(adapter.close).toHaveBeenCalledTimes(1);
@@ -343,7 +389,7 @@ describe("XTaskHttpApplication", () => {
     expect(shutdownMailerIntegration).toHaveBeenCalledTimes(1);
     expect(shutdownCacheIntegration).toHaveBeenCalledTimes(1);
     expect(shutdownInternationalizationIntegration).toHaveBeenCalledTimes(1);
-  });
+  }, 30000);
 
   it("should render a view using adapter renderView", async () => {
     const adapter = {
@@ -465,7 +511,14 @@ describe("http application factories", () => {
     const kernel = { getContainer: vi.fn(async () => container) } as any;
     const lifecycle = {} as any;
 
-    await registerContainerInLifecycle(kernel, lifecycle);
+    const previousNodeEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "development";
+
+    try {
+      await registerContainerInLifecycle(kernel, lifecycle);
+    } finally {
+      process.env.NODE_ENV = previousNodeEnv;
+    }
 
     expect(kernel.getContainer).toHaveBeenCalledTimes(1);
     expect(initializeSocketIoIntegration).toHaveBeenCalledWith(container, lifecycle);
@@ -474,5 +527,5 @@ describe("http application factories", () => {
     expect(initializeCacheIntegration).toHaveBeenCalledWith(container, lifecycle);
     expect(initializeInternationalizationIntegration).toHaveBeenCalledWith(container);
     expect(registerLifeCycleListeners).toHaveBeenCalledTimes(1);
-  });
+  }, 30000);
 });

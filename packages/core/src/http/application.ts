@@ -285,6 +285,10 @@ const resolveTypeOrmInitialize = (): TypeOrmInitializeFn | undefined => {
 };
 
 const resolveTypeOrmShutdown = (): TypeOrmShutdownFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/typeorm")) {
+    return undefined;
+  }
+
   try {
     const typeormPackage = requireFromApplication<{
       shutdownTypeOrmIntegration?: TypeOrmShutdownFn;
@@ -333,6 +337,10 @@ const resolveSecurityInitialize = (): SecurityInitializeFn | undefined => {
 };
 
 const resolveSecurityShutdown = (): SecurityShutdownFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/security")) {
+    return undefined;
+  }
+
   try {
     const securityPackage = requireFromApplication<{
       shutdownSecurityIntegration?: SecurityShutdownFn;
@@ -389,6 +397,10 @@ const resolveMailerShutdown = (): MailerShutdownFn | undefined => {
   const override = httpIntegrationResolverOverrides?.mailerShutdown;
   if (typeof override === "function") {
     return override;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/mailer")) {
+    return undefined;
   }
 
   try {
@@ -449,6 +461,10 @@ const resolveCacheShutdown = (): CacheShutdownFn | undefined => {
     return override;
   }
 
+  if (!isPackageDeclaredInApplication("@xtaskjs/cache")) {
+    return undefined;
+  }
+
   try {
     const cachePackage = requireFromApplication<{
       shutdownCacheIntegration?: CacheShutdownFn;
@@ -497,6 +513,10 @@ const resolveSchedulerInitialize = (): SchedulerInitializeFn | undefined => {
 };
 
 const resolveSchedulerShutdown = (): SchedulerShutdownFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/scheduler")) {
+    return undefined;
+  }
+
   try {
     const schedulerPackage = requireFromApplication<{
       shutdownSchedulerIntegration?: SchedulerShutdownFn;
@@ -545,6 +565,10 @@ const resolveQueueInitialize = (): QueueInitializeFn | undefined => {
 };
 
 const resolveQueueShutdown = (): QueueShutdownFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/queues")) {
+    return undefined;
+  }
+
   try {
     const queuesPackage = requireFromApplication<{
       shutdownQueueIntegration?: QueueShutdownFn;
@@ -601,6 +625,10 @@ const resolveSocketIoShutdown = (): SocketIoShutdownFn | undefined => {
   const override = httpIntegrationResolverOverrides?.socketIoShutdown;
   if (typeof override === "function") {
     return override;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/socket-io")) {
+    return undefined;
   }
 
   try {
@@ -661,6 +689,10 @@ const resolveCqrsShutdown = (): CqrsShutdownFn | undefined => {
     return override;
   }
 
+  if (!isPackageDeclaredInApplication("@xtaskjs/cqrs")) {
+    return undefined;
+  }
+
   try {
     const cqrsPackage = requireFromApplication<{
       shutdownCqrsIntegration?: CqrsShutdownFn;
@@ -709,6 +741,10 @@ const resolveEventSourceInitialize = (): EventSourceInitializeFn | undefined => 
 };
 
 const resolveEventSourceShutdown = (): EventSourceShutdownFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/event-source")) {
+    return undefined;
+  }
+
   try {
     const eventSourcePackage = requireFromApplication<{
       shutdownEventSourceIntegration?: EventSourceShutdownFn;
@@ -765,6 +801,10 @@ const resolveInternationalizationShutdown = (): InternationalizationShutdownFn |
   const override = httpIntegrationResolverOverrides?.internationalizationShutdown;
   if (typeof override === "function") {
     return override;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/internationalization")) {
+    return undefined;
   }
 
   try {
@@ -846,6 +886,10 @@ const resolveThrottlerInitialize = (): ThrottlerInitializeFn | undefined => {
 };
 
 const resolveThrottlerShutdown = (): ThrottlerShutdownFn | undefined => {
+  if (!isPackageDeclaredInApplication("@xtaskjs/throttler")) {
+    return undefined;
+  }
+
   try {
     const throttlerPackage = requireFromApplication<{
       shutdownThrottlerIntegration?: ThrottlerShutdownFn;
