@@ -173,8 +173,7 @@ describe("@xtaskjs/event-source integration", () => {
 
     registerTypeOrmDataSource({
       name: "events-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [],
       synchronize: true,
     });

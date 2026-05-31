@@ -234,15 +234,13 @@ describe("@xtaskjs/cqrs integration", () => {
 
     registerTypeOrmDataSource({
       name: "write-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
     registerTypeOrmDataSource({
       name: "read-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
@@ -280,15 +278,13 @@ describe("@xtaskjs/cqrs integration", () => {
 
     registerTypeOrmDataSource({
       name: "write-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
     registerTypeOrmDataSource({
       name: "read-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
@@ -312,15 +308,13 @@ describe("@xtaskjs/cqrs integration", () => {
 
     registerTypeOrmDataSource({
       name: "write-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
     registerTypeOrmDataSource({
       name: "read-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
@@ -352,15 +346,13 @@ describe("@xtaskjs/cqrs integration", () => {
 
     registerTypeOrmDataSource({
       name: "write-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
     registerTypeOrmDataSource({
       name: "read-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
@@ -389,15 +381,13 @@ describe("@xtaskjs/cqrs integration", () => {
 
     registerTypeOrmDataSource({
       name: "write-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
     registerTypeOrmDataSource({
       name: "read-db",
-      type: "sqlite",
-      database: ":memory:",
+      type: "sqljs",
       entities: [UserEntity],
       synchronize: true,
     });
