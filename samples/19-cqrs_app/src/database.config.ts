@@ -4,8 +4,9 @@ import { UserWriteEntity } from "./user-write.entity";
 
 @TypeOrmDataSource({
   name: "write-db",
-  type: "sqlite",
-  database: process.env.WRITE_DB_PATH || "xtask-cqrs-write.sqlite",
+  type: "sqljs",
+  location: process.env.WRITE_DB_PATH || "xtask-cqrs-write.sqlite",
+  autoSave: true,
   entities: [UserWriteEntity],
   synchronize: true,
 })
@@ -13,8 +14,9 @@ export class WriteDatabaseConfig {}
 
 @TypeOrmDataSource({
   name: "read-db",
-  type: "sqlite",
-  database: process.env.READ_DB_PATH || "xtask-cqrs-read.sqlite",
+  type: "sqljs",
+  location: process.env.READ_DB_PATH || "xtask-cqrs-read.sqlite",
+  autoSave: true,
   entities: [UserProjectionEntity],
   synchronize: true,
 })

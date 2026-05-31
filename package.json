@@ -67,7 +67,6 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.0.5",
     "nodemon": "^3.1.10",
-    "sqlite3": "^5.1.7",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "turbo": "^2.9.14",

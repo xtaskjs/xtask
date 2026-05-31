@@ -19,7 +19,7 @@
     "@xtaskjs/typeorm": "workspace:*",
     "fastify": "^5.2.1",
     "reflect-metadata": "^0.2.2",
-    "sqlite3": "^5.1.7",
+    "sql.js": "^1.13.0",
     "typeorm": "^0.3.28",
     "@xtaskjs/config": "workspace:*",
     "zod": "^3.25.76"

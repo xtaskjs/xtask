@@ -3,8 +3,9 @@ import { UserProjectionEntity } from "./user-projection.entity";
 
 @TypeOrmDataSource({
   name: "event-source-db",
-  type: "sqlite",
-  database: process.env.EVENT_SOURCE_DB_PATH || "xtask-event-source.sqlite",
+  type: "sqljs",
+  location: process.env.EVENT_SOURCE_DB_PATH || "xtask-event-source.sqlite",
+  autoSave: true,
   entities: [UserProjectionEntity],
   synchronize: true,
 })

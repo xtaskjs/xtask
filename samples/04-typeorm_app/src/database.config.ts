@@ -3,8 +3,9 @@ import { UserEntity } from "./user.entity";
 
 @TypeOrmDataSource({
   name: "default",
-  type: "sqlite",
-  database: process.env.DB_PATH || "xtask-typeorm.sqlite",
+  type: "sqljs",
+  location: process.env.DB_PATH || "xtask-typeorm.sqlite",
+  autoSave: true,
   entities: [UserEntity],
   synchronize: false,
   runMigrationsOnServerStart: true,

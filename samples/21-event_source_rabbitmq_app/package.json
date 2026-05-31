@@ -24,7 +24,7 @@
     "@xtaskjs/validation": "workspace:*",
     "amqplib": "^0.10.9",
     "reflect-metadata": "^0.2.2",
-    "sqlite3": "^5.1.7",
+    "sql.js": "^1.13.0",
     "ts-morph": "^27.0.0",
     "typeorm": "^0.3.28",
     "zod": "^3.25.76",
