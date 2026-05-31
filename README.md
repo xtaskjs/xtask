@@ -24,6 +24,29 @@
 - `26-bots_app`: unified bots sample with Telegram, Slack, and WhatsApp adapters in a single `@xtaskjs/bots` runtime.
 - `27-bots_webhook_security_app`: unified bots webhook sample for Slack/Telegram with HMAC signature validation and JWT-protected audit routes via `@xtaskjs/security`.
 
+## Workspace Packages
+
+- `@xtaskjs/common`: shared decorators, metadata, logging, and cross-cutting primitives.
+- `@xtaskjs/core`: DI container, lifecycle, kernel, scanner, and app bootstrap runtime.
+- `@xtaskjs/config`: schema-driven configuration loading and environment validation.
+- `@xtaskjs/value-objects`: value object helpers, converters, factories, and decorators.
+- `@xtaskjs/validation`: request validation integration and validation pipe helpers.
+- `@xtaskjs/express-http`: Express HTTP adapter integration.
+- `@xtaskjs/fastify-http`: Fastify HTTP adapter integration.
+- `@xtaskjs/typeorm`: TypeORM module integration and lifecycle wiring.
+- `@xtaskjs/security`: JWT/JWE security strategies, guards, and auth helpers.
+- `@xtaskjs/mailer`: mail transports, template renderers, and email dispatch helpers.
+- `@xtaskjs/cache`: in-memory/redis cache services and HTTP cache helpers.
+- `@xtaskjs/scheduler`: cron/interval/timeout scheduling runtime and lifecycle hooks.
+- `@xtaskjs/queues`: queues abstraction and broker transports (memory/RabbitMQ).
+- `@xtaskjs/socket-io`: Socket.IO gateway integration and broadcast helpers.
+- `@xtaskjs/internationalization`: locale resolution, translation, formatters, and namespaces.
+- `@xtaskjs/throttler`: throttling decorators, guards, stores, and lifecycle support.
+- `@xtaskjs/testing`: testing runtime, module builder, and DI override utilities.
+- `@xtaskjs/cqrs`: command/query buses, handlers, repositories, and projection support.
+- `@xtaskjs/event-source`: event-sourcing runtime with aggregate/event-store integration.
+- `@xtaskjs/bots`: multi-platform bots runtime for Telegram, Slack, and WhatsApp adapters.
+
 ## Follow The Latest Bots Samples
 
 Recommended order:

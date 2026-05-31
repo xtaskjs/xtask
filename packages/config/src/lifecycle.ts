@@ -1,7 +1,10 @@
 import type { ApplicationLifeCycle, Container } from "@xtaskjs/core";
-import { getRequiredConfigConfiguration, resetConfigConfiguration } from "./configuration";
-import { loadEnvironment } from "./env.loader";
-import { ConfigValidationError } from "./errors";
+import {
+  getConfiguredConfigService,
+  getConfiguredLoadedFiles,
+  getRequiredConfigConfiguration,
+  resetConfigConfiguration,
+} from "./configuration";
 import { ConfigService } from "./service";
 import { getConfigLifecycleToken, getConfigServiceToken } from "./tokens";
 
@@ -13,20 +16,17 @@ export class ConfigLifecycleManager {
   async initialize(container?: Container, lifecycle?: ApplicationLifeCycle): Promise<void> {
     await this.destroy();
 
-    const configuration = getRequiredConfigConfiguration();
-    const loadedEnvironment = loadEnvironment(configuration);
-    const parsed = configuration.schema.safeParse(loadedEnvironment.values);
-
-    if (!parsed.success) {
-      throw new ConfigValidationError({
-        issues: parsed.error.issues,
-        keyMap: loadedEnvironment.keyMap,
-      });
+    getRequiredConfigConfiguration();
+    const configuredService = getConfiguredConfigService();
+    if (!configuredService) {
+      throw new Error(
+        "Config service is not prepared. Call configureConfig(...) or ConfigModule.register(...) before initializeConfigIntegration()."
+      );
     }
 
-    this.service = new ConfigService(parsed.data as Record<string, unknown>);
+    this.service = configuredService as ConfigService<any>;
     this.initialized = true;
-    this.loadedFiles = loadedEnvironment.loadedFiles;
+    this.loadedFiles = getConfiguredLoadedFiles();
 
     this.registerContainerBindings(container);
 

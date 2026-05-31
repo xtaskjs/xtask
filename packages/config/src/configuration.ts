@@ -1,10 +1,15 @@
 import path from "node:path";
-import type { ZodTypeAny } from "zod";
+import { ZodError, type ZodTypeAny } from "zod";
+import { loadEnvironment } from "./env.loader";
+import { ConfigValidationError } from "./errors";
+import { ConfigService } from "./service";
 import type { ConfigModuleOptions, ResolvedConfigModuleOptions } from "./types";
 
 const DEFAULT_ENV_FILES = [".env"];
 
 let configuration: ResolvedConfigModuleOptions | undefined;
+let configuredService: ConfigService<Record<string, unknown>> | undefined;
+let configuredLoadedFiles: string[] = [];
 
 const normalizeOptions = <TSchema extends ZodTypeAny>(
   value: ConfigModuleOptions<TSchema>
@@ -26,7 +31,25 @@ const normalizeOptions = <TSchema extends ZodTypeAny>(
 export const configureConfig = <TSchema extends ZodTypeAny>(
   value: ConfigModuleOptions<TSchema>
 ): ResolvedConfigModuleOptions => {
-  configuration = normalizeOptions(value);
+  const normalized = normalizeOptions(value);
+  const loadedEnvironment = loadEnvironment(normalized);
+
+  try {
+    const parsed = normalized.schema.parse(loadedEnvironment.values);
+    configuration = normalized;
+    configuredService = new ConfigService(parsed as Record<string, unknown>);
+    configuredLoadedFiles = loadedEnvironment.loadedFiles;
+  } catch (error) {
+    if (error instanceof ZodError) {
+      throw new ConfigValidationError({
+        issues: error.issues,
+        keyMap: loadedEnvironment.keyMap,
+      });
+    }
+
+    throw error;
+  }
+
   return getConfigConfiguration();
 };
 
@@ -55,4 +78,16 @@ export const getRequiredConfigConfiguration = (): ResolvedConfigModuleOptions =>
 
 export const resetConfigConfiguration = (): void => {
   configuration = undefined;
+  configuredService = undefined;
+  configuredLoadedFiles = [];
+};
+
+export const getConfiguredConfigService = <
+  TConfig extends Record<string, unknown> = Record<string, unknown>
+>(): ConfigService<TConfig> | undefined => {
+  return configuredService as ConfigService<TConfig> | undefined;
+};
+
+export const getConfiguredLoadedFiles = (): string[] => {
+  return [...configuredLoadedFiles];
 };

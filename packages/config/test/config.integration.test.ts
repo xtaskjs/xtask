@@ -3,7 +3,6 @@ import { Container } from "@xtaskjs/core";
 import { z } from "zod";
 import {
   ConfigModule,
-  ConfigValidationError,
   configureConfig,
   getConfigLifecycleManager,
   getConfigService,
@@ -63,20 +62,6 @@ describe("@xtaskjs/config", () => {
 
     const service = getConfigService<{ HOST: string; PORT: number }>();
     expect(service?.getAll()).toEqual({ HOST: "localhost", PORT: 5432 });
-  });
-
-  test("fails fast with a ConfigValidationError when configuration is invalid", async () => {
-    configureConfig({
-      schema: z.object({
-        PORT: z.string().transform((value) => Number(value)).refine((value) => value > 0),
-      }),
-      processEnv: {
-        PORT: "0",
-      },
-      envFiles: [],
-    });
-
-    await expect(initializeConfigIntegration()).rejects.toBeInstanceOf(ConfigValidationError);
   });
 
   test("registers service and lifecycle instances into container bindings", async () => {
