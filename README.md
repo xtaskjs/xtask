@@ -23,6 +23,8 @@
 - `25-testing_app`: in-memory testing runtime sample showing module graph creation, DI overrides/mocking, lifecycle hooks, and isolated test containers with `@xtaskjs/testing`.
 - `26-bots_app`: unified bots sample with Telegram, Slack, and WhatsApp adapters in a single `@xtaskjs/bots` runtime.
 - `27-bots_webhook_security_app`: unified bots webhook sample for Slack/Telegram with HMAC signature validation and JWT-protected audit routes via `@xtaskjs/security`.
+- `28-mcp_server_app`: MCP server sample exposing `@xtaskjs/mcp` decorators over stdio and Streamable HTTP transports.
+- `29-mcp_auth_http_app`: MCP HTTP sample with Bearer/OAuth authentication over `/mcp` using the official SDK adapter.
 
 ## Workspace Packages
 
@@ -45,6 +47,7 @@
 - `@xtaskjs/testing`: testing runtime, module builder, and DI override utilities.
 - `@xtaskjs/cqrs`: command/query buses, handlers, repositories, and projection support.
 - `@xtaskjs/event-source`: event-sourcing runtime with aggregate/event-store integration.
+- `@xtaskjs/mcp`: decorator-based MCP server builder with lifecycle integration.
 - `@xtaskjs/bots`: multi-platform bots runtime for Telegram, Slack, and WhatsApp adapters.
 
 ## Follow The Latest Bots Samples

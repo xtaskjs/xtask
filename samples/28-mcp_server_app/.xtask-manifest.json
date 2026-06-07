@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-06T10:38:28.827Z",
+  "scanRoots": [
+    "/mnt/e/proyectos/xTaskJS/code/src/samples/28-mcp_server_app/src"
+  ],
+  "files": [
+    "/mnt/e/proyectos/xTaskJS/code/src/samples/28-mcp_server_app/src/app.spec.ts",
+    "/mnt/e/proyectos/xTaskJS/code/src/samples/28-mcp_server_app/src/app.ts",
+    "/mnt/e/proyectos/xTaskJS/code/src/samples/28-mcp_server_app/src/mcp.server.ts",
+    "/mnt/e/proyectos/xTaskJS/code/src/samples/28-mcp_server_app/src/runtime.ts"
+  ]
+}

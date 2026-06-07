@@ -1,0 +1,31 @@
+{
+  "name": "29-mcp_auth_http_app",
+  "version": "1.0.0",
+  "description": "MCP HTTP sample with Bearer/OAuth auth over @xtaskjs/mcp adapter.",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "pnpm -C ../../packages/core build && pnpm -C ../../packages/mcp build",
+    "pretest": "node -e \"process.exit(process.env.TURBO_HASH ? 0 : 1)\" || (pnpm -C ../../packages/core build && pnpm -C ../../packages/mcp build)",
+    "start": "ts-node -r tsconfig-paths/register ./src/app.ts",
+    "build": "npm run clean; tsc",
+    "clean": "rm -rf dist",
+    "test": "ts-node -r tsconfig-paths/register ./src/app.spec.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@xtaskjs/config": "workspace:*",
+    "@xtaskjs/core": "workspace:*",
+    "@xtaskjs/mcp": "workspace:*",
+    "express": "^5.1.0",
+    "reflect-metadata": "^0.2.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2"
+  }
+}

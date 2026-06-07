@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/express-http",
-  "version": "1.0.43",
+  "version": "1.0.44",
   "description": "Express HTTP adapter for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",

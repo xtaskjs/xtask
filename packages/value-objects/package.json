@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/value-objects",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "Value object primitives, converters, and XTaskJS integration helpers.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",

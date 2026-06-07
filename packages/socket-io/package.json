@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/socket-io",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Socket.IO integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",

@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/cache",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "Cache and HTTP caching integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",

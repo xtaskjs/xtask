@@ -38,6 +38,8 @@
       "@xtaskjs/socket-io/*": ["packages/socket-io/src/*"],
       "@xtaskjs/event-source": ["packages/event-source/src/index.ts"],
       "@xtaskjs/event-source/*": ["packages/event-source/src/*"],
+      "@xtaskjs/mcp": ["packages/mcp/src/index.ts"],
+      "@xtaskjs/mcp/*": ["packages/mcp/src/*"],
       "@xtaskjs/internationalization": ["packages/internationalization/src/index.ts"],
       "@xtaskjs/internationalization/*": ["packages/internationalization/src/*"],
       "@xtaskjs/testing": ["packages/testing/src/index.ts"],

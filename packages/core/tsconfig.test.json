@@ -21,6 +21,8 @@
       "@xtaskjs/security/*": ["../security/src/*"],
       "@xtaskjs/mailer": ["../mailer/src"],
       "@xtaskjs/mailer/*": ["../mailer/src/*"],
+      "@xtaskjs/mcp": ["../mcp/src"],
+      "@xtaskjs/mcp/*": ["../mcp/src/*"],
       "@xtaskjs/internationalization": ["../internationalization/src"],
       "@xtaskjs/internationalization/*": ["../internationalization/src/*"]
     }
@@ -35,6 +37,7 @@
     "../fastify-http/src/**/*",
     "../security/src/**/*",
     "../mailer/src/**/*",
+    "../mcp/src/**/*",
     "../internationalization/src/**/*"
   ]
 }

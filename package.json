@@ -21,6 +21,7 @@
     "coverage:open:typeorm": "node ./scripts/run-package-script.js packages/typeorm coverage:open",
     "coverage:open:cqrs": "node ./scripts/run-package-script.js packages/cqrs coverage:open",
     "coverage:open:event-source": "node ./scripts/run-package-script.js packages/event-source coverage:open",
+    "coverage:open:mcp": "node ./scripts/run-package-script.js packages/mcp coverage:open",
     "coverage:open:security": "node ./scripts/run-package-script.js packages/security coverage:open",
     "coverage:open:mailer": "node ./scripts/run-package-script.js packages/mailer coverage:open",
     "coverage:open:cache": "node ./scripts/run-package-script.js packages/cache coverage:open",

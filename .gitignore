@@ -60,6 +60,8 @@
 /src/packages/bots/coverage
 /src/packages/test/coverage
 /src/packages/validation/coverage
+/src/packages/config/coverage
+/src/packages/mcp/coverage
 /packages/core/coverage
 /packages/common/coverage
 /packages/express-http/coverage
@@ -79,6 +81,8 @@
 /packages/bots/coverage
 /packages/testing/coverage
 /packages/validation/coverage
+/packages/config/coverage
+/packages/mcp/coverage
 #Dist
 packages/common/dist/
 packages/core/dist/
@@ -100,6 +104,7 @@ packages/bots/dist/
 packages/testing/dist/
 packages/validation/dist/
 packages/config/dist/
+packages/mcp/dist/
 #Packages
 packages/*/*.tgz
 

@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/security",
-  "version": "1.0.31",
+  "version": "1.0.32",
   "description": "Authentication and authorization integration for xtaskjs.",
   "author": "Javier Rodriguez Soler",
   "homepage": "https://xtaskjs.io",

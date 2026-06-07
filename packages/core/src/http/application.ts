@@ -163,6 +163,8 @@ type ConfigInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycl
 type ConfigShutdownFn = () => Promise<void>;
 type ValidationInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
 type ValidationShutdownFn = () => Promise<void>;
+type McpInitializeFn = (container: Container, lifecycle?: ApplicationLifeCycle) => Promise<void>;
+type McpShutdownFn = () => Promise<void>;
 type CreateDefaultValidationPipeFn = () => { transform: (value: unknown, context: unknown) => unknown | Promise<unknown> };
 
 type HttpIntegrationResolverOverrides = {
@@ -183,6 +185,8 @@ type HttpIntegrationResolverOverrides = {
   configShutdown?: ConfigShutdownFn;
   validationInitialize?: ValidationInitializeFn;
   validationShutdown?: ValidationShutdownFn;
+  mcpInitialize?: McpInitializeFn;
+  mcpShutdown?: McpShutdownFn;
   validationCreateGlobalPipe?: CreateDefaultValidationPipeFn;
 };
 
@@ -1033,6 +1037,68 @@ const resolveValidationShutdown = (): ValidationShutdownFn | undefined => {
   return undefined;
 };
 
+const resolveMcpInitialize = (): McpInitializeFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.mcpInitialize;
+  if (typeof override === "function") {
+    return override;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/mcp")) {
+    return undefined;
+  }
+
+  try {
+    const mcpPackage = requireFromApplication<{
+      initializeMcpIntegration?: McpInitializeFn;
+    }>("@xtaskjs/mcp");
+
+    if (typeof mcpPackage.initializeMcpIntegration === "function") {
+      return mcpPackage.initializeMcpIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/mcp");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
+const resolveMcpShutdown = (): McpShutdownFn | undefined => {
+  const override = httpIntegrationResolverOverrides?.mcpShutdown;
+  if (typeof override === "function") {
+    return override;
+  }
+
+  if (!isPackageDeclaredInApplication("@xtaskjs/mcp")) {
+    return undefined;
+  }
+
+  try {
+    const mcpPackage = requireFromApplication<{
+      shutdownMcpIntegration?: McpShutdownFn;
+    }>("@xtaskjs/mcp");
+
+    if (typeof mcpPackage.shutdownMcpIntegration === "function") {
+      return mcpPackage.shutdownMcpIntegration;
+    }
+  } catch (error: any) {
+    const missingPackage =
+      error?.code === "MODULE_NOT_FOUND" ||
+      String(error?.message || "").includes("@xtaskjs/mcp");
+
+    if (!missingPackage) {
+      throw error;
+    }
+  }
+
+  return undefined;
+};
+
 const resolveDefaultValidationPipeFactory = (): CreateDefaultValidationPipeFn | undefined => {
   if (httpIntegrationResolverOverrides?.validationCreateGlobalPipe) {
     return httpIntegrationResolverOverrides.validationCreateGlobalPipe;
@@ -1283,6 +1349,11 @@ export class XTaskHttpApplication {
       await shutdownValidationIntegration();
     }
 
+    const shutdownMcpIntegration = resolveMcpShutdown();
+    if (shutdownMcpIntegration) {
+      await shutdownMcpIntegration();
+    }
+
     const shutdownConfigIntegration = resolveConfigShutdown();
     if (shutdownConfigIntegration) {
       await shutdownConfigIntegration();
@@ -1412,6 +1483,11 @@ export async function registerContainerInLifecycle(
   const initializeValidationIntegration = resolveValidationInitialize();
   if (initializeValidationIntegration) {
     await initializeValidationIntegration(container, lifecycle);
+  }
+
+  const initializeMcpIntegration = resolveMcpInitialize();
+  if (initializeMcpIntegration) {
+    await initializeMcpIntegration(container, lifecycle);
   }
 
   container.registerLifeCycleListeners(lifecycle);

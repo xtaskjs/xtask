@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/fastify-http",
-  "version": "1.0.45",
+  "version": "1.0.46",
   "description": "Fastify HTTP adapter for xtaskjs.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",

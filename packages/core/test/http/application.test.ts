@@ -10,6 +10,7 @@ import { view } from "../../src/http/types";
 import { initializeMailerIntegration, shutdownMailerIntegration } from "@xtaskjs/mailer";
 import { initializeCacheIntegration, shutdownCacheIntegration } from "@xtaskjs/cache";
 import { initializeCqrsIntegration, shutdownCqrsIntegration } from "@xtaskjs/cqrs";
+import { initializeMcpIntegration, shutdownMcpIntegration } from "@xtaskjs/mcp";
 import {
   initializeInternationalizationIntegration,
   runWithInternationalizationContext,
@@ -29,6 +30,11 @@ vi.mock("@xtaskjs/cache", () => ({
 vi.mock("@xtaskjs/cqrs", () => ({
   initializeCqrsIntegration: vi.fn(async () => {}),
   shutdownCqrsIntegration: vi.fn(async () => {}),
+}));
+
+vi.mock("@xtaskjs/mcp", () => ({
+  initializeMcpIntegration: vi.fn(async () => {}),
+  shutdownMcpIntegration: vi.fn(async () => {}),
 }));
 
 vi.mock("@xtaskjs/internationalization", () => ({
@@ -128,6 +134,8 @@ describe("XTaskHttpApplication", () => {
       mailerShutdown: shutdownMailerIntegration,
       cacheInitialize: initializeCacheIntegration,
       cacheShutdown: shutdownCacheIntegration,
+      mcpInitialize: initializeMcpIntegration,
+      mcpShutdown: shutdownMcpIntegration,
       internationalizationInitialize: initializeInternationalizationIntegration,
       internationalizationShutdown: shutdownInternationalizationIntegration,
       internationalizationContextRunner: runWithInternationalizationContext,
@@ -388,6 +396,7 @@ describe("XTaskHttpApplication", () => {
     expect(shutdownCqrsIntegration).toHaveBeenCalledTimes(1);
     expect(shutdownMailerIntegration).toHaveBeenCalledTimes(1);
     expect(shutdownCacheIntegration).toHaveBeenCalledTimes(1);
+    expect(shutdownMcpIntegration).toHaveBeenCalledTimes(1);
     expect(shutdownInternationalizationIntegration).toHaveBeenCalledTimes(1);
   }, 30000);
 
@@ -448,6 +457,8 @@ describe("http application factories", () => {
       mailerShutdown: shutdownMailerIntegration,
       cacheInitialize: initializeCacheIntegration,
       cacheShutdown: shutdownCacheIntegration,
+      mcpInitialize: initializeMcpIntegration,
+      mcpShutdown: shutdownMcpIntegration,
       internationalizationInitialize: initializeInternationalizationIntegration,
       internationalizationShutdown: shutdownInternationalizationIntegration,
       internationalizationContextRunner: runWithInternationalizationContext,
@@ -525,6 +536,7 @@ describe("http application factories", () => {
     expect(initializeCqrsIntegration).toHaveBeenCalledWith(container, lifecycle);
     expect(initializeMailerIntegration).toHaveBeenCalledWith(container);
     expect(initializeCacheIntegration).toHaveBeenCalledWith(container, lifecycle);
+    expect(initializeMcpIntegration).toHaveBeenCalledWith(container, lifecycle);
     expect(initializeInternationalizationIntegration).toHaveBeenCalledWith(container);
     expect(registerLifeCycleListeners).toHaveBeenCalledTimes(1);
   }, 30000);

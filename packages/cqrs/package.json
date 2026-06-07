@@ -1,6 +1,6 @@
 {
   "name": "@xtaskjs/cqrs",
-  "version": "1.1.23",
+  "version": "1.1.24",
   "description": "CQRS integration for xtaskjs with read/write datasource bindings.",
   "author": "Javier Rodríguez Soler",
   "homepage": "https://xtaskjs.io",
